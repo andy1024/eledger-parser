@@ -24,8 +24,11 @@ Of course you would also need an account on a e-ledger website that is run on a 
 Edit the config.properties file and change the following keys to match your environment:
 
 sys.output.printer : enter your CUPS printer name here
+
 sys.output.formatter : enter your formatter class of choice here (implements Formatter interface)
+
 web.baseUrl : base URL of your e-ledger website
+
 auth.data : semicolon separated list of authentication pairs "user,pass"
 
 2.3. Building
