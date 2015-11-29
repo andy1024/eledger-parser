@@ -23,13 +23,10 @@ Of course you would also need an account on a e-ledger website that is run on a 
 
 Edit the config.properties file and change the following keys to match your environment:
 
-sys.output.printer : enter your CUPS printer name here
-
-sys.output.formatter : enter your formatter class of choice here (implements Formatter interface)
-
-web.baseUrl : base URL of your e-ledger website
-
-auth.data : semicolon separated list of authentication pairs "user,pass"
+- sys.output.printer : enter your CUPS printer name here
+- sys.output.formatter : enter your formatter class of choice here (implements Formatter interface)
+- web.baseUrl : base URL of your e-ledger website
+- auth.data : semicolon separated list of authentication pairs "user,pass"
 
 2.3. Building
 
@@ -88,4 +85,5 @@ Nothing here for the moment
 
 4. What's next
 
-Support more sources, formatters and output destinations (such as a e-mail or alphanumerical LCD screen connected to a Raspberry PI).
+- [ ] support more sources
+- [ ] make more formatters and output destinations (such as a e-mail or alphanumerical LCD screen connected to a Raspberry PI)
