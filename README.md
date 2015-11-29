@@ -14,11 +14,9 @@ School e-ledger extracting and parsing tool to be used by parents in order to mo
 
 3. Usage
   1. Prerequisities
-
    In its OOB form, the software needs Java 7, LaTeX software with texlive-lang-polish and some printer to handle the output. You can however skip the preformatting part and send a plain text page to a generic CUPS printer by simple tweaks in properties file.
    Of course you would also need an account on a e-ledger website that is run on a specific engine. For various reasons I'm not stating the default website manufacturer name. Feel free to ask, if you are interested in extending the tool to suit your needs.
   2. Preconfiguration
-
    Edit the config.properties file and change the following keys to match your environment:
 
    - sys.output.printer : enter your CUPS printer name here
@@ -38,7 +36,7 @@ School e-ledger extracting and parsing tool to be used by parents in order to mo
 
    In my intention it was supposed to be run from cron periodically, to make sure all important information awaits when we get home.
 
-  5. Output
+5. Output
 
    In the stdout you'll see some informational messages about program workings. First it will read the config, then access the datastore, next download the necessary information from the server, check what's and finally output the extract on the device specified in the configuration file.
   1. Sample output
