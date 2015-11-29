@@ -13,10 +13,10 @@ School e-ledger extracting and parsing tool to be used by parents in order to mo
    Many of the tool's features are answers to my personal needs, that no one else would care about. However, I tried to make it as extensible as it gets. Whole thing is customizable by a simple properties file, including output format, formatter filter, event handlers and many, many more.
 
 3. Usage
-  1. Prerequisities
+  1. Prerequisities  
    In its OOB form, the software needs Java 7, LaTeX software with texlive-lang-polish and some printer to handle the output. You can however skip the preformatting part and send a plain text page to a generic CUPS printer by simple tweaks in properties file.
    Of course you would also need an account on a e-ledger website that is run on a specific engine. For various reasons I'm not stating the default website manufacturer name. Feel free to ask, if you are interested in extending the tool to suit your needs.
-  2. Preconfiguration
+  2. Preconfiguration  
    Edit the config.properties file and change the following keys to match your environment:
 
    - sys.output.printer : enter your CUPS printer name here
@@ -39,7 +39,7 @@ School e-ledger extracting and parsing tool to be used by parents in order to mo
 5. Output
 
    In the stdout you'll see some informational messages about program workings. First it will read the config, then access the datastore, next download the necessary information from the server, check what's and finally output the extract on the device specified in the configuration file.
-  1. Sample output
+  1. Sample output  
 ```
 Event fired: app.event.start
 Event handler class org.warheim.app.Application$1
@@ -74,11 +74,11 @@ Event fired: app.event.afterDataStoreWrite
 Event fired: app.event.finish
 ```
 
-3. Problems and troubleshooting
+6. Problems and troubleshooting
 
    Nothing here for the moment
 
-4. What's next
+7. What's next
 
    - [ ] support more sources
    - [ ] make more formatters and output destinations (such as an e-mail or alphanumerical LCD screen connected to a Raspberry PI)
