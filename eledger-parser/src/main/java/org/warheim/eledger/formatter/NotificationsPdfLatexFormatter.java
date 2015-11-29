@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.warheim.eledger.formatter;
 
 import org.warheim.print.FormattingException;
@@ -26,6 +21,8 @@ import org.warheim.eledger.parser.model.UserNotifications;
 import org.warheim.print.FormattableModel;
 
 /**
+ * Notifications formatter that uses external PdfLaTeX installation
+ * Use only if you meet its requirements (see README.MD)
  *
  * @author andy
  */

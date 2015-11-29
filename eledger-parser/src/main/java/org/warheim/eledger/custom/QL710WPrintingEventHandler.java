@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.warheim.eledger.custom;
 
 import org.warheim.app.EventHandler;
@@ -10,14 +5,16 @@ import org.warheim.app.EventHandlerException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.warheim.eledger.parser.Config;
 import org.warheim.net.RequestPreparationException;
 import org.warheim.net.ResponseHandlerException;
 import org.warheim.net.WebCall;
 import org.warheim.net.WrongStatusException;
 
 /**
- *
+ * Custom printing event handler
+ * Sends reset command to the printer after the printing job
+ * It is needed because of an error in printer driver causing printer hang
+ * 
  * @author andy
  */
 public class QL710WPrintingEventHandler implements EventHandler {

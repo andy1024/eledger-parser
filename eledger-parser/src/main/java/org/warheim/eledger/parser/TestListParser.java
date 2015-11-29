@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.warheim.eledger.parser;
 
 import org.warheim.eledger.parser.model.Source;
@@ -19,9 +14,10 @@ import org.warheim.eledger.parser.model.UserNotifications;
 /**
  * Parses the test list page source scraped from web
  * Inserts tests into the UserNotifications object
+ * 
  * @author andy
  */
-public class TestListParser extends SourcePageParser {
+public class TestListParser implements SourcePageParser {
 
     protected Map<String, Subject> getLiveTestSubjects(Elements subjectHeaders) {
         Map<String, Subject>  subjects = new HashMap<>();

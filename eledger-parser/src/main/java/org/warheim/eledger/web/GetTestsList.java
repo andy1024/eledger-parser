@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.warheim.eledger.web;
 
 import org.apache.http.HttpRequest;
@@ -11,6 +6,7 @@ import org.warheim.net.ReturnWebPageCall;
 import org.warheim.net.WebCall;
 
 /**
+ * Gets tests
  *
  * @author andy
  */

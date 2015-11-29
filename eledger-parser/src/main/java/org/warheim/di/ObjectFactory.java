@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.warheim.di;
 
 import java.lang.reflect.InvocationTargetException;
@@ -14,7 +9,8 @@ import java.util.logging.Logger;
 
 /**
  *
- * Semi DI for this project
+ * Object factory class
+ * Creates objects based on String parameter
  *
  * @author andy
  */

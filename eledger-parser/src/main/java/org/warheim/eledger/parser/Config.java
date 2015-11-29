@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.warheim.eledger.parser;
 
 import java.io.FileInputStream;
@@ -18,9 +13,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.warheim.eledger.parser.model.User;
 
-//TODO: implement reading custom file from user directory
-
 /**
+ * Main configuration class
+ * Supports external properties file with custom parameter values
  *
  * @author andy
  */

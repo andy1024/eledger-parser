@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.warheim.eledger.parser;
 
 import org.warheim.eledger.parser.model.Source;
@@ -13,7 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.warheim.eledger.parser.model.NotificationsData;
 import org.warheim.eledger.parser.model.UserNotifications;
+
 /**
+ * Main parser class. Delegates parsing tasks to another elements of the software
  *
  * @author andy
  */

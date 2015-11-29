@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.warheim.eledger.parser;
 
 import org.warheim.eledger.parser.model.Source;
@@ -22,7 +17,7 @@ import org.warheim.eledger.parser.model.UserNotifications;
  * TODO: implement message instead of task
  * @author andy
  */
-public class MessageListParser extends SourcePageParser {
+public class MessageListParser implements SourcePageParser {
 
     protected Map<String, Subject> getLiveTaskSubjects(Elements subjectHeaders) {
         Map<String, Subject>  subjects = new HashMap<>();

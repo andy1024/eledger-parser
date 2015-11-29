@@ -1,12 +1,5 @@
 package org.warheim.eledger.web;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 import org.warheim.net.RequestPreparationException;
 import org.warheim.net.WrongStatusException;
 import org.warheim.net.ResponseHandlerException;
@@ -23,6 +16,7 @@ import org.warheim.eledger.parser.model.SourceType;
 import org.warheim.eledger.parser.model.User;
 
 /**
+ * Main class for web interaction
  *
  * @author andy
  */

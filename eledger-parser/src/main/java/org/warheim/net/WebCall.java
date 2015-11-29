@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.warheim.net;
 
 import java.io.IOException;
@@ -16,6 +11,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 /**
+ * Base class for making web calls
+ * Supports GET and POST, custom headers, custom request preparation and custom response handler
  *
  * @author andy
  */
