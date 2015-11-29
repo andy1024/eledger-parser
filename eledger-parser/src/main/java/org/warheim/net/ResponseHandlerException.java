@@ -1,0 +1,19 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.warheim.net;
+
+/**
+ *
+ * @author andy
+ */
+public class ResponseHandlerException extends Exception {
+    public ResponseHandlerException(String msg) {
+        super(msg);
+    }
+    public ResponseHandlerException(Throwable ex) {
+        super(ex);
+    }
+}
