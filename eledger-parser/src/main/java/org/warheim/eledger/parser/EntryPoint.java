@@ -52,7 +52,7 @@ public class EntryPoint extends Application {
         System.out.println(Config.getStoreFileName());
         this.registerEventHandlers(Config.getProperties(), "app.event.");
         this.fire("app.event.afterConfigRead");
-        String debug = Config.get("sys.debug");
+        String debug = Config.get(Config.KEY_DEBUG);
         if ("1".equals(debug)) {
             this.fire("app.event.beforeServerDataGet");
             //DEBUG:
@@ -67,7 +67,7 @@ public class EntryPoint extends Application {
             this.fire("app.event.beforeDataStoreRead");
             diskStore = FileTool.readFile("/home/andy/src/eledger-getter/y0");
             this.fire("app.event.afterDataStoreRead");
-            Config.set("sys.output.printer", "PDF");
+            Config.set(Config.KEY_PRINTER, "PDF");
             parser = new Parser(serverResponse, diskStore);
             newData = parser.getNewData();
         } else if ("2".equals(debug)) {
@@ -122,14 +122,14 @@ public class EntryPoint extends Application {
         } else {
             System.out.println(newData.showAll());
             boolean printingOk = true;
-            if ("1".equals(Config.get("sys.print"))) {
+            if ("1".equals(Config.get(Config.KEY_PRINT))) {
                 this.fire("app.event.beforeFormatting");
-                Formatter formatter = (Formatter)ObjectFactory.createObject(Config.get("sys.output.formatter"));
+                Formatter formatter = (Formatter)ObjectFactory.createObject(Config.get(Config.KEY_OUTPUT_FORMATTER));
                 formatter.setModel(newData);
                 Doc formattedDocument = formatter.getDocument();
                 this.fire("app.event.afterFormatting");
                 Printer printer = new Printer(
-                        Config.get("sys.output.printer"),
+                        Config.get(Config.KEY_PRINTER),
                         formattedDocument
                 );
 
@@ -142,7 +142,7 @@ public class EntryPoint extends Application {
                     printingOk = false;
                 }
             }
-            if (printingOk&&"1".equals(Config.get("sys.write"))) {
+            if (printingOk&&"1".equals(Config.get(Config.KEY_WRITE))) {
                 try {
                     if (parser!=null) {
                         this.fire("app.event.beforeDataStoreWrite");

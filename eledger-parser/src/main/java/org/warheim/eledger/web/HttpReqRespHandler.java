@@ -33,7 +33,7 @@ public class HttpReqRespHandler {
 
     private final User user;
 
-    private final String base = Config.get("web.baseUrl");
+    private final String base = Config.get(Config.KEY_BASE_URL);
 
     public HttpReqRespHandler(User user) {
         this.user=user;
@@ -42,9 +42,8 @@ public class HttpReqRespHandler {
     protected void sleep() {
         Random r = new Random();
         try {
-            Thread.sleep(
-                    r.nextInt(Config.getInt("web.wait.random.max")) +
-                            Config.getInt("web.wait.random.min")
+            Thread.sleep(r.nextInt(Config.getInt(Config.KEY_WAIT_RANDOM_MAX)) +
+                            Config.getInt(Config.KEY_WAIT_RANDOM_MIN)
             );
         } catch (InterruptedException ex) {
             Logger.getLogger(HttpReqRespHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -54,10 +53,10 @@ public class HttpReqRespHandler {
     public List<Source> getAllData() throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException {
         List<Source> retval = new ArrayList<>();
         
-        String authPage = base + "/" + Config.get("web.authPage");
-        String taskListPage = base + "/" + Config.get("web.taskListPage");
-        String testListPage = base + "/" + Config.get("web.testListPage");
-        String messagesListPage = base + "/" + Config.get("web.messagesListPage");
+        String authPage = base + "/" + Config.get(Config.KEY_AUTH_PAGE);
+        String taskListPage = base + "/" + Config.get(Config.KEY_TASK_LIST_PAGE);
+        String testListPage = base + "/" + Config.get(Config.KEY_TEST_LIST_PAGE);
+        String messagesListPage = base + "/" + Config.get(Config.KEY_MESSAGES_LIST_PAGE);
     
         InitiateConnection init = new InitiateConnection(taskListPage);
         init.doCall();
@@ -97,12 +96,12 @@ public class HttpReqRespHandler {
         -H 'Upgrade-Insecure-Requests: 1' 
         -H "User-Agent: $USER_AGENT"
         */
-        httpMessage.addHeader(Config.get("header.accept.key"), Config.get("header.accept.value"));
-        httpMessage.addHeader(Config.get("header.connection.key"), Config.get("header.connection.value"));
-        httpMessage.addHeader(Config.get("header.acceptEncoding.key"), Config.get("header.acceptEncoding.value"));
-        httpMessage.addHeader(Config.get("header.acceptLanguage.key"), Config.get("header.acceptLanguage.value"));
-        httpMessage.addHeader(Config.get("header.upgradeInsecureRequests.key"), Config.get("header.upgradeInsecureRequests.value"));
-        httpMessage.addHeader(Config.get("header.userAgent.key"), Config.get("header.userAgent.value"));
+        httpMessage.addHeader(Config.get(Config.KEY_HEADER_ACCEPT_KEY), Config.get(Config.KEY_HEADER_ACCEPT_VALUE));
+        httpMessage.addHeader(Config.get(Config.KEY_HEADER_CONNECTION_KEY), Config.get(Config.KEY_HEADER_CONNECTION_VALUE));
+        httpMessage.addHeader(Config.get(Config.KEY_HEADER_ACCEPT_ENCODING_KEY), Config.get(Config.KEY_HEADER_ACCEPT_ENCODING_VALUE));
+        httpMessage.addHeader(Config.get(Config.KEY_HEADER_ACCEPT_LANGUAGE_KEY), Config.get(Config.KEY_HEADER_ACCEPT_LANGUAGE_VALUE));
+        httpMessage.addHeader(Config.get(Config.KEY_HEADER_UPGRADE_INSECURE_REQUESTS_KEY), Config.get(Config.KEY_HEADER_UPGRADE_INSECURE_REQUESTS_VALUE));
+        httpMessage.addHeader(Config.get(Config.KEY_HEADER_USER_AGENT_KEY), Config.get(Config.KEY_HEADER_USER_AGENT_VALUE));
     }
     
     public static void addExtHeaders(HttpMessage httpMessage, String cookie,
@@ -117,19 +116,19 @@ public class HttpReqRespHandler {
         -H 'Connection: keep-alive' 
         If-None-Match: \"$ETAG\"`
         */
-        httpMessage.addHeader("Cookie", Config.get("web.authCookieName") + "=" + cookie);
+        httpMessage.addHeader("Cookie", Config.get(Config.KEY_AUTH_COOKIE_NAME) + "=" + cookie);
         if (origin!=null) {
             httpMessage.addHeader("Origin", origin);
         }
-        httpMessage.addHeader(Config.get("header.contentType.key"), Config.get("header.contentType.value"));
-        httpMessage.addHeader(Config.get("header.cacheControl.key"), Config.get("header.cacheControl.value"));
+        httpMessage.addHeader(Config.get(Config.KEY_HEADER_CONTENT_TYPE_KEY), Config.get(Config.KEY_HEADER_CONTENT_TYPE_VALUE));
+        httpMessage.addHeader(Config.get(Config.KEY_HEADER_CACHE_CONTROL_KEY), Config.get(Config.KEY_HEADER_CACHE_CONTROL_VALUE));
         
-        httpMessage.addHeader(Config.get("header.referer.key"), referer);
-        httpMessage.addHeader(Config.get("header.ifNoneMatch.key"), etag);
+        httpMessage.addHeader(Config.get(Config.KEY_HEADER_REFERER_KEY), referer);
+        httpMessage.addHeader(Config.get(Config.KEY_HEADER_IF_NONE_MATCH_KEY), etag);
     }
     
     protected static String extractCookieValue(String input) {
-        return input.replaceFirst(".*" + Config.get("web.authCookieName") + "=(.*);.*","$1");
+        return input.replaceFirst(".*" + Config.get(Config.KEY_AUTH_COOKIE_NAME) + "=(.*);.*","$1");
     }
     
     public void logout() {

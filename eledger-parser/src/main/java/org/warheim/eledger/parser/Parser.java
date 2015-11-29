@@ -78,7 +78,7 @@ public class Parser {
     
     public void storeUpdatedDiskMap() throws IOException {
         try {
-            FileTool.writeFile(Config.getx("sys.datastore.dir"), Config.get("sys.datastore.filename"), dataFromDisk.serializeToJson());
+            FileTool.writeFile(Config.getx(Config.KEY_DATASTORE_DIR), Config.get(Config.KEY_DATASTORE_FILENAME), dataFromDisk.serializeToJson());
         } catch (IOException ex) {
             Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, "Error while serializing json", ex);
             System.err.println("error while serializing json");

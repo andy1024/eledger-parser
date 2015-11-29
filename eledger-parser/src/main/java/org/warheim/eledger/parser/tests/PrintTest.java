@@ -36,7 +36,7 @@ public class PrintTest{
         for (int i = 0; i < services.length; i++){
             String svcName = services[i].toString();           
             System.out.println("service found: "+svcName);
-            if (svcName.contains(Config.get("sys.output.printer"))){
+            if (svcName.contains(Config.get(Config.KEY_PRINTER))){
                 myPrinter = services[i];
                 System.out.println("my printer found: "+svcName);
                 break;
