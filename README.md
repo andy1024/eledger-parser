@@ -45,6 +45,7 @@ In my intention it was supposed to be run from cron periodically, to make sure a
 In the stdout you'll see some informational messages about program workings. First it will read the config, then access the datastore, next download the necessary information from the server, check what's and finally output the extract on the device specified in the configuration file.
 
 2.5.1. Sample output
+```
 Event fired: app.event.start
 Event handler class org.warheim.app.Application$1
 application start
@@ -76,6 +77,7 @@ Messages
 Event fired: app.event.beforeDataStoreWrite
 Event fired: app.event.afterDataStoreWrite
 Event fired: app.event.finish
+```
 
 3. Problems and troubleshooting
 
