@@ -86,4 +86,4 @@ Nothing here for the moment
 4. What's next
 
 - [ ] support more sources
-- [ ] make more formatters and output destinations (such as a e-mail or alphanumerical LCD screen connected to a Raspberry PI)
+- [ ] make more formatters and output destinations (such as an e-mail or alphanumerical LCD screen connected to a Raspberry PI)
