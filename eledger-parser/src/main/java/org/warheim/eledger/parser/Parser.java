@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.warheim.eledger.parser.model.Message;
 import org.warheim.eledger.parser.model.NotificationsData;
+import org.warheim.eledger.parser.model.SourceType;
 import org.warheim.eledger.parser.model.UserNotifications;
 
 /**
@@ -53,6 +55,17 @@ public class Parser {
                 spp.parse(source, un);
             }
             
+        }
+    }
+    
+    public void supplementDataFromServer(List<Source> sources) {
+        for (Source src: sources) {
+            if (SourceType.MESSAGE_CONTENT.equals(src.getType())) {
+                UserNotifications un = dataFromServer.getNotificationsForUser(src.getUser());
+                Message msg = un.getMessage(src.getId());
+                SourcePageParser spp = new MessageParser();
+                spp.parse(src, un);
+            }
         }
     }
     

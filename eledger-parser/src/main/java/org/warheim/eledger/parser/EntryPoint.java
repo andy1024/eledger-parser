@@ -97,18 +97,19 @@ public class EntryPoint extends Application {
             parser = new Parser(serverResponse, diskStore);
             newData = parser.getNewData();
             this.fire("app.event.beforeServerMessageContentsGet");
+            List<Source> messageDataServerResponse = new ArrayList<>();
             for (User user: Config.getUsers()) {
                 try {
-                    //TODO: implement message contents getting based on diff map
                     HttpReqRespHandler h = sessions.get(user);
-                    serverResponse.addAll(h.getAllData());
-                    sessions.put(user, h);
+                    messageDataServerResponse.addAll(h.getMessagesContents(newData.getNotificationsForUser(user).getMessageIDs()));
                     h.logout();
                 } catch (java.io.IOException e) {
                     Logger.getLogger(EntryPoint.class.getName()).log(Level.SEVERE, null, e);
                     System.exit(2);
                 }
             }
+            //add message contents to the list
+            parser.supplementDataFromServer(messageDataServerResponse);
             this.fire("app.event.afterServerMessageContentsGet");
             
         }

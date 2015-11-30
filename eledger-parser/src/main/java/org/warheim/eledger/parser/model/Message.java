@@ -10,13 +10,15 @@ import java.util.Objects;
  */
 public class Message implements Serializable, Comparable<Message> {
     private String id;
+    private String title;
     private String sender;
     private String recipients;
     private String date;
     private String content;
 
-    public Message(String id, String sender, String recipients, String date, String content) {
+    public Message(String id, String title, String sender, String recipients, String date, String content) {
         this.id = id;
+        this.title = title;
         this.sender = sender;
         this.recipients = recipients;
         this.date = date;
@@ -63,6 +65,14 @@ public class Message implements Serializable, Comparable<Message> {
         this.content = content;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 3;
@@ -89,5 +99,7 @@ public class Message implements Serializable, Comparable<Message> {
     public int compareTo(Message o) {
         return this.id.compareTo(o.id);
     }
+    
+    
     
 }

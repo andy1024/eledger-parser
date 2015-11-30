@@ -36,6 +36,7 @@ public class Config {
     public static final String KEY_HEADER_ACCEPT_LANGUAGE_VALUE = "header.acceptLanguage.value";
     public static final String KEY_HEADER_CONNECTION_VALUE = "header.connection.value";
     public static final String KEY_MESSAGES_LIST_PAGE = "web.messagesListPage";
+    public static final String KEY_MESSAGE_PAGE = "web.messagePage";
     public static final String KEY_HEADER_ACCEPT_ENCODING_VALUE = "header.acceptEncoding.value";
     public static final String KEY_HEADER_ACCEPT_ENCODING_KEY = "header.acceptEncoding.key";
     public static final String KEY_WAIT_RANDOM_MIN = "web.wait.random.min";

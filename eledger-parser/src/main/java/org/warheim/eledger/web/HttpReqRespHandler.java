@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.http.HttpMessage;
@@ -81,6 +82,20 @@ public class HttpReqRespHandler {
         return retval;
     }
     
+    public List<Source> getMessagesContents(Set<String> msgIds) throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException {
+        List<Source> retval = new ArrayList<>();
+        String messagePageUrl = base + "/" + Config.get(Config.KEY_MESSAGE_PAGE);
+        
+        for (String msgId: msgIds) {
+            String messagePageResponse = null;
+            GetMessage messageGetter = new GetMessage(messagePageUrl, msgId, cookie, etag);
+            messagePageResponse = messageGetter.doCall();
+            retval.add(new Source(user, SourceType.MESSAGE_CONTENT, messagePageResponse));
+            sleep();
+        }
+        return retval;
+    }
+    
     public static void addCommonHeaders(HttpMessage httpMessage) {
         /*
         -H "Accept: $ACCEPT" 
@@ -125,6 +140,7 @@ public class HttpReqRespHandler {
         return input.replaceFirst(".*" + Config.get(Config.KEY_AUTH_COOKIE_NAME) + "=(.*);.*","$1");
     }
     
+    //TODO: implement logout mechanism
     public void logout() {
         
     }

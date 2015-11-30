@@ -143,7 +143,6 @@ public class NotificationsData implements Serializable, FormattableModel  {
                     if (diskUN.getMessage(msg.getId())==null) {
                         userNotificationsDiffMap.putMessage(msg);
                         diskUN.putMessage(msg);
-                        //TODO: handle get message content
                     }
                 }
                 diffMap.putUserNotifications(user, userNotificationsDiffMap);

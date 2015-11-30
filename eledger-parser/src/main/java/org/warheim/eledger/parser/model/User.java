@@ -20,6 +20,11 @@ public class User implements Serializable, Comparable<User> {
         return pass;
     }
 
+    public User(String name) {
+        this.name = name;
+        this.pass = "";
+    }
+
     public User(String name, String pass) {
         this.name = name;
         this.pass = pass;

@@ -57,6 +57,10 @@ public class UserNotifications implements Serializable {
         msgMap.put(msg.getId(), msg);
     }
     
+    public void putMessageWithoutContents(String msgId) {
+        msgMap.put(msgId, new Message(msgId, null, null, null, null, null)); //to be filled later
+    }
+
     public void addTest(Subject subject, Test task) {
         Set<Test> list = testMap.get(subject);
         if (list==null) {

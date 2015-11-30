@@ -27,14 +27,14 @@ public class MockData {
         
         notifications.addTest(maths, new Test("2015-11-30", "All algebra test"));
         
-        notifications.putMessage(new Message("111", "john@mit.edu", "all-students", "2015-09-01", "No more jumping on the bed!"));
-        User user = new User(USER_1_NAME, "matt");
+        notifications.putMessage(new Message("111", "advice", "john@mit.edu", "all-students", "2015-09-01", "No more jumping on the bed!"));
+        User user = new User(USER_1_NAME);
         if (stage>0) {
-            notifications.putMessage(new Message("112", "admin@mit.edu", "matt@cs.mit.edu", "2915-11-30", "You've been warned"));
+            notifications.putMessage(new Message("112", "warning", "admin@mit.edu", "matt@cs.mit.edu", "2915-11-30", "You've been warned"));
         }
         notificationsData.putUserNotifications(user, notifications);
         if (stage>1) {
-            User user2 = new User(USER_2_NAME, "abc");
+            User user2 = new User(USER_2_NAME);
             UserNotifications un2 = new UserNotifications();
             Subject sub2 = new Subject(SUBJ_3_ID, SUBJ_3_NAME);
             un2.addTask(sub2, new Task("2015-09-20", "Sorting algorithms"));

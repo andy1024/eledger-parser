@@ -9,11 +9,17 @@ public class Source {
     private User user;
     private SourceType type;
     private String contents;
+    private String id=null; //optional
 
     public Source(User user, SourceType type, String contents) {
         this.user = user;
         this.type = type;
         this.contents = contents;
+    }
+
+    public Source(User user, SourceType type, String contents, String id) {
+        this(user, type, contents);
+        this.id = id;
     }
 
     public User getUser() {
@@ -40,5 +46,13 @@ public class Source {
         this.contents = contents;
     }
     
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     
 }
