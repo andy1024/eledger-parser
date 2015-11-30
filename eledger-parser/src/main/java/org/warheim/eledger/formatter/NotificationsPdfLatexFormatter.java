@@ -58,6 +58,7 @@ public class NotificationsPdfLatexFormatter implements Formatter {
         this.internalVerticalMargin = internalVerticalMargin;
     }*/
     
+    //TODO: implement output of tests and messages
     @Override
     public String format() {
         StringBuilder str = new StringBuilder();
@@ -81,11 +82,11 @@ public class NotificationsPdfLatexFormatter implements Formatter {
                     Set<Task> list = userNotifications.getTasksForSubject(subject);
                     if (list!=null) {
                         boolean firstTask = true;
-                        for (Task msg: list) {
+                        for (Task task: list) {
                             if (!firstTask) {
                                 str.append("\n");
                             }
-                            str.append("\\textsl{\\textsf{\\small{").append(msg.getDate()).append("}}} ").append(msg.getContent())
+                            str.append("\\textsl{\\textsf{\\small{").append(task.getDate()).append("}}} ").append(task.getContent())
                                .append("\n");
                             str.append("\\newline\n");
                             firstTask = false;

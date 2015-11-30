@@ -57,8 +57,8 @@ public class UserNotifications implements Serializable {
         msgMap.put(msg.getId(), msg);
     }
     
-    public void putMessageWithoutContents(String msgId) {
-        msgMap.put(msgId, new Message(msgId, null, null, null, null, null)); //to be filled later
+    public void putMessageWithoutContents(String msgId, String title, String sender, String date) {
+        msgMap.put(msgId, new Message(msgId, title, sender, null, date, null)); //to be filled later
     }
 
     public void addTest(Subject subject, Test task) {
@@ -155,7 +155,8 @@ public class UserNotifications implements Serializable {
             Collection<Message> list = getMessages();
             if (list!=null) {
                 for (Message msg: list) {
-                retval += " " + msg.getId() + " " + msg.getDate() +
+                retval += " " + msg.getId() + " " + msg.getTitle() + 
+                          " " + msg.getDate() +
                           " " + msg.getSender() + " " + msg.getRecipients() +
                           " " + msg.getContent() + "\n";
                 }
