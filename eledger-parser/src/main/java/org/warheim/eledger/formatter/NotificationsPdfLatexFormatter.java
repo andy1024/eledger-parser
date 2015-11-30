@@ -13,9 +13,11 @@ import java.util.logging.Logger;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.SimpleDoc;
+import org.warheim.eledger.parser.model.Message;
 import org.warheim.eledger.parser.model.Task;
 import org.warheim.eledger.parser.model.NotificationsData;
 import org.warheim.eledger.parser.model.Subject;
+import org.warheim.eledger.parser.model.Test;
 import org.warheim.eledger.parser.model.User;
 import org.warheim.eledger.parser.model.UserNotifications;
 import org.warheim.print.FormattableModel;
@@ -58,24 +60,39 @@ public class NotificationsPdfLatexFormatter implements Formatter {
         this.internalVerticalMargin = internalVerticalMargin;
     }*/
     
-    //TODO: implement output of tests and messages
+    enum SepType {
+        THIN, NORMAL, BOLD
+    }
+    
+    private void addSeparator(StringBuilder str, SepType sepType) {
+        switch (sepType) {
+            case THIN : str.append("\\makebox[\\linewidth]{\\rule{\\paperwidth}{0.4pt}}\n");
+                break;
+            case NORMAL : str.append("\\makebox[\\linewidth]{\\rule{\\paperwidth}{0.5pt}}\n");
+                break;
+            case BOLD : str.append("\\makebox[\\linewidth]{\\rule{\\paperwidth}{0.6pt}}\n");
+                break;
+        }
+        str.append("\\newline\n");
+    }
+    
     @Override
     public String format() {
         StringBuilder str = new StringBuilder();
         if (notificationsData!=null) {
             boolean firstUser = true;
             for (User user: notificationsData.getUsers()) {
-                str.append("\\textbf{\\textsft{").append(user.getName()).append("}}\n");
                 if (!firstUser) {
-                    str.append("\\makebox[\\linewidth]{\\rule{\\paperwidth}{0.5pt}}\n");
-                    str.append("\\newline\n");
+                    addSeparator(str, SepType.NORMAL);
                 }
+                str.append("\\Info"); //man icon
+                str.append("\\textbf{\\textsf{").append(user.getName()).append("}}\n");
                 UserNotifications userNotifications = notificationsData.getNotificationsForUser(user);
-                boolean firstSubject = true;
+                //tasks section
+                boolean firstTaskSubject = true;
                 for (Subject subject: userNotifications.getTaskSubjects()) {
-                    if (!firstSubject) {
-                        str.append("\\makebox[\\linewidth]{\\rule{\\paperwidth}{0.4pt}}\n");
-                        str.append("\\newline\n");
+                    if (!firstTaskSubject) {
+                        addSeparator(str, SepType.THIN);
                     }
                     str.append("\\textbf{").append(subject.getName()).append("}\n");
                     str.append("\\newline\n");
@@ -86,13 +103,61 @@ public class NotificationsPdfLatexFormatter implements Formatter {
                             if (!firstTask) {
                                 str.append("\n");
                             }
+                            str.append("\\Writinghand"); //writing hand icon
                             str.append("\\textsl{\\textsf{\\small{").append(task.getDate()).append("}}} ").append(task.getContent())
                                .append("\n");
                             str.append("\\newline\n");
                             firstTask = false;
                         }
                     }
-                    firstSubject=false;
+                    firstTaskSubject=false;
+                }
+                if (!firstTaskSubject) { //there were some tasks in the output, draw separator
+                    addSeparator(str, SepType.THIN);
+                }
+                //tests section
+                boolean firstTestSubject = true;
+                for (Subject subject: userNotifications.getTestSubjects()) {
+                    if (!firstTestSubject) {
+                        addSeparator(str, SepType.THIN);
+                    }
+                    str.append("\\textbf{").append(subject.getName()).append("}\n");
+                    str.append("\\newline\n");
+                    Set<Test> list = userNotifications.getTestsForSubject(subject);
+                    if (list!=null) {
+                        boolean firstTest = true;
+                        for (Test test: list) {
+                            if (!firstTest) {
+                                str.append("\n");
+                            }
+                            str.append("\\Clocklogo"); //clock icon
+                            str.append("\\textsl{\\textsf{\\small{").append(test.getDate()).append("}}} ").append(test.getContent())
+                               .append("\n");
+                            str.append("\\newline\n");
+                            firstTest = false;
+                        }
+                    }
+                    firstTestSubject=false;
+                }
+                if (!firstTestSubject) { //there were some tests in the output, draw separator
+                    addSeparator(str, SepType.THIN);
+                }
+                //messages section
+                boolean firstMessage = true;
+                for (String msgId: userNotifications.getMessageIDs()) {
+                    if (!firstMessage) {
+                        addSeparator(str, SepType.THIN);
+                    }
+                    Message msg = userNotifications.getMessage(msgId);
+                    str.append("\\Letter"); //letter icon
+                    str.append("\\textsl{\\textsf{\\small{").append(msg.getDate()).append("}}} ");
+                    str.append("\\textsl{\\small{").append(msg.getSender()).append("}} ");
+                    str.append("\\textsf{").append(msg.getTitle()).append("} ");
+                    str.append("\\textsl{").append(msg.getRecipients()).append("} ");
+                    str.append(msg.getContent())
+                       .append("\n");
+                    str.append("\\newline\n");
+                    firstMessage = false;
                 }
                 firstUser = false;
             }
@@ -110,6 +175,7 @@ public class NotificationsPdfLatexFormatter implements Formatter {
             pw.println("\\usepackage[utf8]{inputenc}");
             pw.println("\\usepackage{" + languagePackage + "}");
             pw.println("\\usepackage{setspace}");
+            pw.println("\\usepackage{marvosym}");
             pw.println("\\setstretch{" + strech + "}");
             pw.println("\\begin{document}");
             pw.println("\\setbox0=\\vbox{");
