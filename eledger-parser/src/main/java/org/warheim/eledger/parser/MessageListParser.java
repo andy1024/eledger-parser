@@ -5,11 +5,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.warheim.eledger.parser.model.Message;
-import org.warheim.eledger.parser.model.SourceType;
-import org.warheim.eledger.parser.model.User;
 import org.warheim.eledger.parser.model.UserNotifications;
-import org.warheim.file.FileTool;
 
 /**
  * Parses the message list page source scraped from web
