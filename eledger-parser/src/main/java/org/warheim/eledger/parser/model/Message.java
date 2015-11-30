@@ -100,6 +100,4 @@ public class Message implements Serializable, Comparable<Message> {
         return this.id.compareTo(o.id);
     }
     
-    
-    
 }

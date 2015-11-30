@@ -8,7 +8,7 @@ import java.util.Objects;
  *
  * @author andy
  */
-public class Subject implements Serializable {
+public class Subject implements Serializable, Comparable<Subject> {
 
     public Subject(String id, String name) {
         this.id = id;
@@ -63,6 +63,15 @@ public class Subject implements Serializable {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int compareTo(Subject o) {
+        int nameCmp = this.name.compareTo(o.name);
+        if (nameCmp==0) {
+            return this.id.compareTo(o.id);
+        }
+        else return nameCmp;
     }
     
     

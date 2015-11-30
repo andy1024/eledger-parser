@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -87,6 +88,27 @@ public class UserNotifications implements Serializable {
     }
     public Set<Test> getTestsForSubject(Subject subject) {
         Set<Test> list = testMap.get(subject);
+        return list;
+    }
+    
+    public Set<Subject> getInfoSubjects() {
+        Set<Subject> list = new TreeSet<>(taskMap.keySet()); //do not write to internal keySet, that's why I'm copying it
+        list.addAll(testMap.keySet());
+        return list;
+    }
+    
+    public Set<InfoOnSubject> getInfoForSubject(Subject subject) {
+        Set<InfoOnSubject> list = new TreeSet<>();
+        if (taskMap.containsKey(subject)) {
+            for (Task task: taskMap.get(subject)) {
+                list.add(task);
+            }
+        }
+        if (testMap.containsKey(subject)) {
+            for (Test test: testMap.get(subject)) {
+                list.add(test);
+            }
+        }
         return list;
     }
     

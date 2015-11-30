@@ -13,11 +13,10 @@ import java.util.logging.Logger;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.SimpleDoc;
+import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;
-import org.warheim.eledger.parser.model.Task;
 import org.warheim.eledger.parser.model.NotificationsData;
 import org.warheim.eledger.parser.model.Subject;
-import org.warheim.eledger.parser.model.Test;
 import org.warheim.eledger.parser.model.User;
 import org.warheim.eledger.parser.model.UserNotifications;
 import org.warheim.print.FormattableModel;
@@ -87,59 +86,39 @@ public class NotificationsPdfLatexFormatter implements Formatter {
                 }
                 str.append("\\Info"); //man icon
                 str.append("\\textbf{\\textsf{").append(user.getName()).append("}}\n");
+                str.append("\\newline");
                 UserNotifications userNotifications = notificationsData.getNotificationsForUser(user);
-                //tasks section
-                boolean firstTaskSubject = true;
-                for (Subject subject: userNotifications.getTaskSubjects()) {
-                    if (!firstTaskSubject) {
+                //tasks and tests combined section
+                boolean firstSubject = true;
+                for (Subject subject: userNotifications.getInfoSubjects()) {
+                    if (!firstSubject) {
                         addSeparator(str, SepType.THIN);
                     }
                     str.append("\\textbf{").append(subject.getName()).append("}\n");
                     str.append("\\newline\n");
-                    Set<Task> list = userNotifications.getTasksForSubject(subject);
+                    Set<InfoOnSubject> list = userNotifications.getInfoForSubject(subject);
                     if (list!=null) {
-                        boolean firstTask = true;
-                        for (Task task: list) {
-                            if (!firstTask) {
+                        boolean firstInfo = true;
+                        for (InfoOnSubject info: list) {
+                            if (!firstInfo) {
                                 str.append("\n");
                             }
-                            str.append("\\Writinghand"); //writing hand icon
-                            str.append("\\textsl{\\textsf{\\small{").append(task.getDate()).append("}}} ").append(task.getContent())
-                               .append("\n");
-                            str.append("\\newline\n");
-                            firstTask = false;
-                        }
-                    }
-                    firstTaskSubject=false;
-                }
-                if (!firstTaskSubject) { //there were some tasks in the output, draw separator
-                    addSeparator(str, SepType.THIN);
-                }
-                //tests section
-                boolean firstTestSubject = true;
-                for (Subject subject: userNotifications.getTestSubjects()) {
-                    if (!firstTestSubject) {
-                        addSeparator(str, SepType.THIN);
-                    }
-                    str.append("\\textbf{").append(subject.getName()).append("}\n");
-                    str.append("\\newline\n");
-                    Set<Test> list = userNotifications.getTestsForSubject(subject);
-                    if (list!=null) {
-                        boolean firstTest = true;
-                        for (Test test: list) {
-                            if (!firstTest) {
-                                str.append("\n");
+                            switch (info.getType()) {
+                                case TASK: str.append("\\Writinghand"); //writing hand icon
+                                    break;
+                                case TEST: str.append("\\Clocklogo"); //clock icon
+                                    break;
                             }
-                            str.append("\\Clocklogo"); //clock icon
-                            str.append("\\textsl{\\textsf{\\small{").append(test.getDate()).append("}}} ").append(test.getContent())
+                            
+                            str.append("\\textsl{\\textsf{\\small{").append(info.getDate()).append("}}} ").append(info.getContent())
                                .append("\n");
                             str.append("\\newline\n");
-                            firstTest = false;
+                            firstInfo = false;
                         }
                     }
-                    firstTestSubject=false;
+                    firstSubject=false;
                 }
-                if (!firstTestSubject) { //there were some tests in the output, draw separator
+                if (!firstSubject) { //there were some tasks in the output, draw separator
                     addSeparator(str, SepType.THIN);
                 }
                 //messages section
