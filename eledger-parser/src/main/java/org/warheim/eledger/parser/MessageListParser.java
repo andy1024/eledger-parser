@@ -25,7 +25,6 @@ public class MessageListParser implements SourcePageParser {
         return retval;
     }
     
-    //TODO: implement getting sender and date of the message
     @Override
     public void parse(Source source, UserNotifications un) {
         Document doc = Jsoup.parse(source.getContents());
@@ -42,13 +41,4 @@ public class MessageListParser implements SourcePageParser {
         
     }
     
-    public static void main(String... args) throws Exception {
-        String data = FileTool.readFile("/home/andy/src/eledger-getter/msginbox");
-        Source src = new Source(new User("test1"), SourceType.MESSAGES, data);
-        SourcePageParser p = new MessageListParser();
-        UserNotifications un = new UserNotifications();
-        p.parse(src, un);
-        System.out.println(un.showAll());
-    }
-
 }
