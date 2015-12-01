@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.SimpleDoc;
+import org.warheim.eledger.parser.Config;
 import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;
 import org.warheim.eledger.parser.model.NotificationsData;
@@ -78,6 +79,7 @@ public class NotificationsPdfLatexFormatter implements Formatter {
     @Override
     public String format() {
         StringBuilder str = new StringBuilder();
+        Integer maxContentLength = Config.getInt(Config.KEY_MAX_MSG_CONTENT_LENGTH);
         if (notificationsData!=null) {
             boolean firstUser = true;
             for (User user: notificationsData.getUsers()) {
@@ -132,9 +134,20 @@ public class NotificationsPdfLatexFormatter implements Formatter {
                     str.append("\\textsl{\\textsf{\\small{").append(msg.getDate()).append("}}} ");
                     str.append("\\textsl{\\small{").append(msg.getSender()).append("}} ");
                     str.append("\\textsf{").append(msg.getTitle()).append("} ");
-                    str.append("\\textsl{").append(msg.getRecipients()).append("} ");
+                    if (Config.get(Config.KEY_MULTIPLE_RECIPIENTS).equals(msg.getRecipients())) {
+                        str.append("$\\infty$ ");
+                    } else {
+                        str.append("\\textsl{").append(msg.getRecipients()).append("} ");
+                    }
+                    
+                    if (maxContentLength!=null && msg.getContent().length()>maxContentLength) {
+                    str.append(msg.getContent().substring(0, maxContentLength))
+                       .append("...")
+                       .append("\n");
+                    } else {
                     str.append(msg.getContent())
                        .append("\n");
+                    }
                     str.append("\\newline\n");
                     firstMessage = false;
                 }

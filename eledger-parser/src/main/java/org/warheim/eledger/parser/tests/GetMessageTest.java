@@ -16,7 +16,7 @@ import org.warheim.file.FileTool;
 public class GetMessageTest {
 
     public static void main(String... args) throws Exception {
-        String data = FileTool.readFile("/home/andy/src/eledger-getter/msg1");
+        String data = FileTool.readFile("/home/andy/src/eledger-getter/msg3");
         Source src = new Source(new User("test1"), SourceType.MESSAGE_CONTENT, data, "26638");
         SourcePageParser p = new MessageParser();
         UserNotifications un = new UserNotifications();

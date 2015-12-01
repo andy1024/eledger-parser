@@ -60,21 +60,30 @@ public class Parser {
     
     public void supplementDataFromServer(List<Source> sources) {
         for (Source src: sources) {
-            if (SourceType.MESSAGE_CONTENT.equals(src.getType())) {
-                UserNotifications un = dataFromServer.getNotificationsForUser(src.getUser());
-                Message msg = un.getMessage(src.getId());
-                SourcePageParser spp = new MessageParser();
-                spp.parse(src, un);
+            try {
+                if (SourceType.MESSAGE_CONTENT.equals(src.getType())) {
+                    UserNotifications un = dataFromServer.getNotificationsForUser(src.getUser());
+                    Message msg = un.getMessage(src.getId());
+                    SourcePageParser spp = new MessageParser();
+                    spp.parse(src, un);
+                }
+            } catch (Exception e) {
+                System.err.println(src);
+                throw e;
             }
         }
     }
     
     protected void buildDataFromDisk() {
-        try {
-            dataFromDisk = NotificationsData.deserializeFromJson(diskStore);
-        } catch (IllegalStateException e) {
-            System.err.println(e.getCause());
-            throw e;
+        if (diskStore==null||diskStore.isEmpty()) {
+            dataFromDisk = new NotificationsData();
+            } else {
+            try {
+                dataFromDisk = NotificationsData.deserializeFromJson(diskStore);
+            } catch (IllegalStateException e) {
+                System.err.println(e.getCause());
+                throw e;
+            }
         }
     }
     

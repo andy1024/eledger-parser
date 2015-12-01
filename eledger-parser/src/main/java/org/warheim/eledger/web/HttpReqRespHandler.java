@@ -60,7 +60,7 @@ public class HttpReqRespHandler {
         sleep();
         Authorize auth = new Authorize(authPage, taskListPage, base, user.getName(), user.getPass(), cookie, etag);
         auth.doCall();
-        
+
         String taskSourcePage = null;
         GetTasksList taskListGetter = new GetTasksList(taskListPage, cookie, etag);
         taskSourcePage = taskListGetter.doCall();
@@ -71,7 +71,7 @@ public class HttpReqRespHandler {
         GetTestsList testListGetter = new GetTestsList(testListPage, cookie, etag);
         testSourcePage = testListGetter.doCall();
         retval.add(new Source(user, SourceType.TESTLIST, testSourcePage));
-        
+  
         sleep();
         String messagesSourcePage = null;
         GetMessagesList messageListGetter = new GetMessagesList(messagesListPage, cookie, etag);
@@ -85,12 +85,13 @@ public class HttpReqRespHandler {
     public List<Source> getMessagesContents(Set<String> msgIds) throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException {
         List<Source> retval = new ArrayList<>();
         String messagePageUrl = base + "/" + Config.get(Config.KEY_MESSAGE_PAGE);
+        String messageInboxPageUrl = base + "/" + Config.get(Config.KEY_MESSAGES_LIST_PAGE);
         
         for (String msgId: msgIds) {
             String messagePageResponse = null;
-            GetMessage messageGetter = new GetMessage(messagePageUrl, msgId, cookie, etag);
+            GetMessage messageGetter = new GetMessage(messagePageUrl, msgId, cookie, etag, messageInboxPageUrl);
             messagePageResponse = messageGetter.doCall();
-            retval.add(new Source(user, SourceType.MESSAGE_CONTENT, messagePageResponse));
+            retval.add(new Source(user, SourceType.MESSAGE_CONTENT, messagePageResponse, msgId));
             sleep();
         }
         return retval;
@@ -131,17 +132,25 @@ public class HttpReqRespHandler {
         }
         httpMessage.addHeader(Config.get(Config.KEY_HEADER_CONTENT_TYPE_KEY), Config.get(Config.KEY_HEADER_CONTENT_TYPE_VALUE));
         httpMessage.addHeader(Config.get(Config.KEY_HEADER_CACHE_CONTROL_KEY), Config.get(Config.KEY_HEADER_CACHE_CONTROL_VALUE));
-        
-        httpMessage.addHeader(Config.get(Config.KEY_HEADER_REFERER_KEY), referer);
-        httpMessage.addHeader(Config.get(Config.KEY_HEADER_IF_NONE_MATCH_KEY), etag);
+        if (referer!=null) {
+            httpMessage.addHeader(Config.get(Config.KEY_HEADER_REFERER_KEY), referer);
+        }
+        if (etag!=null) {
+            httpMessage.addHeader(Config.get(Config.KEY_HEADER_IF_NONE_MATCH_KEY), etag);
+        }
     }
     
     protected static String extractCookieValue(String input) {
         return input.replaceFirst(".*" + Config.get(Config.KEY_AUTH_COOKIE_NAME) + "=(.*);.*","$1");
     }
     
-    //TODO: implement logout mechanism
-    public void logout() {
-        
+    public void logout() throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException {
+        String logoutUrl = base + "/" + Config.get(Config.KEY_LOGOUT_PAGE);
+        String referer = base + "/" + Config.get(Config.KEY_MAIN_PAGE);
+
+        sleep();
+        Logout logout = new Logout(logoutUrl, referer, cookie);
+        logout.doCall();
+        sleep();
     }
 }

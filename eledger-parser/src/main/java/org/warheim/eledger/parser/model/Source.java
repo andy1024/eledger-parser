@@ -54,5 +54,9 @@ public class Source {
         this.id = id;
     }
 
-    
+    @Override
+    public String toString() {
+        return "Source{" + "user=" + user + ", type=" + type + ", contents=" + contents + ", id=" + id + '}';
+    }
+
 }

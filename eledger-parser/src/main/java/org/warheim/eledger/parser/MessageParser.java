@@ -20,8 +20,16 @@ public class MessageParser implements SourcePageParser {
         Document doc = Jsoup.parse(source.getContents());
         Elements msgHeaders = doc.select("tr.message_header td");
         Message msg = un.getMessage(source.getId());
+        if (msg==null) {//should only happen when testing with not properly initialized datastore
+            System.out.println(String.format("Message %s not available in UN, skipping", source.getId()));
+            return;
+        }
         //String title = WebParserTool.noHTML(msgHeaders.get(0));
         String recipients = WebParserTool.noHTML(msgHeaders.get(2));
+        if (recipients.length()>35 && recipients.contains(",")) {
+            //truncate too long recipients lists
+            recipients = Config.get(Config.KEY_MULTIPLE_RECIPIENTS);
+        }
         Elements msgContents = doc.select("#message_show_content");
         String contents = WebParserTool.noHTML(msgContents.get(0));
         msg.setContent(contents);

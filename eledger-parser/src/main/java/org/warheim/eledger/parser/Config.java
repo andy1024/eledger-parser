@@ -20,44 +20,59 @@ import org.warheim.eledger.parser.model.User;
  * @author andy
  */
 public class Config {
+    //base configuration
     public static final String KEY_CUSTOM_CONFIG_FILENAME = "config.custom.filename";
     public static final String KEY_CONFIG_FILENAME = "config.properties";
     public static final String KEY_PRINTER = "sys.output.printer";
     public static final String KEY_OUTPUT_FORMATTER = "sys.output.formatter";
     public static final String KEY_DEBUG = "sys.debug";
     public static final String KEY_PRINT = "sys.print";
+    public static final String KEY_WAIT_RANDOM_MIN = "web.wait.random.min";
+    public static final String KEY_WAIT_RANDOM_MAX = "web.wait.random.max";
+    public static final String KEY_WRITE = "sys.write";
+    public static final String KEY_DATASTORE_FILENAME = "sys.datastore.filename";
+    public static final String KEY_DATASTORE_DIR = "sys.datastore.dir";
+    
+    //urls
+    public static final String KEY_AUTH_PAGE = "web.authPage";
+    public static final String KEY_TASK_LIST_PAGE = "web.taskListPage";
+    public static final String KEY_TEST_LIST_PAGE = "web.testListPage";
+    public static final String KEY_BASE_URL = "web.baseUrl";
+    public static final String KEY_MESSAGES_LIST_PAGE = "web.messagesListPage";
+    public static final String KEY_MESSAGE_PAGE = "web.messagePage";
+    public static final String KEY_LOGOUT_PAGE = "web.logoutPage";
+    public static final String KEY_MAIN_PAGE = "web.mainPage";
+    
+    //request headers
+    public static final String KEY_HEADER_ACCEPT_ENCODING_KEY = "header.acceptEncoding.key";
+    public static final String KEY_HEADER_ACCEPT_ENCODING_VALUE = "header.acceptEncoding.value";
     public static final String KEY_HEADER_USER_AGENT_KEY = "header.userAgent.key";
     public static final String KEY_HEADER_USER_AGENT_VALUE = "header.userAgent.value";
     public static final String KEY_HEADER_ACCEPT_VALUE = "header.accept.value";
     public static final String KEY_HEADER_ACCEPT_LANGUAGE_KEY = "header.acceptLanguage.key";
-    public static final String KEY_HEADER_UPGRADE_INSECURE_REQUESTS_VALUE = "header.upgradeInsecureRequests.value";
-    public static final String KEY_TEST_LIST_PAGE = "web.testListPage";
-    public static final String KEY_BASE_URL = "web.baseUrl";
     public static final String KEY_HEADER_ACCEPT_LANGUAGE_VALUE = "header.acceptLanguage.value";
-    public static final String KEY_HEADER_CONNECTION_VALUE = "header.connection.value";
-    public static final String KEY_MESSAGES_LIST_PAGE = "web.messagesListPage";
-    public static final String KEY_MESSAGE_PAGE = "web.messagePage";
-    public static final String KEY_HEADER_ACCEPT_ENCODING_VALUE = "header.acceptEncoding.value";
-    public static final String KEY_HEADER_ACCEPT_ENCODING_KEY = "header.acceptEncoding.key";
-    public static final String KEY_WAIT_RANDOM_MIN = "web.wait.random.min";
-    public static final String KEY_AUTH_PAGE = "web.authPage";
+    public static final String KEY_HEADER_UPGRADE_INSECURE_REQUESTS_VALUE = "header.upgradeInsecureRequests.value";
     public static final String KEY_HEADER_ACCEPT_KEY = "header.accept.key";
     public static final String KEY_HEADER_UPGRADE_INSECURE_REQUESTS_KEY = "header.upgradeInsecureRequests.key";
-    public static final String KEY_TASK_LIST_PAGE = "web.taskListPage";
     public static final String KEY_HEADER_CONNECTION_KEY = "header.connection.key";
-    public static final String KEY_WAIT_RANDOM_MAX = "web.wait.random.max";
+    public static final String KEY_HEADER_CONNECTION_VALUE = "header.connection.value";
+    public static final String KEY_HEADER_CACHE_CONTROL_KEY = "header.cacheControl.key";
     public static final String KEY_HEADER_CACHE_CONTROL_VALUE = "header.cacheControl.value";
-    public static final String KEY_HEADER_CONTENT_TYPE_KEY = "header.contentType.key";
     public static final String KEY_HEADER_IF_NONE_MATCH_KEY = "header.ifNoneMatch.key";
+    public static final String KEY_HEADER_CONTENT_TYPE_KEY = "header.contentType.key";
     public static final String KEY_HEADER_CONTENT_TYPE_VALUE = "header.contentType.value";
     public static final String KEY_HEADER_REFERER_KEY = "header.referer.key";
+    public static final String KEY_HEADER_AJAX_REQUESTED_WITH_KEY = "header.ajax.requestedWith.key";
+    public static final String KEY_HEADER_AJAX_REQUESTED_WITH_VALUE = "header.ajax.requestedWith.value";
+    
+    //web interaction
     public static final String KEY_AUTH_COOKIE_NAME = "web.authCookieName";
-    public static final String KEY_HEADER_CACHE_CONTROL_KEY = "header.cacheControl.key";
-    public static final String KEY_WRITE = "sys.write";
-    public static final String KEY_DATASTORE_FILENAME = "sys.datastore.filename";
-    public static final String KEY_DATASTORE_DIR = "sys.datastore.dir";
     public static final String KEY_AUTH_DATA = "auth.data";
 
+    //additional config
+    public static final String KEY_MULTIPLE_RECIPIENTS = "msg.multipleRecipients";
+    public static final String KEY_MAX_MSG_CONTENT_LENGTH = "msg.maxMessageContentLength";
+    
     private Properties props;
     private static Config instance = null;
 
@@ -113,7 +128,11 @@ public class Config {
     public static final Integer getInt(String key) {
         Config inst = inst();
         String val = get(key);
-        return Integer.parseInt(val);
+        if (val==null) {
+            return null;
+        } else {
+            return Integer.parseInt(val);
+        }
     }
 
     public static final String getStoreFileName() {
