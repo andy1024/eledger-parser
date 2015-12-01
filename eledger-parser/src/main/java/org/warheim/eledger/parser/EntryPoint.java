@@ -102,12 +102,15 @@ public class EntryPoint extends Application {
                 try {
                     HttpReqRespHandler h = sessions.get(user);
                     messageDataServerResponse.addAll(h.getMessagesContents(newData.getNotificationsForUser(user).getMessageIDs()));
+                    this.fire("app.event.beforeSingleUserLogout");
                     h.logout();
+                    this.fire("app.event.afterSingleUserLogout");
                 } catch (java.io.IOException e) {
                     Logger.getLogger(EntryPoint.class.getName()).log(Level.SEVERE, null, e);
                     System.exit(2);
                 }
             }
+            
             //add message contents to the list
             parser.supplementDataFromServer(messageDataServerResponse);
             this.fire("app.event.afterServerMessageContentsGet");
