@@ -9,6 +9,7 @@ import java.util.Objects;
  * @author andy
  */
 public class User implements Serializable, Comparable<User> {
+    //TODO: add full name as an option
     private String name;
     private transient String pass; //do not serialize this field
 
