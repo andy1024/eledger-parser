@@ -152,5 +152,4 @@ public class NotificationsData implements Serializable, FormattableModel  {
         return diffMap;
     }
 
-
 }

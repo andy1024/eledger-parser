@@ -39,6 +39,14 @@ public class UserNotifications implements Serializable {
         return false;
     }
     
+    public Map<Subject, Set<Task>> getTaskMap() {
+        return taskMap;
+    }
+    
+    public Map<Subject, Set<Test>> getTestMap() {
+        return testMap;
+    }
+
     public void addTask(Subject subject, Task task) {
         Set<Task> list = taskMap.get(subject);
         if (list==null) {

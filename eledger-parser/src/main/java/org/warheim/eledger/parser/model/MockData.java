@@ -33,9 +33,9 @@ public class MockData {
             notifications.putMessage(new Message("112", "warning", "admin@mit.edu", "matt@cs.mit.edu", "2915-11-30", "You've been warned"));
         }
         notificationsData.putUserNotifications(user, notifications);
+        UserNotifications un2 = new UserNotifications();
         if (stage>1) {
             User user2 = new User(USER_2_NAME);
-            UserNotifications un2 = new UserNotifications();
             Subject sub2 = new Subject(SUBJ_3_ID, SUBJ_3_NAME);
             un2.addTask(sub2, new Task("2015-09-20", "Sorting algorithms"));
             
@@ -43,6 +43,9 @@ public class MockData {
         }
         if (stage>2) {
             notifications.addTest(english, new Test("2915-12-06", "Old english roots"));
+        }
+        if (stage>3) {
+            un2.putMessage(new Message("1150", "warning", "admin@mit.edu", "matt@cs.mit.edu", "2915-11-30", "You've been warned"));
         }
         return notificationsData;
     }

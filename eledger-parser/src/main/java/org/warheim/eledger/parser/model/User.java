@@ -13,6 +13,10 @@ public class User implements Serializable, Comparable<User> {
     private String name;
     private transient String pass; //do not serialize this field
 
+    public String getFullname() {
+        return name;
+    }
+    
     public String getName() {
         return name;
     }

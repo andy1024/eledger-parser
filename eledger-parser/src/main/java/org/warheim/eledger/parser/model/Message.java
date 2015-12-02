@@ -15,15 +15,24 @@ public class Message implements Serializable, Comparable<Message> {
     private String recipients;
     private String date;
     private String content;
+    //private transient User user;
 
-    public Message(String id, String title, String sender, String recipients, String date, String content) {
+    public Message(String id, String title, String sender, String recipients, String date, String content
+            //, User user
+    ) 
+    {
         this.id = id;
         this.title = title;
         this.sender = sender;
         this.recipients = recipients;
         this.date = date;
         this.content = content;
+        //this.user = user;
     }
+    
+//    public User getUser() {
+//        return user;
+//    }
 
     public String getId() {
         return id;
@@ -77,6 +86,15 @@ public class Message implements Serializable, Comparable<Message> {
     public int hashCode() {
         int hash = 3;
         hash = 79 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+    
+    //hashcode built on non-key fields
+    public int flatCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.content);
+        hash = 17 * hash + Objects.hashCode(this.sender);
+        hash = 17 * hash + Objects.hashCode(this.title);
         return hash;
     }
 
