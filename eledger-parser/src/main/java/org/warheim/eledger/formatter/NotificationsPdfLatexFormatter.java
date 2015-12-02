@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.SimpleDoc;
+import static org.warheim.eledger.formatter.LatexEscaper.escape;
 import org.warheim.eledger.parser.Config;
 import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;
@@ -96,7 +97,7 @@ public class NotificationsPdfLatexFormatter implements Formatter {
                     if (!firstSubject) {
                         addSeparator(str, SepType.THIN);
                     }
-                    str.append("\\textbf{").append(subject.getName()).append("}\n");
+                    str.append("\\textbf{").append(escape(subject.getName())).append("}\n");
                     str.append("\\newline\n");
                     Set<InfoOnSubject> list = userNotifications.getInfoForSubject(subject);
                     if (list!=null) {
@@ -112,7 +113,7 @@ public class NotificationsPdfLatexFormatter implements Formatter {
                                     break;
                             }
                             
-                            str.append("\\textsl{\\textsf{\\small{").append(info.getDate()).append("}}} ").append(info.getContent())
+                            str.append("\\textsl{\\textsf{\\small{").append(info.getDate()).append("}}} ").append(escape(info.getContent()))
                                .append("\n");
                             str.append("\\newline\n");
                             firstInfo = false;
@@ -123,6 +124,7 @@ public class NotificationsPdfLatexFormatter implements Formatter {
                 if (!firstSubject) { //there were some tasks in the output, draw separator
                     addSeparator(str, SepType.THIN);
                 }
+                //TODO: handle message combination if more than one user is supposed to receive it
                 //messages section
                 boolean firstMessage = true;
                 for (String msgId: userNotifications.getMessageIDs()) {
@@ -133,19 +135,19 @@ public class NotificationsPdfLatexFormatter implements Formatter {
                     str.append("\\Letter"); //letter icon
                     str.append("\\textsl{\\textsf{\\small{").append(msg.getDate()).append("}}} ");
                     str.append("\\textsl{\\small{").append(msg.getSender()).append("}} ");
-                    str.append("\\textsf{").append(msg.getTitle()).append("} ");
+                    str.append("\\textsf{").append(escape(msg.getTitle())).append("} ");
                     if (Config.get(Config.KEY_MULTIPLE_RECIPIENTS).equals(msg.getRecipients())) {
                         str.append("$\\infty$ ");
                     } else {
-                        str.append("\\textsl{").append(msg.getRecipients()).append("} ");
+                        str.append("\\textsl{").append(escape(msg.getRecipients())).append("} ");
                     }
                     
                     if (maxContentLength!=null && msg.getContent().length()>maxContentLength) {
-                    str.append(msg.getContent().substring(0, maxContentLength))
+                    str.append(escape(msg.getContent().substring(0, maxContentLength)))
                        .append("...")
                        .append("\n");
                     } else {
-                    str.append(msg.getContent())
+                    str.append(escape(msg.getContent()))
                        .append("\n");
                     }
                     str.append("\\newline\n");
