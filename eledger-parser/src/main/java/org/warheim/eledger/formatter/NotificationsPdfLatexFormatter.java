@@ -15,6 +15,7 @@ import javax.print.DocFlavor;
 import javax.print.SimpleDoc;
 import static org.warheim.eledger.formatter.LatexEscaper.escape;
 import org.warheim.eledger.parser.Config;
+import static org.warheim.eledger.parser.NDCombiner.combine;
 import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;
 import org.warheim.eledger.parser.model.NotificationsData;
@@ -84,13 +85,16 @@ public class NotificationsPdfLatexFormatter implements Formatter {
         if (notificationsData!=null) {
             boolean firstUser = true;
             for (User user: notificationsData.getUsers()) {
+                UserNotifications userNotifications = notificationsData.getNotificationsForUser(user);
+                if (userNotifications.isEmpty()) {
+                    continue;
+                }
                 if (!firstUser) {
                     addSeparator(str, SepType.NORMAL);
                 }
                 str.append("\\Info"); //man icon
                 str.append("\\textbf{\\textsf{").append(user.getName()).append("}}\n");
                 str.append("\\newline");
-                UserNotifications userNotifications = notificationsData.getNotificationsForUser(user);
                 //tasks and tests combined section
                 boolean firstSubject = true;
                 for (Subject subject: userNotifications.getInfoSubjects()) {
@@ -187,6 +191,8 @@ public class NotificationsPdfLatexFormatter implements Formatter {
     
     @Override
     public Doc getDocument() throws FormattingException {
+        //combine common messages:
+        setModel(combine(notificationsData));
         File tempFile;
         Doc myDoc;
         try {
