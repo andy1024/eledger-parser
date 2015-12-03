@@ -46,7 +46,7 @@ class MessageForUsers {
     }
 }
 
-public class NDCombiner {
+public class NotificationsDataCombiner {
     public static NotificationsData combine(NotificationsData src) {
         NotificationsData nd = new NotificationsData();
         Map<Integer, MessageForUsers> mm = new HashMap<>();

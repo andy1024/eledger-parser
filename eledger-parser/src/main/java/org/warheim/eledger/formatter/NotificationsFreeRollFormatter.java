@@ -10,7 +10,7 @@ import javax.print.DocFlavor;
 import javax.print.SimpleDoc;
 import static org.warheim.eledger.formatter.LatexEscaper.escape;
 import org.warheim.eledger.parser.Config;
-import static org.warheim.eledger.parser.NDCombiner.combine;
+import static org.warheim.eledger.parser.NotificationsDataCombiner.combine;
 import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;
 import org.warheim.eledger.parser.model.NotificationsData;

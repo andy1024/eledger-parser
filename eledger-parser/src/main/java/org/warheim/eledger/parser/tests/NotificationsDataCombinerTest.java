@@ -1,6 +1,6 @@
 package org.warheim.eledger.parser.tests;
 
-import static org.warheim.eledger.parser.NDCombiner.combine;
+import static org.warheim.eledger.parser.NotificationsDataCombiner.combine;
 import org.warheim.eledger.parser.model.MockData;
 import org.warheim.eledger.parser.model.NotificationsData;
 
