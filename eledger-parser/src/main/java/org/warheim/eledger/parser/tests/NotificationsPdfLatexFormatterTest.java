@@ -11,7 +11,7 @@ import org.warheim.eledger.parser.model.NotificationsData;
 public class NotificationsPdfLatexFormatterTest {
 
     public static void main(String... args) throws Exception {
-        NotificationsData nd = MockData.createTestData(3);
+        NotificationsData nd = MockData.createTestData(4);
         NotificationsPdfLatexFormatter fmt = new NotificationsPdfLatexFormatter();
         fmt.setModel(nd);
         fmt.getDocument();

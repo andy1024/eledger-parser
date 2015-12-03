@@ -6,6 +6,6 @@ package org.warheim.eledger.formatter;
  */
 public class LatexEscaper {
     public static String escape(String input) {
-        return input.replaceAll("&", "\\&");
+        return input.replaceAll("\\&", "\\\\&");
     }
 }
