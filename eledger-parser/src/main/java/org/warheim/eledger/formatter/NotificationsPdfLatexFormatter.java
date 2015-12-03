@@ -3,26 +3,17 @@ package org.warheim.eledger.formatter;
 import org.warheim.print.FormattingException;
 import org.warheim.print.Formatter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.SimpleDoc;
 import static org.warheim.eledger.formatter.LatexEscaper.escape;
 import org.warheim.eledger.parser.Config;
-import static org.warheim.eledger.parser.NDCombiner.combine;
 import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;
-import org.warheim.eledger.parser.model.NotificationsData;
 import org.warheim.eledger.parser.model.Subject;
 import org.warheim.eledger.parser.model.User;
 import org.warheim.eledger.parser.model.UserNotifications;
-import org.warheim.print.FormattableModel;
 
 /**
  * Notifications formatter that uses external PdfLaTeX installation
@@ -30,9 +21,8 @@ import org.warheim.print.FormattableModel;
  *
  * @author andy
  */
-public class NotificationsPdfLatexFormatter implements Formatter {
+public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatter implements Formatter {
 
-    protected NotificationsData notificationsData;
     //values with defaults
     protected String fontSize="5pt";
     protected String width="54mm";
@@ -44,8 +34,12 @@ public class NotificationsPdfLatexFormatter implements Formatter {
     protected String internalVerticalMargin="0.8cm";
     protected String strech="0.5";
     protected String languagePackage="polski";
+    
+    protected Integer maxContentLength;
 
-    public NotificationsPdfLatexFormatter() {}
+    public NotificationsPdfLatexFormatter() {
+        maxContentLength = Config.getInt(Config.KEY_MAX_MSG_CONTENT_LENGTH);
+    }
 
     /*
     public NotificationsPdfLatexFormatter(UserNotifications notificationsData, String fontSize, String width, 
@@ -62,11 +56,8 @@ public class NotificationsPdfLatexFormatter implements Formatter {
         this.internalVerticalMargin = internalVerticalMargin;
     }*/
     
-    enum SepType {
-        THIN, NORMAL, BOLD
-    }
-    
-    private void addSeparator(StringBuilder str, SepType sepType) {
+    @Override
+    protected void addSeparator(StringBuilder str, SepType sepType) {
         switch (sepType) {
             case THIN : str.append("\\makebox[\\linewidth]{\\rule{\\paperwidth}{0.4pt}}\n");
                 break;
@@ -77,144 +68,46 @@ public class NotificationsPdfLatexFormatter implements Formatter {
         }
         str.append("\\newline\n");
     }
+    //TODO: implement some kind of translation dictionary to shorten common subject names and other repetitive elements
     
     @Override
-    public String format() {
-        StringBuilder str = new StringBuilder();
-        Integer maxContentLength = Config.getInt(Config.KEY_MAX_MSG_CONTENT_LENGTH);
-        if (notificationsData!=null) {
-            boolean firstUser = true;
-            for (User user: notificationsData.getUsers()) {
-                UserNotifications userNotifications = notificationsData.getNotificationsForUser(user);
-                if (userNotifications.isEmpty()) {
-                    continue;
-                }
-                if (!firstUser) {
-                    addSeparator(str, SepType.NORMAL);
-                }
-                str.append("\\Info "); //man icon
-                str.append("\\textbf{\\textsf{").append(user.getFullname()).append("}}\n");
-                str.append("\\newline");
-                //tasks and tests combined section
-                boolean firstSubject = true;
-                for (Subject subject: userNotifications.getInfoSubjects()) {
-                    if (!firstSubject) {
-                        addSeparator(str, SepType.THIN);
-                    }
-                    str.append("\\textbf{").append(escape(subject.getName())).append("}\n");
-                    str.append("\\newline\n");
-                    Set<InfoOnSubject> list = userNotifications.getInfoForSubject(subject);
-                    if (list!=null) {
-                        boolean firstInfo = true;
-                        for (InfoOnSubject info: list) {
-                            if (!firstInfo) {
-                                str.append("\n");
-                            }
-                            switch (info.getType()) {
-                                case TASK: str.append("\\Writinghand"); //writing hand icon
-                                    break;
-                                case TEST: str.append("\\Clocklogo"); //clock icon
-                                    break;
-                            }
-                            
-                            str.append("\\textsl{\\textsf{\\small{").append(info.getDate()).append("}}} ").append(escape(info.getContent()))
-                               .append("\n");
-                            str.append("\\newline\n");
-                            firstInfo = false;
-                        }
-                    }
-                    firstSubject=false;
-                }
-                if (!firstSubject) { //there were some tasks in the output, draw separator
-                    addSeparator(str, SepType.THIN);
-                }
-                //messages section
-                boolean firstMessage = true;
-                for (String msgId: userNotifications.getMessageIDs()) {
-                    if (!firstMessage) {
-                        addSeparator(str, SepType.THIN);
-                    }
-                    Message msg = userNotifications.getMessage(msgId);
-                    str.append("\\Letter"); //letter icon
-                    str.append("\\textsl{\\textsf{\\small{").append(msg.getDate()).append("}}} ");
-                    str.append("\\textsl{\\small{").append(msg.getSender()).append("}} ");
-                    str.append("\\textsf{").append(escape(msg.getTitle())).append("} ");
-                    if (Config.get(Config.KEY_MULTIPLE_RECIPIENTS).equals(msg.getRecipients())) {
-                        str.append("$\\infty$ ");
-                    } else {
-                        str.append("\\textsl{").append(escape(msg.getRecipients())).append("} ");
-                    }
-                    
-                    if (maxContentLength!=null && msg.getContent().length()>maxContentLength) {
-                    str.append(escape(msg.getContent().substring(0, maxContentLength)))
-                       .append("...")
-                       .append("\n");
-                    } else {
-                    str.append(escape(msg.getContent()))
-                       .append("\n");
-                    }
-                    str.append("\\newline\n");
-                    firstMessage = false;
-                }
-                firstUser = false;
-            }
-        }
-        return str.toString();
+    protected void makeHeader(StringBuilder str) throws FormattingException {
+        str.append("\\documentclass{article}\n");
+        str.append("\\usepackage{geometry}\n");
+        str.append("\\geometry{paperheight=\\maxdimen,paperwidth=" + width
+                + ",left=" + left + ",right=" + right + ",top=" + top + ",bottom=" + bottom +"}\n");
+        str.append("\\usepackage[utf8]{inputenc}\n");
+        str.append("\\usepackage{" + languagePackage + "}\n");
+        str.append("\\usepackage{setspace}\n");
+        str.append("\\usepackage{marvosym}\n");
+        str.append("\\setstretch{" + strech + "}\n");
+        str.append("\\begin{document}\n");
+        str.append("\\setbox0=\\vbox{\n");
+        str.append("\\setlength\\parindent{0pt}\n");
     }
 
-    protected File prepareTex() throws IOException {
+    @Override
+    protected void makeFooter(StringBuilder str) throws FormattingException {
+        str.append("}\n");
+        str.append("\\dimen0=\\dp0\n");
+        str.append("\\pdfpageheight=\\dimexpr\\ht0+" + internalVerticalMargin +"\\relax\n");
+        str.append("\\ifdim\\pdfpageheight<" + minimalHeight + " \\pdfpageheight=" + minimalHeight + " \\fi\n");
+        str.append("\\unvbox0\\kern-\\dimen0\n");
+        str.append("\\end{document}\n");
+    }
+
+    @Override
+    protected String prepareSourceDocument(StringBuilder str) throws IOException, FormattingException, InterruptedException {
         File tempFile = File.createTempFile(this.getClass().getName(), ".tex"); 
         try (PrintWriter pw = new PrintWriter(tempFile, "UTF-8")) {
-            pw.println("\\documentclass{article}");
-            pw.println("\\usepackage{geometry}");
-            pw.println("\\geometry{paperheight=\\maxdimen,paperwidth=" + width
-                    + ",left=" + left + ",right=" + right + ",top=" + top + ",bottom=" + bottom +"}");
-            pw.println("\\usepackage[utf8]{inputenc}");
-            pw.println("\\usepackage{" + languagePackage + "}");
-            pw.println("\\usepackage{setspace}");
-            pw.println("\\usepackage{marvosym}");
-            pw.println("\\setstretch{" + strech + "}");
-            pw.println("\\begin{document}");
-            pw.println("\\setbox0=\\vbox{");
-            pw.println("\\setlength\\parindent{0pt}");
-            pw.println(format());
-            pw.println("}");
-            pw.println("\\dimen0=\\dp0");
-            pw.println("\\pdfpageheight=\\dimexpr\\ht0+" + internalVerticalMargin +"\\relax");
-            pw.println("\\ifdim\\pdfpageheight<" + minimalHeight + " \\pdfpageheight=" + minimalHeight + " \\fi");
-            pw.println("\\unvbox0\\kern-\\dimen0");
-            pw.println("\\end{document}");
+            pw.println(str.toString());
         }
-        return tempFile;
-   }
+        Process p = Runtime.getRuntime().exec("pdflatex -output-directory /tmp " + tempFile.getAbsolutePath());
+        p.waitFor(60, TimeUnit.SECONDS);
+        String outname = tempFile.getPath().replace(".tex", ".pdf");
+        return outname;
+    }
     
-    @Override
-    public Doc getDocument() throws FormattingException {
-        //combine common messages:
-        setModel(combine(notificationsData));
-        File tempFile;
-        Doc myDoc;
-        try {
-            tempFile = prepareTex();
-            Process p = Runtime.getRuntime().exec("pdflatex -output-directory /tmp " + tempFile.getAbsolutePath());
-            p.waitFor(60, TimeUnit.SECONDS);
-            String outname = tempFile.getPath().replace(".tex", ".pdf");
-            System.err.println(outname);
-            FileInputStream psStream = null;
-            psStream = new FileInputStream(outname);
-            DocFlavor psInFormat = DocFlavor.INPUT_STREAM.AUTOSENSE;
-            myDoc = new SimpleDoc(psStream, psInFormat, null);  
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(NotificationsPdfLatexFormatter.class.getName()).log(Level.SEVERE, null, ex);
-            throw new FormattingException(ex);
-        }
-        return myDoc;
-    }
-
-    public NotificationsData getMmap() {
-        return notificationsData;
-    }
-
     public String getFontSize() {
         return fontSize;
     }
@@ -296,10 +189,54 @@ public class NotificationsPdfLatexFormatter implements Formatter {
     }
 
     @Override
-    public void setModel(FormattableModel model) {
-        this.notificationsData = (NotificationsData) model;
+    protected void putUser(StringBuilder str, User user) {
+        str.append("\\Info "); //man icon
+        str.append("\\textbf{\\textsf{").append(user.getFullname()).append("}}\n");
+        str.append("\\newline");
     }
-    
-    
+
+    @Override
+    protected void putSubject(StringBuilder str, Subject subject) {
+        str.append("\\textbf{").append(escape(subject.getName())).append("}\n");
+        str.append("\\newline\n");
+    }
+
+    @Override
+    protected void putInfoOnSubject(StringBuilder str, InfoOnSubject info) {
+        switch (info.getType()) {
+            case TASK: str.append("\\Writinghand"); //writing hand icon
+                break;
+            case TEST: str.append("\\Clocklogo"); //clock icon
+                break;
+        }
+
+        str.append("\\textsl{\\textsf{\\small{").append(info.getDate()).append("}}} ").append(escape(info.getContent()))
+           .append("\n");
+        str.append("\\newline\n");
+    }
+
+    @Override
+    protected void putMessage(StringBuilder str, Message msg) {
+        str.append("\\Letter"); //letter icon
+        str.append("\\textsl{\\textsf{\\small{").append(msg.getDate()).append("}}} ");
+        str.append("\\textsl{\\small{").append(msg.getSender()).append("}} ");
+        str.append("\\textsf{").append(escape(msg.getTitle())).append("} ");
+        if (Config.get(Config.KEY_MULTIPLE_RECIPIENTS).equals(msg.getRecipients())) {
+            str.append("$\\infty$ ");
+        } else {
+            str.append("\\textsl{").append(escape(msg.getRecipients())).append("} ");
+        }
+
+        if (maxContentLength!=null && msg.getContent().length()>maxContentLength) {
+        str.append(escape(msg.getContent().substring(0, maxContentLength)))
+           .append("...")
+           .append("\n");
+        } else {
+        str.append(escape(msg.getContent()))
+           .append("\n");
+        }
+        str.append("\\newline\n");
+    }
+
     
 }

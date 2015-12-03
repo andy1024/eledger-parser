@@ -17,14 +17,14 @@ import org.warheim.print.Printer;
 public class PdfLatexPrinterTest {
     public static void main(String... args) throws Exception {
         final String text = "Let me inform you, that you have some surplus money on your account";
-        Formatter fmt = new NotificationsPdfLatexFormatter() {
-            @Override
-            public String format() {
-                return text;
-            }
-        };
-        Doc doc = fmt.getDocument();
-        Printer pr = new Printer("650Brother_QL-710W", doc);
-        pr.print();
+//        Formatter fmt = new NotificationsPdfLatexFormatter() {
+//            @Override
+//            public String format() {
+//                return text;
+//            }
+//        };
+//        Doc doc = fmt.getDocument();
+//        Printer pr = new Printer("650Brother_QL-710W", doc);
+//        pr.print();
     }
 }

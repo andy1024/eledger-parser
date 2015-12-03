@@ -11,7 +11,5 @@ public interface Formatter {
     
     public void setModel(FormattableModel model);
     
-    public abstract String format();
-    
     public abstract Doc getDocument() throws FormattingException;
 }
