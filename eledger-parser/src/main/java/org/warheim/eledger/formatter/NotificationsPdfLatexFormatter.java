@@ -5,7 +5,6 @@ import org.warheim.print.Formatter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import static org.warheim.eledger.formatter.LatexEscaper.escape;
 import org.warheim.eledger.parser.Config;
@@ -13,7 +12,6 @@ import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;
 import org.warheim.eledger.parser.model.Subject;
 import org.warheim.eledger.parser.model.User;
-import org.warheim.eledger.parser.model.UserNotifications;
 
 /**
  * Notifications formatter that uses external PdfLaTeX installation
@@ -74,13 +72,17 @@ public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatt
     protected void makeHeader(StringBuilder str) throws FormattingException {
         str.append("\\documentclass{article}\n");
         str.append("\\usepackage{geometry}\n");
-        str.append("\\geometry{paperheight=\\maxdimen,paperwidth=" + width
-                + ",left=" + left + ",right=" + right + ",top=" + top + ",bottom=" + bottom +"}\n");
+        str.append("\\geometry{paperheight=\\maxdimen,paperwidth=").append(width)
+                .append(",left=").append(left)
+                .append(",right=").append(right)
+                .append(",top=").append(top)
+                .append(",bottom=").append(bottom)
+                .append("\n");
         str.append("\\usepackage[utf8]{inputenc}\n");
-        str.append("\\usepackage{" + languagePackage + "}\n");
+        str.append("\\usepackage{").append(languagePackage).append("}\n");
         str.append("\\usepackage{setspace}\n");
         str.append("\\usepackage{marvosym}\n");
-        str.append("\\setstretch{" + strech + "}\n");
+        str.append("\\setstretch{").append(strech).append("}\n");
         str.append("\\begin{document}\n");
         str.append("\\setbox0=\\vbox{\n");
         str.append("\\setlength\\parindent{0pt}\n");
@@ -90,8 +92,8 @@ public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatt
     protected void makeFooter(StringBuilder str) throws FormattingException {
         str.append("}\n");
         str.append("\\dimen0=\\dp0\n");
-        str.append("\\pdfpageheight=\\dimexpr\\ht0+" + internalVerticalMargin +"\\relax\n");
-        str.append("\\ifdim\\pdfpageheight<" + minimalHeight + " \\pdfpageheight=" + minimalHeight + " \\fi\n");
+        str.append("\\pdfpageheight=\\dimexpr\\ht0+").append(internalVerticalMargin).append("\\relax\n");
+        str.append("\\ifdim\\pdfpageheight<").append(minimalHeight).append("\\pdfpageheight=").append(minimalHeight).append(" \\fi\n");
         str.append("\\unvbox0\\kern-\\dimen0\n");
         str.append("\\end{document}\n");
     }
