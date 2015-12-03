@@ -92,8 +92,8 @@ public class NotificationsPdfLatexFormatter implements Formatter {
                 if (!firstUser) {
                     addSeparator(str, SepType.NORMAL);
                 }
-                str.append("\\Info"); //man icon
-                str.append("\\textbf{\\textsf{").append(user.getName()).append("}}\n");
+                str.append("\\Info "); //man icon
+                str.append("\\textbf{\\textsf{").append(user.getFullname()).append("}}\n");
                 str.append("\\newline");
                 //tasks and tests combined section
                 boolean firstSubject = true;
@@ -128,7 +128,6 @@ public class NotificationsPdfLatexFormatter implements Formatter {
                 if (!firstSubject) { //there were some tasks in the output, draw separator
                     addSeparator(str, SepType.THIN);
                 }
-                //TODO: handle message combination if more than one user is supposed to receive it
                 //messages section
                 boolean firstMessage = true;
                 for (String msgId: userNotifications.getMessageIDs()) {

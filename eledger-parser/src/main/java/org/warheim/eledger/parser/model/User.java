@@ -9,12 +9,16 @@ import java.util.Objects;
  * @author andy
  */
 public class User implements Serializable, Comparable<User> {
-    //TODO: add full name as an option
-    private String name;
-    private transient String pass; //do not serialize this field
+    final private String name;
+    final private transient String pass; //do not serialize this field
+    private transient String fullname = null;
 
     public String getFullname() {
-        return name;
+        return (fullname!=null?fullname:name);
+    }
+    
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
     
     public String getName() {

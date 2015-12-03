@@ -146,6 +146,9 @@ public class Config {
         for (String authChunk: authChunks) {
             String[] els = authChunk.split(",");
             User user = new User(els[0], els[1]);
+            if (els.length>2) {
+                user.setFullname(els[2]);
+            }
             users.add(user);
         }
         return users;
