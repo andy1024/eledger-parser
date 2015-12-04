@@ -29,8 +29,6 @@ import org.warheim.formatter.Formatter;
 import org.warheim.outputsink.Output;
 import org.warheim.outputsink.OutputException;
 
-//TODO: add support for more output destinations
-
 /**
  *
  * @author andy
