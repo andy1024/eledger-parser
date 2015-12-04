@@ -84,8 +84,8 @@ Event fired: app.event.finish
    - [ ] support more sources
    - [x] make more formatters
    - [ ] make more output destinations
-   -   [x] e-mail 
-   -   [ ] alphanumerical LCD screen connected to a Raspberry PI)
+      - [x] e-mail 
+      - [ ] alphanumerical LCD screen connected to a Raspberry PI)
    - [x] support custom configuration
    - [x] handle logouts
    - [x] add custom user name support
