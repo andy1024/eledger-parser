@@ -1,4 +1,4 @@
-package org.warheim.print;
+package org.warheim.outputsink.printer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,21 +14,35 @@ import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
-import org.warheim.eledger.formatter.NotificationsPdfLatexFormatter;
+import org.warheim.outputsink.Output;
 
 /**
  * Java printing support class
  *
  * @author andy
  */
-public class Printer {
-    protected String printerID;
+public class Printer implements Output {
+    protected String outputDeviceID;
     protected File inputFile;
     protected Doc doc;
 
-    public Printer(String printerID, File inputFile) {
-        this.printerID = printerID;
+    @Override
+    public void setOutputDeviceID(String outputDeviceID) {
+        this.outputDeviceID = outputDeviceID;
+    }
+
+    @Override
+    public void setInputFile(File inputFile) {
         this.inputFile = inputFile;
+    }
+    
+    public Printer(String printerID, File inputFile) {
+        this.outputDeviceID = printerID;
+        this.inputFile = inputFile;
+    }
+    
+    public Printer() {
+        
     }
     
     protected Doc getDocument() throws PrintingException {
@@ -39,13 +53,17 @@ public class Printer {
             DocFlavor psInFormat = DocFlavor.INPUT_STREAM.AUTOSENSE;
             myDoc = new SimpleDoc(psStream, psInFormat, null);  
         } catch (IOException ex) {
-            Logger.getLogger(NotificationsPdfLatexFormatter.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Printer.class.getName()).log(Level.SEVERE, null, ex);
             throw new PrintingException(ex);
         }
         return myDoc;
     }
     
-    public boolean print() throws PrintingException {
+    @Override
+    public boolean process() throws PrintingException {
+        if (outputDeviceID==null||outputDeviceID.isEmpty()||inputFile==null) {
+            throw new PrintingException("No printer or inputFile defined");
+        }
         DocFlavor psInFormat = DocFlavor.INPUT_STREAM.AUTOSENSE;
         PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
 
@@ -55,7 +73,7 @@ public class Printer {
         for (PrintService service : services) {
             String svcName = service.toString();           
             System.out.println("service found: "+svcName);
-            if (svcName.contains(printerID)) {
+            if (svcName.contains(outputDeviceID)) {
                 myPrinter = service;
                 System.out.println("Searched for printer found: "+svcName);
                 break;

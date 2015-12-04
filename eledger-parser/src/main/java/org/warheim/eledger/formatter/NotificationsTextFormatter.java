@@ -10,7 +10,7 @@ import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;
 import org.warheim.eledger.parser.model.Subject;
 import org.warheim.eledger.parser.model.User;
-import org.warheim.print.FormattingException;
+import org.warheim.formatter.FormattingException;
 
 /**
  *

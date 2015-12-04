@@ -30,7 +30,7 @@ public class ObjectFactory {
         try {
             clazz = Class.forName(clazzStr);
             object = clazz.newInstance();
-            Logger.getLogger(ObjectFactory.class.getName()).log(Level.INFO, null, clazz);
+            Logger.getLogger(ObjectFactory.class.getName()).log(Level.INFO, clazz.toString());
             if (str.length>1) { //check if there are any arguments
                 String argumentList = str[1];
                 String[] args = argumentList.split(",");
@@ -40,8 +40,9 @@ public class ObjectFactory {
                     String key = elements[0];
                     String value = elements[1];
                     String setterName = getSetterName(key);
-                    Logger.getLogger(ObjectFactory.class.getName()).log(Level.INFO, null, 
+                    Logger.getLogger(ObjectFactory.class.getName()).log(Level.INFO,  
                         setterName + "(" + value + ")");
+                    //System.out.println(setterName + "(" + value + ")");
                     attrMap.put(key, value);
                     Method m = clazz.getMethod(setterName, String.class);
                     m.invoke(object, value);

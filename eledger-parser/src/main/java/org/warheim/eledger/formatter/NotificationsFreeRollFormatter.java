@@ -13,9 +13,9 @@ import org.warheim.eledger.parser.model.NotificationsData;
 import org.warheim.eledger.parser.model.Subject;
 import org.warheim.eledger.parser.model.User;
 import org.warheim.eledger.parser.model.UserNotifications;
-import org.warheim.print.FormattableModel;
-import org.warheim.print.Formatter;
-import org.warheim.print.FormattingException;
+import org.warheim.formatter.FormattableModel;
+import org.warheim.formatter.Formatter;
+import org.warheim.formatter.FormattingException;
 
 /**
  *

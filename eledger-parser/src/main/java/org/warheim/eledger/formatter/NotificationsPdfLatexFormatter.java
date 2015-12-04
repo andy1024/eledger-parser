@@ -1,7 +1,7 @@
 package org.warheim.eledger.formatter;
 
-import org.warheim.print.FormattingException;
-import org.warheim.print.Formatter;
+import org.warheim.formatter.FormattingException;
+import org.warheim.formatter.Formatter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -77,7 +77,7 @@ public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatt
                 .append(",right=").append(right)
                 .append(",top=").append(top)
                 .append(",bottom=").append(bottom)
-                .append("\n");
+                .append("}\n");
         str.append("\\usepackage[utf8]{inputenc}\n");
         str.append("\\usepackage{").append(languagePackage).append("}\n");
         str.append("\\usepackage{setspace}\n");

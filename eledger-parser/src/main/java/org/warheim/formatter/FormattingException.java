@@ -1,4 +1,4 @@
-package org.warheim.print;
+package org.warheim.formatter;
 
 /**
  *

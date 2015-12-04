@@ -24,9 +24,10 @@ public class Config {
     public static final String KEY_CUSTOM_CONFIG_FILENAME = "config.custom.filename";
     public static final String KEY_CONFIG_FILENAME = "config.properties";
     public static final String KEY_PRINTER = "sys.output.printer";
+    public static final String KEY_OUTPUT_SINK = "sys.output.sink";
     public static final String KEY_OUTPUT_FORMATTER = "sys.output.formatter";
     public static final String KEY_DEBUG = "sys.debug";
-    public static final String KEY_PRINT = "sys.print";
+    public static final String KEY_OUTPUT = "sys.output";
     public static final String KEY_WAIT_RANDOM_MIN = "web.wait.random.min";
     public static final String KEY_WAIT_RANDOM_MAX = "web.wait.random.max";
     public static final String KEY_WRITE = "sys.write";

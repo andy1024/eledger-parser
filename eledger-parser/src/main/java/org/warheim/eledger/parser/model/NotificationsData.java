@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import org.warheim.print.FormattableModel;
+import org.warheim.formatter.FormattableModel;
 
 /**
  * All data that was scraped from the service is encapsulated in this model object

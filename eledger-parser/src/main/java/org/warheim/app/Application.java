@@ -16,10 +16,9 @@ import org.warheim.di.ObjectFactory;
  * @author andy
  */
 public abstract class Application {
-    protected static final String EVENT_APP_START = "app.event.start";
    
     public Application() {
-        registerEventHandler(EVENT_APP_START, new EventHandler() {
+        registerEventHandler(Event.APP_EVENT_START, new EventHandler() {
 
             @Override
             public void handle() throws EventHandlerException {
@@ -27,7 +26,7 @@ public abstract class Application {
             }
         });
         try {
-            fire("app.event.start");
+            fire(Event.APP_EVENT_START);
         } catch (EventHandlerException ex) {
             Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
         }

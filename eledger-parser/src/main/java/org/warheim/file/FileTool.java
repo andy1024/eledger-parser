@@ -14,8 +14,11 @@ import java.io.PrintWriter;
  */
 public class FileTool {
     public static String readFile(String name) throws FileNotFoundException, IOException {
+        return readFile(new File(name));
+    }
+    public static String readFile(File file) throws FileNotFoundException, IOException {
         String doc;
-        try (BufferedReader br = new BufferedReader(new FileReader(name))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             doc = "";
             while ((line = br.readLine())!=null) {

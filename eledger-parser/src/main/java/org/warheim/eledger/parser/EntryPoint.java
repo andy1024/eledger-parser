@@ -3,11 +3,9 @@ package org.warheim.eledger.parser;
 import java.io.File;
 import org.warheim.eledger.parser.model.SourceType;
 import org.warheim.eledger.parser.model.Source;
-import org.warheim.print.PrintingException;
-import org.warheim.print.Printer;
 import org.warheim.file.FileTool;
 import org.warheim.eledger.web.HttpReqRespHandler;
-import org.warheim.print.FormattingException;
+import org.warheim.formatter.FormattingException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +15,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.warheim.app.Application;
+import org.warheim.app.Event;
 import org.warheim.app.EventHandlerException;
 import org.warheim.di.ObjectCreationException;
 import org.warheim.di.ObjectFactory;
@@ -26,7 +25,9 @@ import org.warheim.eledger.parser.model.User;
 import org.warheim.net.RequestPreparationException;
 import org.warheim.net.ResponseHandlerException;
 import org.warheim.net.WrongStatusException;
-import org.warheim.print.Formatter;
+import org.warheim.formatter.Formatter;
+import org.warheim.outputsink.Output;
+import org.warheim.outputsink.OutputException;
 
 //TODO: add support for more output destinations
 
@@ -48,10 +49,10 @@ public class EntryPoint extends Application {
         Parser parser = null;
         System.out.println(Config.getStoreFileName());
         this.registerEventHandlers(Config.getProperties(), "app.event.");
-        this.fire("app.event.afterConfigRead");
+        this.fire(Event.APP_EVENT_AFTER_CONFIG_READ);
         String debug = Config.get(Config.KEY_DEBUG);
         if ("1".equals(debug)) {
-            this.fire("app.event.beforeServerDataGet");
+            this.fire(Event.APP_EVENT_BEFORE_SERVER_DATA_GET);
             //DEBUG:
             serverResponse.add(
                     new Source(
@@ -60,10 +61,10 @@ public class EntryPoint extends Application {
                         FileTool.readFile("/home/andy/src/eledger-getter/y1")
                     )
             );
-            this.fire("app.event.afterServerDataGet");
-            this.fire("app.event.beforeDataStoreRead");
+            this.fire(Event.APP_EVENT_AFTER_SERVER_DATA_GET);
+            this.fire(Event.APP_EVENT_BEFORE_DATA_STORE_READ);
             diskStore = FileTool.readFile("/home/andy/src/eledger-getter/y0");
-            this.fire("app.event.afterDataStoreRead");
+            this.fire(Event.APP_EVENT_AFTER_DATA_STORE_READ);
             Config.set(Config.KEY_PRINTER, "PDF");
             parser = new Parser(serverResponse, diskStore);
             newData = parser.getNewData();
@@ -74,7 +75,7 @@ public class EntryPoint extends Application {
             newData = mockData;
             parser.buildDataFromServer();
         } else {
-            this.fire("app.event.beforeServerDataGet");
+            this.fire(Event.APP_EVENT_BEFORE_SERVER_DATA_GET);
             Map<User, HttpReqRespHandler> sessions = new HashMap<>();
             for (User user: Config.getUsers()) {
                 try {
@@ -87,26 +88,26 @@ public class EntryPoint extends Application {
                 }
             }
             
-            this.fire("app.event.afterServerDataGet");
-            this.fire("app.event.beforeDataStoreRead");
+            this.fire(Event.APP_EVENT_AFTER_SERVER_DATA_GET);
+            this.fire(Event.APP_EVENT_BEFORE_DATA_STORE_READ);
             try {
                 diskStore = FileTool.readFile(Config.getStoreFileName());
             } catch (FileNotFoundException fnfe) {
                 Logger.getLogger(EntryPoint.class.getName()).log(Level.INFO, "No datastore file, will be created upon exit", fnfe);
                 diskStore = "";
             }
-            this.fire("app.event.afterDataStoreRead");
+            this.fire(Event.APP_EVENT_AFTER_DATA_STORE_READ);
             parser = new Parser(serverResponse, diskStore);
             newData = parser.getNewData();
-            this.fire("app.event.beforeServerMessageContentsGet");
+            this.fire(Event.APP_EVENT_BEFORE_SERVER_MESSAGE_CONTENTS_GET);
             List<Source> messageDataServerResponse = new ArrayList<>();
             for (User user: Config.getUsers()) {
                 try {
                     HttpReqRespHandler h = sessions.get(user);
                     messageDataServerResponse.addAll(h.getMessagesContents(newData.getNotificationsForUser(user).getMessageIDs()));
-                    this.fire("app.event.beforeSingleUserLogout");
+                    this.fire(Event.APP_EVENT_BEFORE_SINGLE_USER_LOGOUT);
                     h.logout();
-                    this.fire("app.event.afterSingleUserLogout");
+                    this.fire(Event.APP_EVENT_AFTER_SINGLE_USER_LOGOUT);
                 } catch (java.io.IOException e) {
                     Logger.getLogger(EntryPoint.class.getName()).log(Level.SEVERE, null, e);
                     System.exit(2);
@@ -115,46 +116,44 @@ public class EntryPoint extends Application {
             
             //add message contents to the list
             parser.supplementDataFromServer(messageDataServerResponse);
-            this.fire("app.event.afterServerMessageContentsGet");
+            this.fire(Event.APP_EVENT_AFTER_SERVER_MESSAGE_CONTENTS_GET);
             
         }
         if (newData==null||newData.isEmpty()) {
             System.out.println("No new data");//System.exit(1);
         } else {
             System.out.println(newData.showAll());
-            boolean printingOk = true;
-            if ("1".equals(Config.get(Config.KEY_PRINT))) {
-                this.fire("app.event.beforeFormatting");
+            boolean outputOk = true;
+            if ("1".equals(Config.get(Config.KEY_OUTPUT))) {
+                this.fire(Event.APP_EVENT_BEFORE_FORMATTING);
                 Formatter formatter = (Formatter)ObjectFactory.createObject(Config.get(Config.KEY_OUTPUT_FORMATTER));
                 formatter.setModel(newData);
                 File formattedDocumentFile = formatter.getFormattedDocumentFile();
-                this.fire("app.event.afterFormatting");
-                Printer printer = new Printer(
-                        Config.get(Config.KEY_PRINTER),
-                        formattedDocumentFile
-                );
+                this.fire(Event.APP_EVENT_AFTER_FORMATTING);
+                Output output = (Output)ObjectFactory.createObject(Config.get(Config.KEY_OUTPUT_SINK));
+                output.setInputFile(formattedDocumentFile);
 
                 try {
-                    this.fire("app.event.beforePrinting");
-                    printer.print();
-                    this.fire("app.event.afterPrinting");
-                } catch (PrintingException ex) {
+                    this.fire(Event.APP_EVENT_BEFORE_OUTPUT);
+                    output.process();
+                    this.fire(Event.APP_EVENT_AFTER_OUTPUT);
+                } catch (OutputException ex) {
                     Logger.getLogger(EntryPoint.class.getName()).log(Level.SEVERE, null, ex);
-                    printingOk = false;
+                    outputOk = false;
                 }
             }
-            if (printingOk&&"1".equals(Config.get(Config.KEY_WRITE))) {
+            if (outputOk&&"1".equals(Config.get(Config.KEY_WRITE))) {
                 try {
                     if (parser!=null) {
-                        this.fire("app.event.beforeDataStoreWrite");
+                        this.fire(Event.APP_EVENT_BEFORE_DATA_STORE_WRITE);
                         parser.storeUpdatedDiskMap();
-                        this.fire("app.event.afterDataStoreWrite");
-                    }//only update map if printing went fine
+                        this.fire(Event.APP_EVENT_AFTER_DATA_STORE_WRITE);
+                    }//only update map if output (printing) went fine
                 } catch (IOException ex) {
                     Logger.getLogger(EntryPoint.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
-        this.fire("app.event.finish");
+        this.fire(Event.APP_EVENT_FINISH);
     }
 }
