@@ -28,6 +28,8 @@ import org.warheim.net.ResponseHandlerException;
 import org.warheim.net.WrongStatusException;
 import org.warheim.print.Formatter;
 
+//TODO: add support for more output destinations
+
 /**
  *
  * @author andy
