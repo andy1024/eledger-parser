@@ -29,6 +29,8 @@ import org.warheim.formatter.Formatter;
 import org.warheim.outputsink.Output;
 import org.warheim.outputsink.OutputException;
 
+//TODO: switch from system.output mess to proper logging
+
 /**
  *
  * @author andy

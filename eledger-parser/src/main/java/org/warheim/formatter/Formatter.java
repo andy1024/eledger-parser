@@ -11,5 +11,5 @@ public interface Formatter {
     
     public void setModel(FormattableModel model);
     
-    public abstract File getFormattedDocumentFile() throws FormattingException;
+    public File getFormattedDocumentFile() throws FormattingException;
 }
