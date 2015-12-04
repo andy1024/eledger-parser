@@ -21,6 +21,7 @@ School e-ledger extracting and parsing tool to be used by parents in order to mo
 
    - sys.output.printer : enter your CUPS printer name here
    - sys.output.formatter : enter your formatter class of choice here (implements Formatter interface)
+   - sys.output.sink : enter output sink of your choice (implements Output interface)
    - web.baseUrl : base URL of your e-ledger website
    - auth.data : semicolon separated list of authentication pairs "user,pass" or "user,pass,fullname", where fullname is user-friendly name
 
@@ -82,7 +83,9 @@ Event fired: app.event.finish
 
    - [ ] support more sources
    - [x] make more formatters
-   - [ ] make more output destinations (such as an e-mail or alphanumerical LCD screen connected to a Raspberry PI)
+   - [ ] make more output destinations
+      - [x] e-mail 
+      - [ ] alphanumerical LCD screen connected to a Raspberry PI)
    - [x] support custom configuration
    - [x] handle logouts
    - [x] add custom user name support
