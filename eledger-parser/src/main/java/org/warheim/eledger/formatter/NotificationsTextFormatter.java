@@ -32,12 +32,12 @@ public class NotificationsTextFormatter extends NotificationsFreeRollFormatter {
     }
 
     @Override
-    protected String prepareSourceDocument(StringBuilder str) throws IOException, FormattingException, InterruptedException {
+    protected File prepareSourceDocument(StringBuilder str) throws IOException, FormattingException, InterruptedException {
         File tempFile = File.createTempFile(this.getClass().getName(), ".txt"); 
         try (PrintWriter pw = new PrintWriter(tempFile, "UTF-8")) {
             pw.println(str.toString());
         }
-        return tempFile.getPath();
+        return tempFile;
     }
 
     @Override

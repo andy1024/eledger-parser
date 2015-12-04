@@ -1,5 +1,6 @@
 package org.warheim.eledger.parser;
 
+import java.io.File;
 import org.warheim.eledger.parser.model.SourceType;
 import org.warheim.eledger.parser.model.Source;
 import org.warheim.print.PrintingException;
@@ -15,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.print.Doc;
 import org.warheim.app.Application;
 import org.warheim.app.EventHandlerException;
 import org.warheim.di.ObjectCreationException;
@@ -127,11 +127,11 @@ public class EntryPoint extends Application {
                 this.fire("app.event.beforeFormatting");
                 Formatter formatter = (Formatter)ObjectFactory.createObject(Config.get(Config.KEY_OUTPUT_FORMATTER));
                 formatter.setModel(newData);
-                Doc formattedDocument = formatter.getDocument();
+                File formattedDocumentFile = formatter.getFormattedDocumentFile();
                 this.fire("app.event.afterFormatting");
                 Printer printer = new Printer(
                         Config.get(Config.KEY_PRINTER),
-                        formattedDocument
+                        formattedDocumentFile
                 );
 
                 try {

@@ -1,14 +1,10 @@
 package org.warheim.eledger.formatter;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.SimpleDoc;
-import static org.warheim.eledger.formatter.LatexEscaper.escape;
 import org.warheim.eledger.parser.Config;
 import static org.warheim.eledger.parser.NotificationsDataCombiner.combine;
 import org.warheim.eledger.parser.model.InfoOnSubject;
@@ -39,33 +35,26 @@ public abstract class NotificationsFreeRollFormatter implements Formatter {
         this.notificationsData = (NotificationsData) model;
     }
 
-    //TODO: move printable document code handler to .print module
-    //TODO: make formatter output-agnostic
     @Override
-    public Doc getDocument() throws FormattingException {
+    public File getFormattedDocumentFile() throws FormattingException {
         //combine common messages:
         setModel(combine(notificationsData));
-        String outname;
-        Doc myDoc;
+        File outFile;
         try {
             StringBuilder str = new StringBuilder();
             makeHeader(str);
             makeBody(str);
             makeFooter(str);
-            outname = prepareSourceDocument(str);
-            System.out.println(outname);
-            FileInputStream psStream = null;
-            psStream = new FileInputStream(outname);
-            DocFlavor psInFormat = DocFlavor.INPUT_STREAM.AUTOSENSE;
-            myDoc = new SimpleDoc(psStream, psInFormat, null);  
+            outFile = prepareSourceDocument(str);
+            System.out.println(outFile);
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(NotificationsPdfLatexFormatter.class.getName()).log(Level.SEVERE, null, ex);
             throw new FormattingException(ex);
         }
-        return myDoc;
+        return outFile;
     }
 
-    protected abstract String prepareSourceDocument(StringBuilder str) throws IOException, FormattingException, InterruptedException;
+    protected abstract File prepareSourceDocument(StringBuilder str) throws IOException, FormattingException, InterruptedException;
     
     protected abstract void putUser(StringBuilder str, User user);
 

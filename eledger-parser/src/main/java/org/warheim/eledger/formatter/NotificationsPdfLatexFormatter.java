@@ -99,7 +99,7 @@ public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatt
     }
 
     @Override
-    protected String prepareSourceDocument(StringBuilder str) throws IOException, FormattingException, InterruptedException {
+    protected File prepareSourceDocument(StringBuilder str) throws IOException, FormattingException, InterruptedException {
         File tempFile = File.createTempFile(this.getClass().getName(), ".tex"); 
         try (PrintWriter pw = new PrintWriter(tempFile, "UTF-8")) {
             pw.println(str.toString());
@@ -107,7 +107,7 @@ public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatt
         Process p = Runtime.getRuntime().exec("pdflatex -output-directory /tmp " + tempFile.getAbsolutePath());
         p.waitFor(60, TimeUnit.SECONDS);
         String outname = tempFile.getPath().replace(".tex", ".pdf");
-        return outname;
+        return new File(outname);
     }
     
     public String getFontSize() {

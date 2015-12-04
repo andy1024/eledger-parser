@@ -14,6 +14,6 @@ public class NotificationsPdfLatexFormatterTest {
         NotificationsData nd = MockData.createTestData(4);
         NotificationsPdfLatexFormatter fmt = new NotificationsPdfLatexFormatter();
         fmt.setModel(nd);
-        fmt.getDocument();
+        fmt.getFormattedDocumentFile();
     }
 }

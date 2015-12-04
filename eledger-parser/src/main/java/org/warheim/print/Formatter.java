@@ -1,6 +1,6 @@
 package org.warheim.print;
 
-import javax.print.Doc;
+import java.io.File;
 
 /**
  * Formatter interface
@@ -11,5 +11,5 @@ public interface Formatter {
     
     public void setModel(FormattableModel model);
     
-    public abstract Doc getDocument() throws FormattingException;
+    public abstract File getFormattedDocumentFile() throws FormattingException;
 }

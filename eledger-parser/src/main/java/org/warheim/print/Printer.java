@@ -1,5 +1,8 @@
 package org.warheim.print;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.Doc;
@@ -8,8 +11,10 @@ import javax.print.DocPrintJob;
 import javax.print.PrintException;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
+import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
+import org.warheim.eledger.formatter.NotificationsPdfLatexFormatter;
 
 /**
  * Java printing support class
@@ -18,11 +23,26 @@ import javax.print.attribute.PrintRequestAttributeSet;
  */
 public class Printer {
     protected String printerID;
+    protected File inputFile;
     protected Doc doc;
 
-    public Printer(String printerID, Doc doc) {
+    public Printer(String printerID, File inputFile) {
         this.printerID = printerID;
-        this.doc = doc;
+        this.inputFile = inputFile;
+    }
+    
+    protected Doc getDocument() throws PrintingException {
+        Doc myDoc;
+        try {
+            FileInputStream psStream = null;
+            psStream = new FileInputStream(inputFile);
+            DocFlavor psInFormat = DocFlavor.INPUT_STREAM.AUTOSENSE;
+            myDoc = new SimpleDoc(psStream, psInFormat, null);  
+        } catch (IOException ex) {
+            Logger.getLogger(NotificationsPdfLatexFormatter.class.getName()).log(Level.SEVERE, null, ex);
+            throw new PrintingException(ex);
+        }
+        return myDoc;
     }
     
     public boolean print() throws PrintingException {
@@ -42,7 +62,8 @@ public class Printer {
             }
         }
          
-        if (myPrinter != null) {            
+        if (myPrinter != null) {
+            doc = getDocument();
             DocPrintJob job = myPrinter.createPrintJob();
             try {
                 job.print(doc, aset);

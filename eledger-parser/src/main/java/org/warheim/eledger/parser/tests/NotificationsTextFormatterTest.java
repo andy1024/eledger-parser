@@ -14,6 +14,6 @@ public class NotificationsTextFormatterTest {
         NotificationsData nd = MockData.createTestData(4);
         NotificationsTextFormatter fmt = new NotificationsTextFormatter();
         fmt.setModel(nd);
-        fmt.getDocument();
+        fmt.getFormattedDocumentFile();
     }
 }
