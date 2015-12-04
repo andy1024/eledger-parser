@@ -39,6 +39,8 @@ public abstract class NotificationsFreeRollFormatter implements Formatter {
         this.notificationsData = (NotificationsData) model;
     }
 
+    //TODO: move printable document code handler to .print module
+    //TODO: make formatter output-agnostic
     @Override
     public Doc getDocument() throws FormattingException {
         //combine common messages:
