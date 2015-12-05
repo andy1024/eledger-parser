@@ -21,14 +21,7 @@ import org.warheim.formatter.FormattingException;
  *
  * @author andy
  */
-public abstract class NotificationsFreeRollFormatter implements Formatter {
-    protected NotificationsData notificationsData;
-
-    public NotificationsData getMmap() {
-        return notificationsData;
-    }
-    
-    protected abstract void addSeparator(StringBuilder str, SepType sepType);
+public abstract class NotificationsFreeRollFormatter extends NotificationsTaggedFormatter {
 
     @Override
     public void setModel(FormattableModel model) {
@@ -53,8 +46,57 @@ public abstract class NotificationsFreeRollFormatter implements Formatter {
         }
         return outFile;
     }
+    
+    @Override
+    protected void startUserTag(StringBuilder str, User user, int count) {
+        if (count>0) {
+            addSeparator(str, SepType.NORMAL);
+        }
+        putUser(str, user);
+    }
+    
+    @Override
+    protected void endUserTag(StringBuilder str, User user, int count) {
+    }
 
-    protected abstract File prepareSourceDocument(StringBuilder str) throws IOException, FormattingException, InterruptedException;
+    @Override
+    protected void startSubjectTag(StringBuilder str, Subject subject, int count) {
+        if (count>0) {
+            addSeparator(str, SepType.THIN);
+        }
+        putSubject(str, subject);
+    }
+    
+    @Override
+    protected void endSubjectTag(StringBuilder str, Subject subject, int count) {
+    }
+    
+    @Override
+    protected void startInfoOnSubjectTag(StringBuilder str, InfoOnSubject info, int count) {
+        if (count>0) {
+            str.append("\n");
+        }
+        putInfoOnSubject(str, info);
+    }
+    
+    @Override
+    protected void endInfoOnSubjectTag(StringBuilder str, InfoOnSubject info, int count) {
+    }
+    
+    @Override
+    protected void startMessageTag(StringBuilder str, Message msg, int count) {
+        if (count>0) {
+            addSeparator(str, SepType.THIN);
+        }
+        putMessage(str, msg);
+    }
+    
+    @Override
+    protected void endMessageTag(StringBuilder str, Message msg, int count) {
+        
+    }
+
+    //protected File prepareSourceDocument(StringBuilder str) throws IOException, FormattingException, InterruptedException;
     
     protected abstract void putUser(StringBuilder str, User user);
 
@@ -63,63 +105,5 @@ public abstract class NotificationsFreeRollFormatter implements Formatter {
     protected abstract void putInfoOnSubject(StringBuilder str, InfoOnSubject info);
     
     protected abstract void putMessage(StringBuilder str, Message msg);
-    
-    protected void makeBody(StringBuilder str) throws FormattingException {
-        Integer maxContentLength = Config.getInt(Config.KEY_MAX_MSG_CONTENT_LENGTH);
-        if (notificationsData!=null) {
-            boolean firstUser = true;
-            for (User user: notificationsData.getUsers()) {
-                UserNotifications userNotifications = notificationsData.getNotificationsForUser(user);
-                if (userNotifications.isEmpty()) {
-                    continue;
-                }
-                if (!firstUser) {
-                    addSeparator(str, SepType.NORMAL);
-                }
-                putUser(str, user);
-                //tasks and tests combined section
-                boolean firstSubject = true;
-                for (Subject subject: userNotifications.getInfoSubjects()) {
-                    if (!firstSubject) {
-                        addSeparator(str, SepType.THIN);
-                    }
-                    putSubject(str, subject);
-                    Set<InfoOnSubject> list = userNotifications.getInfoForSubject(subject);
-                    if (list!=null) {
-                        boolean firstInfo = true;
-                        for (InfoOnSubject info: list) {
-                            if (!firstInfo) {
-                                str.append("\n");
-                            }
-                            putInfoOnSubject(str, info);
-                            firstInfo = false;
-                        }
-                    }
-                    firstSubject=false;
-                }
-                if (!firstSubject
-                        && !userNotifications.getInfoSubjects().isEmpty()
-                        ) { //there were some tasks in the output, draw separator
-                    addSeparator(str, SepType.THIN);
-                }
-                //messages section
-                boolean firstMessage = true;
-                for (String msgId: userNotifications.getMessageIDs()) {
-                    if (!firstMessage) {
-                        addSeparator(str, SepType.THIN);
-                    }
-                    Message msg = userNotifications.getMessage(msgId);
-                    putMessage(str, msg);
-                    firstMessage = false;
-                }
-                firstUser = false;
-            }
-        }
-
-    }
-    
-    protected abstract void makeHeader(StringBuilder str) throws FormattingException;
-    
-    protected abstract void makeFooter(StringBuilder str) throws FormattingException;
 
 }
