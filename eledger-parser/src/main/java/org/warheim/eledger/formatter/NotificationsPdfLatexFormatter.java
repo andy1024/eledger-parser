@@ -33,17 +33,23 @@ public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatt
     protected String strech="0.5";
     protected String languagePackage="polski";
     
-    //TODO: make this an outside-accessible property of this specific formatter
-    protected Integer maxContentLength;
+    protected Integer maxContentLength = 256;
+
+    public void setMaxContentLength(Integer maxContentLength) {
+        this.maxContentLength = maxContentLength;
+    }
+
+    public void setMaxContentLength(String sMaxContentLength) {
+        setMaxContentLength(Integer.parseInt(sMaxContentLength));
+    }
 
     public NotificationsPdfLatexFormatter() {
-        maxContentLength = Config.getInt(Config.KEY_MAX_MSG_CONTENT_LENGTH);
     }
 
     @Override
     protected void addSeparator(StringBuilder str, SepType sepType) {
         switch (sepType) {
-            case THIN : str.append("\\makebox[\\linewidth]{\\rule{\\paperwidth}{0.4pt}}\n");
+            case THIN : str.append("\\makebox[\\linewidth]{\\rule{\\paperwidth}{0.3pt}}\n");
                 break;
             case NORMAL : str.append("\\makebox[\\linewidth]{\\rule{\\paperwidth}{0.5pt}}\n");
                 break;
