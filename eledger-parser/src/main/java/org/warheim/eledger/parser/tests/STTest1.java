@@ -5,7 +5,6 @@
  */
 package org.warheim.eledger.parser.tests;
 
-import java.util.Arrays;
 //import org.stringtemplate.v4.ST;
 
 /**

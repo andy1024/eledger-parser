@@ -16,10 +16,21 @@ import java.util.logging.Logger;
  */
 public class ObjectFactory {
 
+    /**
+     * returns setter method name for the specified key
+     * @param key
+     * @return 
+     */
     public static String getSetterName(String key) {
         return "set" + key.substring(0, 1).toUpperCase() + key.substring(1);
     }
 
+    /**
+     * creates object based on String parameter
+     * @param objDef object specification: package.class(parameter=value[,parameter=value])
+     * @return
+     * @throws ObjectCreationException 
+     */
     public static Object createObject(String objDef) throws ObjectCreationException {
         Logger.getLogger(ObjectFactory.class.getName()).log(Level.INFO, null, "DI-Constructing object");
         Object object = null;

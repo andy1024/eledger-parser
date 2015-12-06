@@ -19,7 +19,7 @@ import org.warheim.eledger.parser.model.UserNotifications;
 public class Parser {
     private final List<Source> sources;
     private final String diskStore;
-    private NotificationsData dataFromServer = new NotificationsData();
+    private final NotificationsData dataFromServer = new NotificationsData();
     private NotificationsData dataFromDisk = new NotificationsData();
     
     protected void setDataFromDisk(NotificationsData notificationsData) {
@@ -38,7 +38,7 @@ public class Parser {
                 un = new UserNotifications();
                 dataFromServer.putUserNotifications(source.getUser(), un);
             }
-            SourcePageParser spp = null;
+            SourcePageParser spp;
             switch (source.getType()) {
                 case TASKLIST:
                     spp = new TaskListParser();
@@ -49,6 +49,8 @@ public class Parser {
                 case MESSAGES:
                     spp = new MessageListParser();
                     break;
+                default:
+                    spp = null;
                     
             }
             if (spp!=null) {
@@ -63,7 +65,6 @@ public class Parser {
             try {
                 if (SourceType.MESSAGE_CONTENT.equals(src.getType())) {
                     UserNotifications un = dataFromServer.getNotificationsForUser(src.getUser());
-                    Message msg = un.getMessage(src.getId());
                     SourcePageParser spp = new MessageParser();
                     spp.parse(src, un);
                 }

@@ -6,9 +6,7 @@
 package org.warheim.eledger.parser.tests;
 
 import java.io.IOException;
-import org.apache.http.HttpMessage;
 import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
 import org.warheim.net.RequestPreparationException;
 import org.warheim.net.ResponseHandlerException;
 import org.warheim.net.ReturnWebPageCall;

@@ -20,7 +20,7 @@ import java.util.TreeSet;
 public class UserNotifications implements Serializable {
     private Map<Subject, Set<Task>> taskMap = new HashMap<>();
     private Map<Subject, Set<Test>> testMap = new HashMap<>();
-    private Map<String, Message> msgMap = new HashMap<>();
+    private final Map<String, Message> msgMap = new HashMap<>();
     
     public UserNotifications() {
         
@@ -155,43 +155,50 @@ public class UserNotifications implements Serializable {
     }
 
     public String showAll() {
-        String retval = "";
+        StringBuilder retval = new StringBuilder();
         if (!taskMap.isEmpty()) {
-            retval += "Tasks\n";
+            retval.append("Tasks\n");
             for (Subject subject: taskMap.keySet()) {
-                retval += subject.getName() + "\n";
+                retval.append(subject.getName()).append("\n");
                 Set<Task> list = getTasksForSubject(subject);
                 if (list!=null) {
                     for (Task task: list) {
-                        retval += " " + task.getDate() + " " + task.getContent() + "\n";
+                        retval.append(" ").append(task.getDate())
+                              .append(" ").append(task.getContent())
+                              .append("\n");
                     }
                 }
             }
         }
         if (!testMap.isEmpty()) {
-            retval += "Tests\n";
+            retval.append("Tests\n");
             for (Subject subject: testMap.keySet()) {
-                retval += subject.getName() + "\n";
+                retval.append(subject.getName()).append("\n");
                 Set<Test> list = getTestsForSubject(subject);
                 if (list!=null) {
                     for (Test test: list) {
-                        retval += " " + test.getDate() + " " + test.getContent() + "\n";
+                        retval.append(" ").append(test.getDate())
+                              .append(" ").append(test.getContent())
+                              .append("\n");
                     }
                 }
             }
         }
         if (!msgMap.isEmpty()) {
-            retval += "Messages\n";
+            retval.append("Messages\n");
             Collection<Message> list = getMessages();
             if (list!=null) {
                 for (Message msg: list) {
-                retval += " " + msg.getId() + " " + msg.getTitle() + 
-                          " " + msg.getDate() +
-                          " " + msg.getSender() + " " + msg.getRecipients() +
-                          " " + msg.getContent() + "\n";
+                retval.append(" ").append(msg.getId())
+                      .append(" ").append(msg.getTitle())
+                      .append(" ").append(msg.getDate())
+                      .append(" ").append(msg.getSender())
+                      .append(" ").append(msg.getRecipients())
+                      .append(" ").append(msg.getContent())
+                      .append("\n");
                 }
             }
         }
-        return retval;
+        return retval.toString();
     }
 }

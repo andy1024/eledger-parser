@@ -36,10 +36,9 @@ public class MailSender implements Output {
     /**
      * Send email using GMail SMTP server.
      *
-     * @param username GMail username
-     * @param password GMail password
-     * @param recipientEmail TO recipient
-     * @param ccEmail CC recipient. Can be empty if there is no CC recipient
+     * @param user GMail username
+     * @param pass GMail password
+     * @param recipient TO recipient
      * @param title title of the message
      * @param message message to be sent
      * @throws AddressException if the email address parse failed
@@ -128,7 +127,7 @@ public class MailSender implements Output {
 
     @Override
     public boolean process() throws OutputException {
-        String contents = "";
+        String contents;
         try {
             contents = FileTool.readFile(inputFile);
             send(contents);

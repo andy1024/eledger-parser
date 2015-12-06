@@ -75,7 +75,7 @@ public class Config {
     public static final String KEY_MAX_MSG_CONTENT_LENGTH = "msg.maxMessageContentLength";
     
     private Properties props;
-    private static Config instance = null;
+    private static Config instance = new Config();
 
     private Config() {
         init();
@@ -127,7 +127,6 @@ public class Config {
     }
 
     public static final Integer getInt(String key) {
-        Config inst = inst();
         String val = get(key);
         if (val==null) {
             return null;

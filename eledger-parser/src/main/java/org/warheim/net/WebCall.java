@@ -25,10 +25,11 @@ public abstract class WebCall {
     protected String requestType;
     
     public HttpUriRequest createRequest(String url) {
-        if (REQUEST_TYPE_GET.equals(requestType)) {
-            return new HttpGet(url);
-        } else if (REQUEST_TYPE_POST.equals(requestType)) {
-            return new HttpPost(url);
+        if (null != requestType) switch (requestType) {
+            case REQUEST_TYPE_GET:
+                return new HttpGet(url);
+            case REQUEST_TYPE_POST:
+                return new HttpPost(url);
         }
         return null;
     }

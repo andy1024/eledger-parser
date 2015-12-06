@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import org.warheim.eledger.parser.model.Message;
-import org.warheim.eledger.parser.model.MockData;
 import org.warheim.eledger.parser.model.NotificationsData;
 import org.warheim.eledger.parser.model.User;
 import org.warheim.eledger.parser.model.UserNotifications;
@@ -33,16 +32,16 @@ class MessageForUsers {
         return users;
     }
     String getUserNames() {
-        String retval = "";
+        StringBuilder retval = new StringBuilder();
         boolean first = true;
         for (User user: users) {
             if (!first) {
-                retval += ";";
+                retval.append(";");
             }
-            retval += user.getFullname();
+            retval.append(user.getFullname());
             first = false;
         }
-        return retval;
+        return retval.toString();
     }
 }
 

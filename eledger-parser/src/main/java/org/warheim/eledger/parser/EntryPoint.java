@@ -30,12 +30,12 @@ import org.warheim.outputsink.Output;
 import org.warheim.outputsink.OutputException;
 
 //TODO: switch from system.output mess to proper logging
-
 /**
  *
  * @author andy
  */
 public class EntryPoint extends Application {
+
     public static void main(String... args) throws Exception {
         Application app = new EntryPoint();
         app.run();
@@ -51,86 +51,88 @@ public class EntryPoint extends Application {
         this.registerEventHandlers(Config.getProperties(), "app.event.");
         this.fire(Event.APP_EVENT_AFTER_CONFIG_READ);
         String debug = Config.get(Config.KEY_DEBUG);
-        if ("1".equals(debug)) {
-            this.fire(Event.APP_EVENT_BEFORE_SERVER_DATA_GET);
-            //DEBUG:
-            serverResponse.add(
-                    new Source(
-                        new User("testowy", "***"), 
-                        SourceType.TASKLIST, 
-                        FileTool.readFile("/home/andy/src/eledger-getter/y1")
-                    )
-            );
-            this.fire(Event.APP_EVENT_AFTER_SERVER_DATA_GET);
-            this.fire(Event.APP_EVENT_BEFORE_DATA_STORE_READ);
-            diskStore = FileTool.readFile("/home/andy/src/eledger-getter/y0");
-            this.fire(Event.APP_EVENT_AFTER_DATA_STORE_READ);
-            Config.set(Config.KEY_PRINTER, "PDF");
-            parser = new Parser(serverResponse, diskStore);
-            newData = parser.getNewData();
-        } else if ("2".equals(debug)) {
-            final NotificationsData mockData = MockData.createTestData(0);
-            parser = new Parser(new ArrayList<Source>(), diskStore);//mocked
-            parser.setDataFromDisk(mockData);
-            newData = mockData;
-            parser.buildDataFromServer();
-        } else {
-            this.fire(Event.APP_EVENT_BEFORE_SERVER_DATA_GET);
-            Map<User, HttpReqRespHandler> sessions = new HashMap<>();
-            for (User user: Config.getUsers()) {
-                try {
-                    HttpReqRespHandler h = new HttpReqRespHandler(user);
-                    serverResponse.addAll(h.getAllData());
-                    sessions.put(user, h);
-                } catch (java.io.IOException e) {
-                    Logger.getLogger(EntryPoint.class.getName()).log(Level.SEVERE, null, e);
-                    System.exit(2);
-                }
+        if (null != debug) {
+            switch (debug) {
+                case "1":
+                    this.fire(Event.APP_EVENT_BEFORE_SERVER_DATA_GET);
+                    //DEBUG:
+                    serverResponse.add(
+                            new Source(
+                                    new User("testowy", "***"),
+                                    SourceType.TASKLIST,
+                                    FileTool.readFile("/home/andy/src/eledger-getter/y1")
+                            )
+                    );
+                    this.fire(Event.APP_EVENT_AFTER_SERVER_DATA_GET);
+                    this.fire(Event.APP_EVENT_BEFORE_DATA_STORE_READ);
+                    diskStore = FileTool.readFile("/home/andy/src/eledger-getter/y0");
+                    this.fire(Event.APP_EVENT_AFTER_DATA_STORE_READ);
+                    Config.set(Config.KEY_PRINTER, "PDF");
+                    parser = new Parser(serverResponse, diskStore);
+                    newData = parser.getNewData();
+                    break;
+                case "2":
+                    final NotificationsData mockData = MockData.createTestData(0);
+                    parser = new Parser(new ArrayList<Source>(), diskStore);//mocked
+                    parser.setDataFromDisk(mockData);
+                    newData = mockData;
+                    parser.buildDataFromServer();
+                    break;
+                default:
+                    this.fire(Event.APP_EVENT_BEFORE_SERVER_DATA_GET);
+                    Map<User, HttpReqRespHandler> sessions = new HashMap<>();
+                    for (User user : Config.getUsers()) {
+                        try {
+                            HttpReqRespHandler h = new HttpReqRespHandler(user);
+                            serverResponse.addAll(h.getAllData());
+                            sessions.put(user, h);
+                        } catch (java.io.IOException e) {
+                            Logger.getLogger(EntryPoint.class.getName()).log(Level.SEVERE, null, e);
+                            System.exit(2);
+                        }
+                    }
+                    this.fire(Event.APP_EVENT_AFTER_SERVER_DATA_GET);
+                    this.fire(Event.APP_EVENT_BEFORE_DATA_STORE_READ);
+                    try {
+                        diskStore = FileTool.readFile(Config.getStoreFileName());
+                    } catch (FileNotFoundException fnfe) {
+                        Logger.getLogger(EntryPoint.class.getName()).log(Level.INFO, "No datastore file, will be created upon exit", fnfe);
+                        diskStore = "";
+                    }
+                    this.fire(Event.APP_EVENT_AFTER_DATA_STORE_READ);
+                    parser = new Parser(serverResponse, diskStore);
+                    newData = parser.getNewData();
+                    this.fire(Event.APP_EVENT_BEFORE_SERVER_MESSAGE_CONTENTS_GET);
+                    List<Source> messageDataServerResponse = new ArrayList<>();
+                    for (User user : Config.getUsers()) {
+                        try {
+                            HttpReqRespHandler h = sessions.get(user);
+                            messageDataServerResponse.addAll(h.getMessagesContents(newData.getNotificationsForUser(user).getMessageIDs()));
+                            this.fire(Event.APP_EVENT_BEFORE_SINGLE_USER_LOGOUT);
+                            h.logout();
+                            this.fire(Event.APP_EVENT_AFTER_SINGLE_USER_LOGOUT);
+                        } catch (java.io.IOException e) {
+                            Logger.getLogger(EntryPoint.class.getName()).log(Level.SEVERE, null, e);
+                            System.exit(2);
+                        }
+                    }   //add message contents to the list
+                    parser.supplementDataFromServer(messageDataServerResponse);
+                    this.fire(Event.APP_EVENT_AFTER_SERVER_MESSAGE_CONTENTS_GET);
+                    break;
             }
-            
-            this.fire(Event.APP_EVENT_AFTER_SERVER_DATA_GET);
-            this.fire(Event.APP_EVENT_BEFORE_DATA_STORE_READ);
-            try {
-                diskStore = FileTool.readFile(Config.getStoreFileName());
-            } catch (FileNotFoundException fnfe) {
-                Logger.getLogger(EntryPoint.class.getName()).log(Level.INFO, "No datastore file, will be created upon exit", fnfe);
-                diskStore = "";
-            }
-            this.fire(Event.APP_EVENT_AFTER_DATA_STORE_READ);
-            parser = new Parser(serverResponse, diskStore);
-            newData = parser.getNewData();
-            this.fire(Event.APP_EVENT_BEFORE_SERVER_MESSAGE_CONTENTS_GET);
-            List<Source> messageDataServerResponse = new ArrayList<>();
-            for (User user: Config.getUsers()) {
-                try {
-                    HttpReqRespHandler h = sessions.get(user);
-                    messageDataServerResponse.addAll(h.getMessagesContents(newData.getNotificationsForUser(user).getMessageIDs()));
-                    this.fire(Event.APP_EVENT_BEFORE_SINGLE_USER_LOGOUT);
-                    h.logout();
-                    this.fire(Event.APP_EVENT_AFTER_SINGLE_USER_LOGOUT);
-                } catch (java.io.IOException e) {
-                    Logger.getLogger(EntryPoint.class.getName()).log(Level.SEVERE, null, e);
-                    System.exit(2);
-                }
-            }
-            
-            //add message contents to the list
-            parser.supplementDataFromServer(messageDataServerResponse);
-            this.fire(Event.APP_EVENT_AFTER_SERVER_MESSAGE_CONTENTS_GET);
-            
         }
-        if (newData==null||newData.isEmpty()) {
+        if (newData == null || newData.isEmpty()) {
             System.out.println("No new data");//System.exit(1);
         } else {
             System.out.println(newData.showAll());
             boolean outputOk = true;
             if ("1".equals(Config.get(Config.KEY_OUTPUT))) {
                 this.fire(Event.APP_EVENT_BEFORE_FORMATTING);
-                Formatter formatter = (Formatter)ObjectFactory.createObject(Config.get(Config.KEY_OUTPUT_FORMATTER));
+                Formatter formatter = (Formatter) ObjectFactory.createObject(Config.get(Config.KEY_OUTPUT_FORMATTER));
                 formatter.setModel(newData);
                 File formattedDocumentFile = formatter.getFormattedDocumentFile();
                 this.fire(Event.APP_EVENT_AFTER_FORMATTING);
-                Output output = (Output)ObjectFactory.createObject(Config.get(Config.KEY_OUTPUT_SINK));
+                Output output = (Output) ObjectFactory.createObject(Config.get(Config.KEY_OUTPUT_SINK));
                 output.setInputFile(formattedDocumentFile);
 
                 try {
@@ -142,9 +144,9 @@ public class EntryPoint extends Application {
                     outputOk = false;
                 }
             }
-            if (outputOk&&"1".equals(Config.get(Config.KEY_WRITE))) {
+            if (outputOk && "1".equals(Config.get(Config.KEY_WRITE))) {
                 try {
-                    if (parser!=null) {
+                    if (parser != null) {
                         this.fire(Event.APP_EVENT_BEFORE_DATA_STORE_WRITE);
                         parser.storeUpdatedDiskMap();
                         this.fire(Event.APP_EVENT_AFTER_DATA_STORE_WRITE);

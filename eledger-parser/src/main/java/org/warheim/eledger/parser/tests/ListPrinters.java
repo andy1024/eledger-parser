@@ -5,25 +5,22 @@
  */
 package org.warheim.eledger.parser.tests;
 
-import java.io.*;
 import javax.print.*;
-import javax.print.attribute.*; 
-import javax.print.attribute.standard.*; 
-  
-public class ListPrinters{
-  
-   public static void main(String args[]){
-       
-        DocFlavor psInFormat = DocFlavor.INPUT_STREAM.AUTOSENSE;
+import javax.print.attribute.*;
+
+public class ListPrinters {
+
+    public static void main(String args[]) {
+
         PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
         //PrintService[] services = PrintServiceLookup.lookupPrintServices(psInFormat, aset);
         PrintService[] services = PrintServiceLookup.lookupPrintServices(null, aset);
-         
+
         // this step is necessary because I have several printers configured
         PrintService myPrinter = null;
-        for (int i = 0; i < services.length; i++){
-            String svcName = services[i].toString();           
-            System.out.println("service found: "+svcName);
+        for (PrintService service : services) {
+            String svcName = service.toString();
+            System.out.println("service found: " + svcName);
         }
-   }
+    }
 }

@@ -17,15 +17,14 @@ public class FileTool {
         return readFile(new File(name));
     }
     public static String readFile(File file) throws FileNotFoundException, IOException {
-        String doc;
+        StringBuilder doc = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            doc = "";
             while ((line = br.readLine())!=null) {
-                doc+=line;
+                doc.append(line);
             }
         }
-        return doc;
+        return doc.toString();
     }
     public static void writeFile(String name, Object obj) throws FileNotFoundException, IOException {
         try (PrintWriter pw = new PrintWriter(name)) {

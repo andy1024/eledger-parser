@@ -17,7 +17,7 @@ import org.warheim.formatter.FormattableModel;
  * @author andy
  */
 public class NotificationsData implements Serializable, FormattableModel  {
-    private Map<User, UserNotifications> dataMap = new HashMap<>();
+    private final Map<User, UserNotifications> dataMap = new HashMap<>();
     
     public boolean isEmpty() {
         return dataMap.isEmpty();
@@ -59,15 +59,15 @@ public class NotificationsData implements Serializable, FormattableModel  {
     }
 
      public String showAll() {
-        String retval = "All notifications\n";
+        StringBuilder retval = new StringBuilder("All notifications\n");
         for (User user: getUsers()) {
             UserNotifications un = getNotificationsForUser(user);
             if (un!=null) {
-                retval += "for user: " + user.getName() + "\n";
-                retval += un.showAll();
+                retval.append("for user: ").append(user.getName()).append("\n");
+                retval.append(un.showAll());
             }
         }
-        return retval;
+        return retval.toString();
     }
      
     public static NotificationsData getDataDiff(NotificationsData dataFromServer, NotificationsData dataFromDisk) {

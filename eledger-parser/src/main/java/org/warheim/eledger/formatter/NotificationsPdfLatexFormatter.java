@@ -19,7 +19,7 @@ import org.warheim.eledger.parser.model.User;
  *
  * @author andy
  */
-public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatter implements Formatter {
+public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatter {
 
     //values with defaults
     protected String fontSize="5pt";

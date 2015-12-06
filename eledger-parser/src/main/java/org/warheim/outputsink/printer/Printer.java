@@ -48,7 +48,7 @@ public class Printer implements Output {
     protected Doc getDocument() throws PrintingException {
         Doc myDoc;
         try {
-            FileInputStream psStream = null;
+            FileInputStream psStream;
             psStream = new FileInputStream(inputFile);
             DocFlavor psInFormat = DocFlavor.INPUT_STREAM.AUTOSENSE;
             myDoc = new SimpleDoc(psStream, psInFormat, null);  

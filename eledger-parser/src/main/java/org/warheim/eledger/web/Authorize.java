@@ -32,12 +32,12 @@ import static org.warheim.eledger.web.HttpReqRespHandler.addExtHeaders;
  */
 public final class Authorize extends WebCall {
 
-    private String username;
-    private String pass;
-    private String destPage;
-    private String origin;
-    private String cookie;
-    private String etag;
+    private final String username;
+    private final String pass;
+    private final String destPage;
+    private final String origin;
+    private final String cookie;
+    private final String etag;
     
     public Authorize(String url, String destPage, String origin, String username, String pass,
         String cookie, String etag) {

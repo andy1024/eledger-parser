@@ -27,8 +27,7 @@ public class HttpClientTest {
      * @throws Exception
      */
     public static final void main(String[] args) throws Exception {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        try {
+        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             HttpGet httpget = new HttpGet("http://httpbin.org/");
             System.out.println("Executing request " + httpget.getRequestLine());
             ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
@@ -46,8 +45,6 @@ public class HttpClientTest {
             String responseBody = httpclient.execute(httpget, responseHandler);
             System.out.println("----------------------------------------");
             System.out.println(responseBody);
-        } finally {
-            httpclient.close();
         }
     }
     

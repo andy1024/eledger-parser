@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.warheim.eledger.parser.Config;
 import static org.warheim.eledger.parser.NotificationsDataCombiner.combine;
 import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;

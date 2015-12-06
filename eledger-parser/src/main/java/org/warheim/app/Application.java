@@ -17,6 +17,9 @@ import org.warheim.di.ObjectFactory;
  */
 public abstract class Application {
    
+    /**
+     * Initializes application with basic event handler
+     */
     public Application() {
         registerEventHandler(Event.APP_EVENT_START, new EventHandler() {
 
@@ -32,6 +35,9 @@ public abstract class Application {
         }
     }
      
+    /**
+     * Event handlers map, customizable by registerEventHandler(s) methods
+     */
     protected Map<String, EventHandler> eventHandlers = new HashMap<>();
     
     public final void fire(String event) throws EventHandlerException {
@@ -66,13 +72,26 @@ public abstract class Application {
         }
     }
     
+    /**
+     * register single event handler
+     * @param event
+     * @param handler 
+     */
     public final void registerEventHandler(String event, EventHandler handler) {
         eventHandlers.put(event, handler);
     }
 
+    /**
+     * unregister single event handler
+     * @param event 
+     */
     public final void unregisterEventHandler(String event) {
         eventHandlers.remove(event);
     }
 
+    /**
+     * main application entry point
+     * @throws Exception 
+     */
     public abstract void run() throws Exception;
 }

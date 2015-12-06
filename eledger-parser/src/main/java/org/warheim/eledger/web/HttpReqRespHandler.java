@@ -61,19 +61,19 @@ public class HttpReqRespHandler {
         Authorize auth = new Authorize(authPage, taskListPage, base, user.getName(), user.getPass(), cookie, etag);
         auth.doCall();
 
-        String taskSourcePage = null;
+        String taskSourcePage;
         GetTasksList taskListGetter = new GetTasksList(taskListPage, cookie, etag);
         taskSourcePage = taskListGetter.doCall();
         retval.add(new Source(user, SourceType.TASKLIST, taskSourcePage));
         sleep();
         
-        String testSourcePage = null;
+        String testSourcePage;
         GetTestsList testListGetter = new GetTestsList(testListPage, cookie, etag);
         testSourcePage = testListGetter.doCall();
         retval.add(new Source(user, SourceType.TESTLIST, testSourcePage));
   
         sleep();
-        String messagesSourcePage = null;
+        String messagesSourcePage;
         GetMessagesList messageListGetter = new GetMessagesList(messagesListPage, cookie, etag);
         messagesSourcePage = messageListGetter.doCall();
         retval.add(new Source(user, SourceType.MESSAGES, messagesSourcePage));
@@ -88,7 +88,7 @@ public class HttpReqRespHandler {
         String messageInboxPageUrl = base + "/" + Config.get(Config.KEY_MESSAGES_LIST_PAGE);
         
         for (String msgId: msgIds) {
-            String messagePageResponse = null;
+            String messagePageResponse;
             GetMessage messageGetter = new GetMessage(messagePageUrl, msgId, cookie, etag, messageInboxPageUrl);
             messagePageResponse = messageGetter.doCall();
             retval.add(new Source(user, SourceType.MESSAGE_CONTENT, messagePageResponse, msgId));

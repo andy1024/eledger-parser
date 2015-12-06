@@ -2,19 +2,15 @@ package org.warheim.eledger.formatter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.warheim.eledger.parser.Config;
 import static org.warheim.eledger.parser.NotificationsDataCombiner.combine;
 import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;
 import org.warheim.eledger.parser.model.NotificationsData;
 import org.warheim.eledger.parser.model.Subject;
 import org.warheim.eledger.parser.model.User;
-import org.warheim.eledger.parser.model.UserNotifications;
 import org.warheim.formatter.FormattableModel;
-import org.warheim.formatter.Formatter;
 import org.warheim.formatter.FormattingException;
 
 /**
