@@ -22,19 +22,24 @@
             <version>1.8.3</version>
         </dependency>
         <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>2.4</version>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.4</version>
         </dependency>
         <dependency>
-                <groupId>joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>2.9</version>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.9</version>
         </dependency>
         <dependency>
-                <groupId>javax.mail</groupId>
-                <artifactId>javax.mail-api</artifactId>
-                <version>1.5.4</version>
+            <groupId>com.openpojo</groupId>
+            <artifactId>openpojo</artifactId>
+            <version>0.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+            <version>1.5.4</version>
         </dependency>
         <dependency>
             <groupId>com.sun.mail</groupId>
@@ -59,7 +64,7 @@
             <scope>test</scope>
         </dependency>
 
-<!--        <dependency>
+        <!--        <dependency>
                 <groupId>org.antlr</groupId>
                 <artifactId>ST4</artifactId>
                 <version>4.0.8</version>
@@ -73,10 +78,10 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                    <phase>package</phase>
-                    <goals>
-                       <goal>single</goal>
-                    </goals>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
                     </execution>
                 </executions>
                 <configuration>
@@ -85,8 +90,8 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                        <!-- Jar file entry point -->
-                        <mainClass>org.warheim.eledger.parser.EntryPoint</mainClass>
+                            <!-- Jar file entry point -->
+                            <mainClass>org.warheim.eledger.parser.EntryPoint</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -6,6 +6,8 @@ package org.warheim.di;
  */
 public interface MetaInstruction {
     
+    public void register() throws MetaInstructionException;
+    
     public String execute() throws MetaInstructionException;
     
 }

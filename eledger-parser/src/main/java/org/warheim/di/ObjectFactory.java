@@ -1,8 +1,12 @@
 package org.warheim.di;
 
+import com.openpojo.reflection.PojoClass;
+import com.openpojo.reflection.filters.FilterBasedOnInheritance;
+import com.openpojo.reflection.impl.PojoClassFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,9 +26,22 @@ public class ObjectFactory {
     
     protected static final Map<String, MetaInstruction> metaInstructionHandlers = new HashMap<>();
 
-    //TODO: replace it with some more sophisticated solution like autoregistering of handlers
     static {
-        metaInstructionHandlers.put(MI_TAG_CHARACTER + "CURRENT_DATE" + MI_TAG_CHARACTER, new DateMetaInstruction());
+        List<PojoClass> classes = PojoClassFactory.getPojoClassesRecursively("org.warheim",
+            new FilterBasedOnInheritance(MetaInstruction.class));
+        for (PojoClass pc: classes) {
+            try {
+                MetaInstruction mi = (MetaInstruction)pc.getClazz().newInstance();
+                mi.register();
+            } catch (InstantiationException | IllegalAccessException | MetaInstructionException ex) {
+                logger.error("Meta instruction handler instantiation error", ex);
+            }
+        }
+    }
+    
+    public static void registerMetaInstructionHandler(String key, Class<? extends MetaInstruction> handler) 
+            throws InstantiationException, IllegalAccessException {
+        metaInstructionHandlers.put(key, handler.newInstance());
     }
     
     /**
