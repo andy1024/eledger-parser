@@ -14,6 +14,7 @@ import org.warheim.file.FileTool;
 import org.warheim.outputsink.Output;
 import org.warheim.outputsink.OutputException;
 
+//TODO: implement sending notifications as an attachment
 public class MailSender implements Output {
 
     private String host = "smtp.gmail.com";

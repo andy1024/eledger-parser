@@ -32,7 +32,6 @@ public abstract class Application {
         }
     }
      
-    //TODO: consider changing String to Event interface as a key
     protected Map<String, EventHandler> eventHandlers = new HashMap<>();
     
     public final void fire(String event) throws EventHandlerException {
