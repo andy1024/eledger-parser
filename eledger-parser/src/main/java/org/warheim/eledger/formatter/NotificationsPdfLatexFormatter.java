@@ -1,7 +1,6 @@
 package org.warheim.eledger.formatter;
 
 import org.warheim.formatter.FormattingException;
-import org.warheim.formatter.Formatter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;

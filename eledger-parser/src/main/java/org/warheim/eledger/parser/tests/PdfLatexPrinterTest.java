@@ -5,11 +5,6 @@
  */
 package org.warheim.eledger.parser.tests;
 
-import javax.print.Doc;
-import org.warheim.eledger.formatter.NotificationsPdfLatexFormatter;
-import org.warheim.formatter.Formatter;
-import org.warheim.outputsink.printer.Printer;
-
 /**
  *
  * @author andy

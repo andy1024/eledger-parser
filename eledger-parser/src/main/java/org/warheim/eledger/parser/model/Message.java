@@ -107,10 +107,7 @@ public class Message implements Serializable, Comparable<Message> {
             return false;
         }
         final Message other = (Message) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.id, other.id);
     }
 
     @Override

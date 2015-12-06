@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.security.Security;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.mail.*;
 import javax.mail.internet.*;

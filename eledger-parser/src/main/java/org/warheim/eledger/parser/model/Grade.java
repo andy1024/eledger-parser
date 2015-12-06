@@ -80,10 +80,7 @@ public class Grade implements Serializable, Comparable<Grade> {
         if (!Objects.equals(this.date, other.date)) {
             return false;
         }
-        if (!Objects.equals(this.value, other.value)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.value, other.value);
     }
     
     @Override

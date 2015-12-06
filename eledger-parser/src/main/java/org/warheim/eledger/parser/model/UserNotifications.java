@@ -6,7 +6,6 @@ import com.google.gson.reflect.TypeToken;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -27,16 +26,11 @@ public class UserNotifications implements Serializable {
     }
     
     public boolean isEmpty() {
-        if (
-            taskMap.isEmpty()
+        return taskMap.isEmpty()
                 &&
-            testMap.isEmpty()
+                testMap.isEmpty()
                 &&
-            msgMap.isEmpty()
-            ) {
-            return true;
-        }
-        return false;
+                msgMap.isEmpty();
     }
     
     public Map<Subject, Set<Task>> getTaskMap() {

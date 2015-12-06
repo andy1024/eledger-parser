@@ -38,10 +38,7 @@ public class Task extends InfoOnSubject implements Serializable {
         if (!Objects.equals(this.date, other.date)) {
             return false;
         }
-        if (!Objects.equals(this.content, other.content)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.content, other.content);
     }
     
 }
