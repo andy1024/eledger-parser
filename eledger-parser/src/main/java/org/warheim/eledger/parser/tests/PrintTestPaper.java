@@ -8,8 +8,10 @@ package org.warheim.eledger.parser.tests;
 import java.io.*;
 import javax.print.*;
 import javax.print.attribute.*;
+import org.slf4j.LoggerFactory;
 
 public class PrintTestPaper {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PrintTestPaper.class);
 
     public static void main(String args[]) throws Exception {
 
@@ -24,10 +26,10 @@ public class PrintTestPaper {
         PrintService myPrinter = null;
         for (PrintService service : services) {
             String svcName = service.toString();
-            System.out.println("service found: " + svcName);
+            logger.info("service found: " + svcName);
             if (svcName.contains("Kyocera_Kyocera_FS-1010")) {
                 myPrinter = service;
-                System.out.println("my printer found: " + svcName);
+                logger.info("my printer found: " + svcName);
                 break;
             }
         }
@@ -36,7 +38,7 @@ public class PrintTestPaper {
             DocPrintJob job = myPrinter.createPrintJob();
             job.print(myDoc, aset);
         } else {
-            System.out.println("no printer services found");
+            logger.warn("no printer services found");
         }
     }
 }

@@ -3,8 +3,6 @@ package org.warheim.outputsink.printer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
@@ -14,6 +12,7 @@ import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
+import org.slf4j.LoggerFactory;
 import org.warheim.outputsink.Output;
 
 /**
@@ -22,6 +21,8 @@ import org.warheim.outputsink.Output;
  * @author andy
  */
 public class Printer implements Output {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Printer.class);    
+    
     protected String outputDeviceID;
     protected File inputFile;
     protected Doc doc;
@@ -53,7 +54,7 @@ public class Printer implements Output {
             DocFlavor psInFormat = DocFlavor.INPUT_STREAM.AUTOSENSE;
             myDoc = new SimpleDoc(psStream, psInFormat, null);  
         } catch (IOException ex) {
-            Logger.getLogger(Printer.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error while getting document", ex);
             throw new PrintingException(ex);
         }
         return myDoc;
@@ -72,10 +73,10 @@ public class Printer implements Output {
         PrintService myPrinter = null;
         for (PrintService service : services) {
             String svcName = service.toString();           
-            System.out.println("service found: "+svcName);
+            logger.debug("service found: "+svcName);
             if (svcName.contains(outputDeviceID)) {
                 myPrinter = service;
-                System.out.println("Searched for printer found: "+svcName);
+                logger.info("Searched for printer found: "+svcName);
                 break;
             }
         }
@@ -86,7 +87,7 @@ public class Printer implements Output {
             try {
                 job.print(doc, aset);
             } catch (PrintException ex) {
-                Logger.getLogger(Printer.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error("Error while printing", ex);
                 throw new PrintingException(ex);
             }
         } else {

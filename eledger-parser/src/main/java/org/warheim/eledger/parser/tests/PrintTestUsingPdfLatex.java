@@ -9,8 +9,10 @@ import java.io.*;
 import javax.print.*;
 import javax.print.attribute.*;
 import javax.print.attribute.standard.PrinterResolution;
+import org.slf4j.LoggerFactory;
 
 public class PrintTestUsingPdfLatex {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PrintTestUsingPdfLatex.class);
 
     //5pt, 0.1in 2.0in 0.05in
     public static File prepareTex(String text, String fontSize, String height, String width, String margin) throws IOException {
@@ -34,7 +36,7 @@ public class PrintTestUsingPdfLatex {
         Process p = Runtime.getRuntime().exec("pdflatex -output-directory /tmp " + tempFile.getAbsolutePath());
         p.waitFor();
         String outname = tempFile.getPath().replace(".tex", ".pdf");
-        System.err.println(outname);
+        logger.info(outname);
         FileInputStream psStream;
         psStream = new FileInputStream(outname);
         DocFlavor psInFormat = DocFlavor.INPUT_STREAM.AUTOSENSE;
@@ -48,10 +50,10 @@ public class PrintTestUsingPdfLatex {
         PrintService myPrinter = null;
         for (PrintService service : services) {
             String svcName = service.toString();
-            System.out.println("service found: " + svcName);
+            logger.info("service found: " + svcName);
             if (svcName.contains("650Brother_QL-710W")) {
                 myPrinter = service;
-                System.out.println("my printer found: " + svcName);
+                logger.info("my printer found: " + svcName);
                 break;
             }
         }
@@ -61,7 +63,7 @@ public class PrintTestUsingPdfLatex {
             aset.add(new PrinterResolution(300, 300, PrinterResolution.DPI));
             job.print(myDoc, aset);
         } else {
-            System.out.println("no printer services found");
+            logger.warn("no printer services found");
         }
     }
 }

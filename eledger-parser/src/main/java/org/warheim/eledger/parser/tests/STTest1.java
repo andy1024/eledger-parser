@@ -18,6 +18,5 @@ public class STTest1 {
 //                '$', '$');
 //        templ.add("myname", Arrays.asList(new String[]{"rot", "grün", "gelb", "blau"}));
 //        String ergebnis = templ.render();
-//        System.out.println(ergebnis);
     }
 }

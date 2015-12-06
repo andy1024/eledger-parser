@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 import org.warheim.eledger.parser.model.User;
 
 /**
@@ -20,6 +19,8 @@ import org.warheim.eledger.parser.model.User;
  * @author andy
  */
 public class Config {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Config.class);
+
     //base configuration
     public static final String KEY_CUSTOM_CONFIG_FILENAME = "config.custom.filename";
     public static final String KEY_CONFIG_FILENAME = "config.properties";
@@ -87,8 +88,7 @@ public class Config {
         try (InputStream resourceStream = loader.getResourceAsStream(resourceName)) {
             props.load(resourceStream);
         } catch (IOException ex) {
-            Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Main config not found " + ex.getMessage());
+            logger.error("Main config not found", ex);
         }
         String customConfigFileName = Config.getx(props, KEY_CUSTOM_CONFIG_FILENAME);
         if (customConfigFileName!=null && !customConfigFileName.isEmpty()) {
@@ -98,11 +98,9 @@ public class Config {
                 props.load(fis);
                 fis.close();
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("Custom config not found " + ex.getMessage());
+                logger.error("Custom config not found", ex);
             } catch (IOException ex) {
-                Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("Custom config inaccesible " + ex.getMessage());
+                logger.error("Custom config inaccesible", ex);
             }
         }
         

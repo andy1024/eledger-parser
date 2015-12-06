@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.http.HttpMessage;
+import org.slf4j.LoggerFactory;
 import org.warheim.eledger.parser.Config;
 import org.warheim.eledger.parser.model.Source;
 import org.warheim.eledger.parser.model.SourceType;
@@ -22,6 +23,7 @@ import org.warheim.eledger.parser.model.User;
  * @author andy
  */
 public class HttpReqRespHandler {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HttpReqRespHandler.class);
     
     private String etag=null;
     private String cookie=null;
@@ -41,7 +43,7 @@ public class HttpReqRespHandler {
                             Config.getInt(Config.KEY_WAIT_RANDOM_MIN)
             );
         } catch (InterruptedException ex) {
-            Logger.getLogger(HttpReqRespHandler.class.getName()).log(Level.SEVERE, null, ex);
+            logger.warn("Error while taking a nap", ex);
         }
     }
 

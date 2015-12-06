@@ -7,6 +7,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.LoggerFactory;
 import org.warheim.eledger.web.GetTasksList;
 
 /**
@@ -15,6 +16,7 @@ import org.warheim.eledger.web.GetTasksList;
  * @author andy
  */
 public abstract class ReturnWebPageCall extends WebCall {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ReturnWebPageCall.class);
 
     public ReturnWebPageCall(int expectedOutcomeStatus, String url, String requestType) {
         super(expectedOutcomeStatus, url, requestType);
@@ -27,7 +29,8 @@ public abstract class ReturnWebPageCall extends WebCall {
         try {
             retval = (entity != null ? EntityUtils.toString(entity) : null);
         } catch (IOException | ParseException ex) {
-            Logger.getLogger(GetTasksList.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error while reading response from server", ex);
+            logger.debug("Entity:" + entity.toString());
             throw new ResponseHandlerException(ex);
         }
         return retval;

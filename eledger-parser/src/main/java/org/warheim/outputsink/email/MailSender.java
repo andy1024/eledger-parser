@@ -10,12 +10,14 @@ import java.util.logging.Logger;
 
 import javax.mail.*;
 import javax.mail.internet.*;
+import org.slf4j.LoggerFactory;
 import org.warheim.file.FileTool;
 import org.warheim.outputsink.Output;
 import org.warheim.outputsink.OutputException;
 
 //TODO: implement sending notifications as an attachment
 public class MailSender implements Output {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MailSender.class);
 
     private String host = "smtp.gmail.com";
     private String domain = "gmail.com";
@@ -132,7 +134,7 @@ public class MailSender implements Output {
             contents = FileTool.readFile(inputFile);
             send(contents);
         } catch (IOException | MessagingException ex) {
-            Logger.getLogger(MailSender.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error while sending mail", ex);
             throw new OutputException(ex);
         }
         return true;

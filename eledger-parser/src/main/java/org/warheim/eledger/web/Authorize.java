@@ -14,6 +14,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.LoggerFactory;
 import static org.warheim.eledger.web.HttpReqRespHandler.addCommonHeaders;
 import static org.warheim.eledger.web.HttpReqRespHandler.addExtHeaders;
 
@@ -31,6 +32,7 @@ import static org.warheim.eledger.web.HttpReqRespHandler.addExtHeaders;
     --compressed -s -D response1-header -o response1
  */
 public final class Authorize extends WebCall {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Authorize.class);
 
     private final String username;
     private final String pass;
@@ -63,7 +65,7 @@ public final class Authorize extends WebCall {
         try {
             post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Authorize.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error while preparing request call headers", ex);
             throw new RequestPreparationException(ex);
         }
     }

@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 import org.warheim.app.Application;
 import org.warheim.app.Event;
 import org.warheim.app.EventHandlerException;
@@ -29,12 +28,12 @@ import org.warheim.formatter.Formatter;
 import org.warheim.outputsink.Output;
 import org.warheim.outputsink.OutputException;
 
-//TODO: switch from system.output mess to proper logging
 /**
  *
  * @author andy
  */
 public class EntryPoint extends Application {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(EntryPoint.class);
 
     public static void main(String... args) throws Exception {
         Application app = new EntryPoint();
@@ -47,7 +46,7 @@ public class EntryPoint extends Application {
         String diskStore = "";
         NotificationsData newData = null;
         Parser parser = null;
-        System.out.println(Config.getStoreFileName());
+        logger.info(Config.getStoreFileName());
         this.registerEventHandlers(Config.getProperties(), "app.event.");
         this.fire(Event.APP_EVENT_AFTER_CONFIG_READ);
         String debug = Config.get(Config.KEY_DEBUG);
@@ -87,7 +86,7 @@ public class EntryPoint extends Application {
                             serverResponse.addAll(h.getAllData());
                             sessions.put(user, h);
                         } catch (java.io.IOException e) {
-                            Logger.getLogger(EntryPoint.class.getName()).log(Level.SEVERE, null, e);
+                            logger.error("Server request/respons error", e);
                             System.exit(2);
                         }
                     }
@@ -96,7 +95,7 @@ public class EntryPoint extends Application {
                     try {
                         diskStore = FileTool.readFile(Config.getStoreFileName());
                     } catch (FileNotFoundException fnfe) {
-                        Logger.getLogger(EntryPoint.class.getName()).log(Level.INFO, "No datastore file, will be created upon exit", fnfe);
+                        logger.warn("No datastore file, will be created upon exit", fnfe);
                         diskStore = "";
                     }
                     this.fire(Event.APP_EVENT_AFTER_DATA_STORE_READ);
@@ -112,7 +111,7 @@ public class EntryPoint extends Application {
                             h.logout();
                             this.fire(Event.APP_EVENT_AFTER_SINGLE_USER_LOGOUT);
                         } catch (java.io.IOException e) {
-                            Logger.getLogger(EntryPoint.class.getName()).log(Level.SEVERE, null, e);
+                            logger.error("Server request/response error", e);
                             System.exit(2);
                         }
                     }   //add message contents to the list
@@ -122,9 +121,9 @@ public class EntryPoint extends Application {
             }
         }
         if (newData == null || newData.isEmpty()) {
-            System.out.println("No new data");//System.exit(1);
+            logger.info("No new data");//System.exit(1);
         } else {
-            System.out.println(newData.showAll());
+            logger.debug(newData.showAll());
             boolean outputOk = true;
             if ("1".equals(Config.get(Config.KEY_OUTPUT))) {
                 this.fire(Event.APP_EVENT_BEFORE_FORMATTING);
@@ -140,7 +139,7 @@ public class EntryPoint extends Application {
                     output.process();
                     this.fire(Event.APP_EVENT_AFTER_OUTPUT);
                 } catch (OutputException ex) {
-                    Logger.getLogger(EntryPoint.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error("Error while processing output", ex);
                     outputOk = false;
                 }
             }
@@ -152,7 +151,7 @@ public class EntryPoint extends Application {
                         this.fire(Event.APP_EVENT_AFTER_DATA_STORE_WRITE);
                     }//only update map if output (printing) went fine
                 } catch (IOException ex) {
-                    Logger.getLogger(EntryPoint.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error("Error while updating datastore", ex);
                 }
             }
         }

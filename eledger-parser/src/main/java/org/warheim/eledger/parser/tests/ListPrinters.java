@@ -7,20 +7,19 @@ package org.warheim.eledger.parser.tests;
 
 import javax.print.*;
 import javax.print.attribute.*;
+import org.slf4j.LoggerFactory;
 
 public class ListPrinters {
-
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ListPrinters.class);
+    
     public static void main(String args[]) {
 
         PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
-        //PrintService[] services = PrintServiceLookup.lookupPrintServices(psInFormat, aset);
         PrintService[] services = PrintServiceLookup.lookupPrintServices(null, aset);
 
-        // this step is necessary because I have several printers configured
-        PrintService myPrinter = null;
         for (PrintService service : services) {
             String svcName = service.toString();
-            System.out.println("service found: " + svcName);
+            logger.info("service found: " + svcName);
         }
     }
 }

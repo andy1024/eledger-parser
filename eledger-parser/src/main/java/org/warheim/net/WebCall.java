@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class for making web calls
@@ -17,6 +18,8 @@ import org.apache.http.impl.client.HttpClients;
  * @author andy
  */
 public abstract class WebCall {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WebCall.class);
+    
     public static final String REQUEST_TYPE_GET = "GET";
     public static final String REQUEST_TYPE_POST = "POST";
     
@@ -41,10 +44,9 @@ public abstract class WebCall {
     }
 
     protected void showRequest(HttpRequest req) {
-        //if (1==1) return;
-        System.out.println("Executing request " + req.getRequestLine());
+        logger.debug("Executing request " + req.getRequestLine());
         for (Header h: req.getAllHeaders()) {
-            System.out.println(h);
+            logger.debug(h.toString());
         }
     }
 

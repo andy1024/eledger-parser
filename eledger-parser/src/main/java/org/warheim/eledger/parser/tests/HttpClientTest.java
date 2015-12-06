@@ -14,13 +14,15 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author andy
  */
 public class HttpClientTest {
-
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HttpClientTest.class);
+    
     /**
      * http client testing method
      * @param args
@@ -29,7 +31,7 @@ public class HttpClientTest {
     public static final void main(String[] args) throws Exception {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             HttpGet httpget = new HttpGet("http://httpbin.org/");
-            System.out.println("Executing request " + httpget.getRequestLine());
+            logger.info("Executing request " + httpget.getRequestLine());
             ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
                 @Override
                 public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
@@ -43,8 +45,8 @@ public class HttpClientTest {
                 }
             };
             String responseBody = httpclient.execute(httpget, responseHandler);
-            System.out.println("----------------------------------------");
-            System.out.println(responseBody);
+            logger.info("----------------------------------------");
+            logger.info(responseBody);
         }
     }
     

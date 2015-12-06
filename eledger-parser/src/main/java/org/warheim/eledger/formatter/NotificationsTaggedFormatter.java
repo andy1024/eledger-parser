@@ -3,8 +3,7 @@ package org.warheim.eledger.formatter;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 import static org.warheim.eledger.parser.NotificationsDataCombiner.combine;
 import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;
@@ -21,6 +20,8 @@ import org.warheim.formatter.FormattingException;
  * @author andy
  */
 public abstract class NotificationsTaggedFormatter implements Formatter {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(NotificationsTaggedFormatter.class);
+
     protected NotificationsData notificationsData;
 
     public NotificationsData getMmap() {
@@ -45,9 +46,9 @@ public abstract class NotificationsTaggedFormatter implements Formatter {
             makeBody(str);
             makeFooter(str);
             outFile = prepareSourceDocument(str);
-            System.out.println(outFile);
+            logger.debug(outFile.getAbsolutePath());
         } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(NotificationsPdfLatexFormatter.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error while creating output file", ex);
             throw new FormattingException(ex);
         }
         return outFile;

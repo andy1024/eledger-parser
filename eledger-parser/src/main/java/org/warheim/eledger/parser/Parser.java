@@ -4,9 +4,7 @@ import org.warheim.eledger.parser.model.Source;
 import org.warheim.file.FileTool;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.warheim.eledger.parser.model.Message;
+import org.slf4j.LoggerFactory;
 import org.warheim.eledger.parser.model.NotificationsData;
 import org.warheim.eledger.parser.model.SourceType;
 import org.warheim.eledger.parser.model.UserNotifications;
@@ -17,6 +15,8 @@ import org.warheim.eledger.parser.model.UserNotifications;
  * @author andy
  */
 public class Parser {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Parser.class);
+
     private final List<Source> sources;
     private final String diskStore;
     private final NotificationsData dataFromServer = new NotificationsData();
@@ -69,7 +69,8 @@ public class Parser {
                     spp.parse(src, un);
                 }
             } catch (Exception e) {
-                System.err.println(src);
+                logger.error("Error while supplementing data from server", e);
+                logger.debug("Source data:\n"+src);
                 throw e;
             }
         }
@@ -82,7 +83,8 @@ public class Parser {
             try {
                 dataFromDisk = NotificationsData.deserializeFromJson(diskStore);
             } catch (IllegalStateException e) {
-                System.err.println(e.getCause());
+                logger.error("Error while building data from datastore", e);
+                logger.debug("Source data:\n"+diskStore);
                 throw e;
             }
         }
@@ -100,8 +102,7 @@ public class Parser {
         try {
             FileTool.writeFile(Config.getx(Config.KEY_DATASTORE_DIR), Config.get(Config.KEY_DATASTORE_FILENAME), dataFromDisk.serializeToJson());
         } catch (IOException ex) {
-            Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, "Error while serializing json", ex);
-            System.err.println("error while serializing json");
+            logger.error("Error while serializing json", ex);
             throw ex;
         }
     }

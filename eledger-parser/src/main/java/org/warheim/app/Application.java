@@ -4,8 +4,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.warheim.di.ObjectCreationException;
 import org.warheim.di.ObjectFactory;
 
@@ -16,6 +16,7 @@ import org.warheim.di.ObjectFactory;
  * @author andy
  */
 public abstract class Application {
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
    
     /**
      * Initializes application with basic event handler
@@ -25,13 +26,13 @@ public abstract class Application {
 
             @Override
             public void handle() throws EventHandlerException {
-                System.out.println("application start");
+                logger.info("application start");
             }
         });
         try {
             fire(Event.APP_EVENT_START);
         } catch (EventHandlerException ex) {
-            Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Event handler problem", ex);
         }
     }
      
@@ -41,12 +42,12 @@ public abstract class Application {
     protected Map<String, EventHandler> eventHandlers = new HashMap<>();
     
     public final void fire(String event) throws EventHandlerException {
-        System.out.println("Event fired: " + event);
+        logger.debug("Event fired: " + event);
         EventHandler handlerToFire = eventHandlers.get(event);
         if (handlerToFire!=null) {
-            System.out.println("Event handler class " + handlerToFire.getClass().getName());
+            logger.debug("Event handler class " + handlerToFire.getClass().getName());
             handlerToFire.handle();
-            System.out.println("Event handler finished");
+            logger.debug("Event handler finished");
         }
     }
     

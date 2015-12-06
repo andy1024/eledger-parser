@@ -3,6 +3,7 @@ package org.warheim.eledger.parser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.slf4j.LoggerFactory;
 import org.warheim.eledger.parser.model.Message;
 import org.warheim.eledger.parser.model.Source;
 import org.warheim.eledger.parser.model.UserNotifications;
@@ -14,6 +15,7 @@ import org.warheim.eledger.parser.model.UserNotifications;
  * @author andy
  */
 public class MessageParser implements SourcePageParser {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MessageParser.class);
 
     @Override
     public void parse(Source source, UserNotifications un) {
@@ -21,7 +23,7 @@ public class MessageParser implements SourcePageParser {
         Elements msgHeaders = doc.select("tr.message_header td");
         Message msg = un.getMessage(source.getId());
         if (msg==null) {//should only happen when testing with not properly initialized datastore
-            System.out.println(String.format("Message %s not available in UN, skipping", source.getId()));
+            logger.warn(String.format("Message %s not available in UN, skipping", source.getId()));
             return;
         }
         //String title = WebParserTool.noHTML(msgHeaders.get(0));
@@ -35,7 +37,7 @@ public class MessageParser implements SourcePageParser {
         msg.setContent(contents);
         //msg.setTitle(title);
         msg.setRecipients(recipients);
-        System.out.println(msg);
+        logger.debug(msg.toString());
     }
 
 }

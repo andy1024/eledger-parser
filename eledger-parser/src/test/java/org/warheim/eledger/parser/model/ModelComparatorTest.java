@@ -27,8 +27,6 @@ public class ModelComparatorTest {
         Assert.assertNotNull(msgsDisk);
         Assert.assertEquals(2, msgsDisk.size());
 
-        //Assert.assertEquals(notifDisk.getNotificationsForUser("Matthew C. Cornwallis").get
-        //System.out.println(diff.showAll());
     }
     @Test
     public void testCompareMoreCategories() {
@@ -47,8 +45,6 @@ public class ModelComparatorTest {
         Set<Task> diskTasks = notifDisk.getNotificationsForUser(MockData.USER_2_NAME).getTasksForSubject(subject);
         Assert.assertNotNull(diskTasks);
         Assert.assertEquals(1, diskTasks.size());
-        
-        
         
     }
     

@@ -4,8 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -15,7 +14,7 @@ import java.util.logging.Logger;
  * @author andy
  */
 public class ObjectFactory {
-
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ObjectFactory.class);
     /**
      * returns setter method name for the specified key
      * @param key
@@ -32,7 +31,7 @@ public class ObjectFactory {
      * @throws ObjectCreationException 
      */
     public static Object createObject(String objDef) throws ObjectCreationException {
-        Logger.getLogger(ObjectFactory.class.getName()).log(Level.INFO, null, "DI-Constructing object");
+        logger.debug("DI-Constructing object");
         Object object = null;
         String classDescription = objDef;
         String[] str = classDescription.split("[\\(\\)]");
@@ -41,7 +40,7 @@ public class ObjectFactory {
         try {
             clazz = Class.forName(clazzStr);
             object = clazz.newInstance();
-            Logger.getLogger(ObjectFactory.class.getName()).log(Level.INFO, clazz.toString());
+            logger.debug(clazz.toString());
             if (str.length>1) { //check if there are any arguments
                 String argumentList = str[1];
                 String[] args = argumentList.split(",");
@@ -51,20 +50,18 @@ public class ObjectFactory {
                     String key = elements[0];
                     String value = elements[1];
                     String setterName = getSetterName(key);
-                    Logger.getLogger(ObjectFactory.class.getName()).log(Level.INFO,  
-                        setterName + "(" + value + ")");
-                    //System.out.println(setterName + "(" + value + ")");
+                    logger.debug(setterName + "(" + value + ")");
                     attrMap.put(key, value);
                     Method m = clazz.getMethod(setterName, String.class);
                     m.invoke(object, value);
                 }
             }
         } catch (NoSuchMethodException | SecurityException ex) {
-            Logger.getLogger(ObjectFactory.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error while creating object " + objDef, ex);
             throw new ObjectCreationException(ex);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                 IllegalArgumentException | InvocationTargetException ex) {
-            Logger.getLogger(ObjectFactory.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error while creating object " + objDef, ex);
             throw new ObjectCreationException(ex);
         }
 

@@ -7,6 +7,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.LoggerFactory;
 import org.warheim.eledger.parser.model.Subject;
 import org.warheim.eledger.parser.model.Test;
 import org.warheim.eledger.parser.model.UserNotifications;
@@ -18,14 +19,15 @@ import org.warheim.eledger.parser.model.UserNotifications;
  * @author andy
  */
 public class TestListParser implements SourcePageParser {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TestListParser.class);
 
     protected Map<String, Subject> getLiveTestSubjects(Elements subjectHeaders) {
         Map<String, Subject>  subjects = new HashMap<>();
         for (Element e: subjectHeaders) {
-//            System.out.println(e.className());
-//            System.out.println(e.id());
+            logger.debug(e.className());
+            logger.debug(e.id());
             Elements subjectNameElements = e.select(".show_link_subject a");
-//            System.out.println();
+
             String id = stripSubjectId(e.id());
             Subject subject = new Subject(id, stripSubjectName(subjectNameElements.get(0).html()));
             subjects.put(id, subject);
@@ -49,9 +51,7 @@ public class TestListParser implements SourcePageParser {
         Elements tableRows = doc.select(".new_border tr");
         Elements subjectHeaders = tableRows.select(".subject_header");
         Map<String, Subject> subjects = getLiveTestSubjects(subjectHeaders);
-//        for (String id: subjects.keySet()) {
-//            System.out.println(subjects.get(id));
-//        }
+
         Elements testRows = doc.select(".subject_details");
         for (Element testRow: testRows) {
             Subject subject = null;
@@ -63,7 +63,7 @@ public class TestListParser implements SourcePageParser {
                 }
             }
             if (subject==null) {
-                System.err.println("Subject not found");
+                logger.warn("Subject not found");
             } else {
                 String testDate = null;
                 String testValue = null;
@@ -79,7 +79,7 @@ public class TestListParser implements SourcePageParser {
                     }
                 }
                 if (testValue==null || testDate==null) {
-                    System.err.println("Bad test attributes");
+                    logger.warn("Bad test attributes");
                 } else {
                     Test test = new Test(testDate, testValue);
                     un.addTest(subject, test);
