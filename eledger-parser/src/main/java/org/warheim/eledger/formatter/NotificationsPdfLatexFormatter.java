@@ -183,7 +183,7 @@ public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatt
 
     @Override
     protected void putUser(StringBuilder str, User user) {
-        str.append("\\Info "); //man icon
+        str.append("\\Info "); //info icon
         str.append("\\textbf{\\textsf{").append(user.getFullname()).append("}}\n");
         str.append("\\newline");
     }

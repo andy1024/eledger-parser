@@ -1,5 +1,8 @@
 package org.warheim.eledger.parser.model;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.warheim.eledger.parser.NotificationsDataCombiner;
@@ -14,7 +17,11 @@ public class MessageCombinerTest {
      * test combining messages for one user (null-operation)
      */
     @Test
-    public void oneUserTestCombiner() {
+    public void oneUserTestCombinerT() {
+        oneUserTestCombiner();
+    }
+    
+    public NotificationsData oneUserTestCombiner() {
         NotificationsData sourceData = new NotificationsData();
         User u1 = new User(C_KRYSTY_WROTH);
         UserNotifications un1 = new UserNotifications();
@@ -23,13 +30,18 @@ public class MessageCombinerTest {
         sourceData.putUserNotifications(u1, un1);
         NotificationsData combinedData = NotificationsDataCombiner.combine(sourceData);
         Assert.assertEquals(NotificationsData.getDataDiff(sourceData, combinedData).isEmpty(), true);
+        return sourceData;
     }
     
     /**
      * test combining messages for two users, without extra data
      */
     @Test
-    public void twoUsersTestCombiner() {
+    public void twoUsersTestCombinerT() {
+        twoUsersTestCombiner();
+    }
+    
+    public NotificationsData twoUsersTestCombiner() {
         NotificationsData sourceData = new NotificationsData();
         User u1 = new User(C_DEAN_CAWDOR);
         User u2 = new User(C_LORI_QUINT);
@@ -48,6 +60,7 @@ public class MessageCombinerTest {
             Assert.assertEquals(M_TITLE_2, mc.getTitle());
             break;
         }
+        return sourceData;
     }
 
     /**
@@ -55,7 +68,11 @@ public class MessageCombinerTest {
      * for various recipients combination
      */
     @Test
-    public void manyUsersTestCombiner() {
+    public void manyUsersTestCombinerT() {
+        manyUsersTestCombiner();
+    }
+    
+    public NotificationsData manyUsersTestCombiner() {
         NotificationsData sourceData = new NotificationsData();
         User u1 = new User(C_JAK);
         User u2 = new User(C_RYAN);
@@ -79,13 +96,18 @@ public class MessageCombinerTest {
         for (User uc: combinedData.getUsers()) {
             Assert.assertEquals(1, combinedData.getNotificationsForUser(uc).getMessages().size());
         }
+        return sourceData;
     }
 
     /**
      * Test combining various users data, not just messages
      */
     @Test
-    public void manyUsersTestCombinerWithExtraData() {
+    public void manyUsersTestCombinerWithExtraDataT() {
+        manyUsersTestCombinerWithExtraData();
+    }
+    
+    public NotificationsData manyUsersTestCombinerWithExtraData() {
         NotificationsData sourceData = new NotificationsData();
         User u1 = new User(C_TRADER);
         User u2 = new User(C_JB);
@@ -143,7 +165,25 @@ public class MessageCombinerTest {
                     break;
             }
         }
+        return sourceData;
     }
+    
+    //yeah, I really like this bunch;)
+    //@Test
+    public void makeMuchData() throws IOException {
+        NotificationsData dataStore = new NotificationsData();
+        NotificationsData.getDataDiff(oneUserTestCombiner(), dataStore);
+        NotificationsData.getDataDiff(twoUsersTestCombiner(), dataStore);
+        NotificationsData.getDataDiff(manyUsersTestCombiner(), dataStore);
+        NotificationsData.getDataDiff(manyUsersTestCombinerWithExtraData(), dataStore);
+        String outstr = dataStore.serializeToJson();
+        File tempFile = File.createTempFile(this.getClass().getName(), ".txt"); 
+        try (PrintWriter pw = new PrintWriter(tempFile, "UTF-8")) {
+            pw.println(outstr);
+        }
+
+    }
+    
     public static final String C_TRADER = "Trader";
     public static final String C_RYAN = "Ryan Cawdor";
     public static final String C_JB = "JB Dix";
