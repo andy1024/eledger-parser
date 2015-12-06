@@ -49,13 +49,6 @@ public class EntryPoint extends Application {
         Parser parser = null;
         logger.info(Config.getStoreFileName());
         this.registerEventHandlers(Config.getProperties(), "app.event.");
-        this.registerEventHandler(Event.APP_EVENT_FINISH, new EventHandler() {
-
-            @Override
-            public void handle() throws EventHandlerException {
-                logger.info("application end");
-            }
-        });
         this.fire(Event.APP_EVENT_AFTER_CONFIG_READ);
         String debug = Config.get(Config.KEY_DEBUG);
         if (null != debug) {

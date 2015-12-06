@@ -29,6 +29,14 @@ public abstract class Application {
                 logger.info("application start");
             }
         });
+        //customizable in runtime
+        registerEventHandler(Event.APP_EVENT_FINISH, new EventHandler() {
+
+            @Override
+            public void handle() throws EventHandlerException {
+                logger.info("application end");
+            }
+        });
         try {
             fire(Event.APP_EVENT_START);
         } catch (EventHandlerException ex) {
