@@ -145,7 +145,9 @@ public class NotificationsData implements Serializable, FormattableModel  {
                         diskUN.putMessage(msg);
                     }
                 }
-                diffMap.putUserNotifications(user, userNotificationsDiffMap);
+                if (!userNotificationsDiffMap.isEmpty()) {
+                    diffMap.putUserNotifications(user, userNotificationsDiffMap);
+                }
             }
             //dataFromDisk.putUserNotifications(user, diskUN); //rewrite disk UN's
         }

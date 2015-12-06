@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,12 +42,12 @@ public class ModelSerializationTest {
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization()
         .setPrettyPrinting().create();
         String retval = gson.toJson(not);
-        System.out.println(retval);
 
         gson = new Gson();
         Type type = new TypeToken<NotificationsData>(){}.getType();
         NotificationsData not2 = gson.fromJson(retval, type);
-        System.out.println(not2.showAll());
+        NotificationsData diff = NotificationsData.getDataDiff(not, not2);
+        Assert.assertTrue(diff.isEmpty());
 
     }
 

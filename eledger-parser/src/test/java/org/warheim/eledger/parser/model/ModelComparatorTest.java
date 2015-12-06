@@ -13,9 +13,7 @@ public class ModelComparatorTest {
     @Test
     public void testCompareMsgOnly() {
         NotificationsData notifDisk = MockData.createTestData(0);
-        //System.out.println(notifDisk.showAll());
         NotificationsData notifServ = MockData.createTestData(1);
-        //System.out.println(notifServ.showAll());
         NotificationsData diff = NotificationsData.getDataDiff(notifServ, notifDisk);
         Assert.assertNotNull(diff);
         UserNotifications un = diff.getNotificationsForUser(MockData.USER_1_NAME);
@@ -35,9 +33,7 @@ public class ModelComparatorTest {
     @Test
     public void testCompareMoreCategories() {
         NotificationsData notifDisk = MockData.createTestData(0);
-        //System.out.println(notifDisk.showAll());
         NotificationsData notifServ = MockData.createTestData(3);
-        //System.out.println(notifServ.showAll());
         NotificationsData diff = NotificationsData.getDataDiff(notifServ, notifDisk);
         Assert.assertNotNull(diff);
         Subject subject = new Subject(MockData.SUBJ_3_ID, MockData.SUBJ_3_NAME);
@@ -47,7 +43,6 @@ public class ModelComparatorTest {
         Set<Task> diffTasks = un.getTasksForSubject(subject);
         Assert.assertNotNull(diffTasks);
         Assert.assertEquals(1, diffTasks.size());
-        System.out.println(diff.showAll());
         
         Set<Task> diskTasks = notifDisk.getNotificationsForUser(MockData.USER_2_NAME).getTasksForSubject(subject);
         Assert.assertNotNull(diskTasks);
