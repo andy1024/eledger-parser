@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
  * @author andy
  */
 public class ObjectFactory {
+    //TODO: add a possibility to define meta instructions like %CURRENT_DATE%
+
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ObjectFactory.class);
     /**
      * returns setter method name for the specified key

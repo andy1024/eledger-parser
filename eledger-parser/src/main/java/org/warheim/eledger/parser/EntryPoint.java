@@ -15,6 +15,7 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 import org.warheim.app.Application;
 import org.warheim.app.Event;
+import org.warheim.app.EventHandler;
 import org.warheim.app.EventHandlerException;
 import org.warheim.di.ObjectCreationException;
 import org.warheim.di.ObjectFactory;
@@ -48,6 +49,13 @@ public class EntryPoint extends Application {
         Parser parser = null;
         logger.info(Config.getStoreFileName());
         this.registerEventHandlers(Config.getProperties(), "app.event.");
+        this.registerEventHandler(Event.APP_EVENT_FINISH, new EventHandler() {
+
+            @Override
+            public void handle() throws EventHandlerException {
+                logger.info("application end");
+            }
+        });
         this.fire(Event.APP_EVENT_AFTER_CONFIG_READ);
         String debug = Config.get(Config.KEY_DEBUG);
         if (null != debug) {
@@ -123,7 +131,7 @@ public class EntryPoint extends Application {
         if (newData == null || newData.isEmpty()) {
             logger.info("No new data");//System.exit(1);
         } else {
-            logger.debug(newData.showAll());
+            logger.info(newData.showAll());
             boolean outputOk = true;
             if ("1".equals(Config.get(Config.KEY_OUTPUT))) {
                 this.fire(Event.APP_EVENT_BEFORE_FORMATTING);

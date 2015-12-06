@@ -133,6 +133,7 @@ public class MailSender implements Output {
         try {
             contents = FileTool.readFile(inputFile);
             send(contents);
+            logger.info("Email sent to " + recipient);
         } catch (IOException | MessagingException ex) {
             logger.error("Error while sending mail", ex);
             throw new OutputException(ex);

@@ -76,7 +76,7 @@ public class Printer implements Output {
             logger.debug("service found: "+svcName);
             if (svcName.contains(outputDeviceID)) {
                 myPrinter = service;
-                logger.info("Searched for printer found: "+svcName);
+                logger.info("Printer found: "+svcName);
                 break;
             }
         }
