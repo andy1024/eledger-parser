@@ -55,10 +55,7 @@ public class User implements Serializable, Comparable<User> {
             return false;
         }
         final User other = (User) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.name, other.name);
     }
 
     @Override
