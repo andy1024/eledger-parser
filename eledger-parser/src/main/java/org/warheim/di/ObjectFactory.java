@@ -1,5 +1,7 @@
 package org.warheim.di;
 
+import org.warheim.di.metainstruction.MetaInstructionException;
+import org.warheim.di.metainstruction.MetaInstruction;
 import com.openpojo.reflection.PojoClass;
 import com.openpojo.reflection.filters.FilterBasedOnInheritance;
 import com.openpojo.reflection.impl.PojoClassFactory;

@@ -1,4 +1,4 @@
-package org.warheim.di;
+package org.warheim.di.metainstruction;
 
 /**
  *

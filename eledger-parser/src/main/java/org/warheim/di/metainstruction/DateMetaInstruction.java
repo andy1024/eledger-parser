@@ -1,7 +1,8 @@
-package org.warheim.di;
+package org.warheim.di.metainstruction;
 
 import org.joda.time.LocalDate;
 import org.slf4j.LoggerFactory;
+import org.warheim.di.ObjectFactory;
 
 /**
  *
