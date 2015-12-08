@@ -1,13 +1,20 @@
 package org.warheim.eledger.parser.model;
 
 import java.io.Serializable;
-import org.joda.time.DateTime;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.slf4j.LoggerFactory;
+import org.warheim.eledger.parser.Config;
 
 /**
  *
  * @author andy
  */
 public abstract class InfoOnSubject implements Serializable, Comparable<InfoOnSubject> {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(InfoOnSubject.class);
+    
     protected String date;
     protected String content;
     protected InfoType type;
@@ -36,15 +43,22 @@ public abstract class InfoOnSubject implements Serializable, Comparable<InfoOnSu
 
     @Override
     public int compareTo(InfoOnSubject o) {
-        
-        DateTime thisDate = new DateTime(this.getDate());
-        DateTime oDate = new DateTime(o.getDate());
-        if (thisDate.isBefore(oDate)) {
-            return -1;
-        } else if (thisDate.isAfter(oDate)) {
-            return 1;
-        } else {
+        DateFormat formatter = new SimpleDateFormat(Config.DATE_FORMAT);
+        Date thisDate;
+        Date oDate;
+        int dateComparison = 0;
+        try {
+            thisDate = formatter.parse(this.getDate());
+            oDate = formatter.parse(o.getDate());
+             dateComparison = thisDate.compareTo(oDate);
+        } catch (ParseException ex) {
+            logger.error("Wrong dates in subjects: " + this.getDate() + ", " + o.getDate(), ex);
+        }
+
+        if (dateComparison==0) {
             return this.getContent().compareTo(o.getContent());
+        } else {
+            return dateComparison;
         }
     }
     

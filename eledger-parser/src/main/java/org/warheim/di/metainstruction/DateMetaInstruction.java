@@ -1,8 +1,11 @@
 package org.warheim.di.metainstruction;
 
-import org.joda.time.LocalDate;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.slf4j.LoggerFactory;
 import org.warheim.di.ObjectFactory;
+import org.warheim.eledger.parser.Config;
 
 /**
  *
@@ -24,8 +27,9 @@ public class DateMetaInstruction implements MetaInstruction {
     
     @Override
     public String execute() throws MetaInstructionException {
-        LocalDate localDate = new LocalDate();
-        return localDate.toString();
+        DateFormat formatter = new SimpleDateFormat(Config.DATE_FORMAT);
+        String retval = formatter.format(new Date());
+        return retval;
     }
 
 }

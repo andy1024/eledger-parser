@@ -73,6 +73,7 @@ public class Config {
 
     //additional config
     public static final String KEY_MULTIPLE_RECIPIENTS = "msg.multipleRecipients";
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
     
     private Properties props;
     private static Config instance = new Config();

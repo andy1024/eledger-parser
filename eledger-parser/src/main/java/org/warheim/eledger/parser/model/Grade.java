@@ -1,8 +1,13 @@
 package org.warheim.eledger.parser.model;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
-import org.joda.time.DateTime;
+import org.slf4j.LoggerFactory;
+import org.warheim.eledger.parser.Config;
 
 /**
  * TODO: this is too far fetched for the moment, do not implement yet
@@ -11,6 +16,8 @@ import org.joda.time.DateTime;
  * @author andy
  */
 public class Grade implements Serializable, Comparable<Grade> {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Grade.class);
+
     private String importance;
     private String name;
     private String date;
@@ -85,15 +92,22 @@ public class Grade implements Serializable, Comparable<Grade> {
     
     @Override
     public int compareTo(Grade o) {
-        
-        DateTime thisDate = new DateTime(this.date);
-        DateTime oDate = new DateTime(o.date);
-        if (thisDate.isBefore(oDate)) {
-            return -1;
-        } else if (thisDate.isAfter(oDate)) {
-            return 1;
+        DateFormat formatter = new SimpleDateFormat(Config.DATE_FORMAT);
+        Date thisDate;
+        Date oDate;
+        int dateComparison = 0;
+        try {
+            thisDate = formatter.parse(this.getDate());
+            oDate = formatter.parse(o.getDate());
+             dateComparison = thisDate.compareTo(oDate);
+        } catch (ParseException ex) {
+            logger.error("Wrong dates in subjects: " + this.getDate() + ", " + o.getDate(), ex);
+        }
+
+        if (dateComparison==0) {
+            return this.getValue().compareTo(o.getValue());
         } else {
-            return this.value.compareTo(o.value);
+            return dateComparison;
         }
     }
 
