@@ -26,9 +26,9 @@ public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatt
     protected String left="0.4cm";
     protected String right="0.3cm";
     protected String top="0.2cm";
-    protected String bottom="0.8cm";
+    protected String bottom="0.6cm";
     protected String minimalHeight="2cm";
-    protected String internalVerticalMargin="0.8cm";
+    protected String internalVerticalMargin="0.6cm";
     protected String strech="0.5";
     protected String languagePackage="polski";
     
@@ -231,5 +231,21 @@ public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatt
         str.append("\\newline\n");
     }
 
+    //implements cleanup of dangling newlines
+    @Override
+    protected void makeBody(StringBuilder str) throws FormattingException {
+        super.makeBody(str);
+        int len = str.length();
+        if (len>20) {
+            String finalPart = str.substring(len-20);
+            if (finalPart.endsWith("\\newline\n")) {
+                str.setLength(len-9);
+            } else if (finalPart.endsWith("\\newline")) {
+                str.setLength(len-8);
+            } else if (finalPart.endsWith("\n")) {
+                str.setLength(len-1);
+            }
+        }
+    }
     
 }
