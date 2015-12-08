@@ -14,7 +14,7 @@ import org.warheim.eledger.parser.model.UserNotifications;
  *
  * @author andy
  */
-
+//TODO: trace the error with big data produced by test class, when one message recipient is lost in progress (Ryan)
 class MessageForUsers {
     public Message msg;
     public Set<User> users = new TreeSet<>();
