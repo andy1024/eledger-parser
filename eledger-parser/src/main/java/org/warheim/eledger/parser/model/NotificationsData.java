@@ -91,8 +91,8 @@ public class NotificationsData implements Serializable, FormattableModel  {
                     if (diskTasks==null||diskTasks.isEmpty()) { //it is not known to the stored map
                         //process the entire subject
                         userNotificationsDiffMap.putTasks(serverSubject, serverTasks); //save it for printout
-                        //dataFromDisk.putTasks(serverSubject, serverTasks); //copy it to disk store
-                        dataFromDisk.putUserNotifications(user, userNotificationsDiffMap);
+                        //FIX for bug #3
+                        diskUN.putTasks(serverSubject, serverTasks); //copy it to disk store
                     } else { //subject is known, check each task
                         Set<Task> diffTasks = new TreeSet<>();
                         int newTaskInSubjectCount = 0;
@@ -118,8 +118,8 @@ public class NotificationsData implements Serializable, FormattableModel  {
                     if (diskTests==null||diskTests.isEmpty()) { //it is not known to the stored map
                         //process the entire subject
                         userNotificationsDiffMap.putTests(serverSubject, serverTests); //save it for printout
-                        //dataFromDisk.putTasks(serverSubject, serverTasks); //copy it to disk store
-                        dataFromDisk.putUserNotifications(user, userNotificationsDiffMap);
+                        //FIX for bug #3
+                        diskUN.putTests(serverSubject, serverTests); //copy it to disk store
                     } else { //subject is known, check each task
                         Set<Test> diffTests = new TreeSet<>();
                         int newTestInSubjectCount = 0;

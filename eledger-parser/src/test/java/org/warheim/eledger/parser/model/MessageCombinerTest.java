@@ -1,8 +1,7 @@
 package org.warheim.eledger.parser.model;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Collection;
 import org.junit.Assert;
 import org.junit.Test;
 import org.warheim.eledger.parser.NotificationsDataCombiner;
@@ -169,17 +168,30 @@ public class MessageCombinerTest {
     }
     
     //yeah, I really like this bunch;)
-    //@Test
+    @Test
     public void makeMuchData() throws IOException {
         NotificationsData dataStore = new NotificationsData();
         NotificationsData.getDataDiff(oneUserTestCombiner(), dataStore);
         NotificationsData.getDataDiff(twoUsersTestCombiner(), dataStore);
         NotificationsData.getDataDiff(manyUsersTestCombiner(), dataStore);
         NotificationsData.getDataDiff(manyUsersTestCombinerWithExtraData(), dataStore);
-        String outstr = dataStore.serializeToJson();
-        File tempFile = File.createTempFile(this.getClass().getName(), ".txt"); 
-        try (PrintWriter pw = new PrintWriter(tempFile, "UTF-8")) {
-            pw.println(outstr);
+//        String outstr = dataStore.serializeToJson();
+//        File tempFile = File.createTempFile(this.getClass().getName(), ".txt"); 
+//        try (PrintWriter pw = new PrintWriter(tempFile, "UTF-8")) {
+//            pw.println(outstr);
+//        }
+        
+        NotificationsData combined = NotificationsDataCombiner.combine(dataStore);
+        
+        //Test for bug #3
+        for (User user: combined.getUsers()) {
+            UserNotifications un = combined.getNotificationsForUser(user);
+            Collection<Message> msgs = un.getMessages();
+            for (Message msg: msgs) {
+                if (M_TITLE_3.equals(msg.getTitle())) {
+                    Assert.assertEquals(C_JAK + ";" + C_RYAN, user.getFullname());
+                }
+            }
         }
 
     }
