@@ -25,7 +25,6 @@ public class ResetQL710W extends WebCall {
         super(200, url, WebCall.REQUEST_TYPE_POST);
     }
 
-    //TODO: check why printer still freezes sometimes
     @Override
     public void prepareRequest(HttpRequest request) throws RequestPreparationException {
             List<NameValuePair> nameValuePairs = new ArrayList<>(3);
