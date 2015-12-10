@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
  * @author andy
  */
 public class ObjectFactory {
+    //TODO: implement object cache pool. consider TTL, synchronization and object resetting
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ObjectFactory.class);
     
     public static final String MI_TAG_CHARACTER = "%";
