@@ -69,7 +69,7 @@ public class WebProcessorApache implements WebProcessor {
             throw new WebExecutionException(ex);
         }
         WebResponse response = new WebResponseImpl(hresp.getStatusLine().getStatusCode(), body);
-        //TODO: handle response headers
+
         for (Header header: hresp.getAllHeaders()) {
             response.addHeader(header.getName(), header.getValue());
         }
