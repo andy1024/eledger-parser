@@ -3,18 +3,12 @@ package org.warheim.eledger.web;
 import org.warheim.net.RequestPreparationException;
 import org.warheim.net.WebCall;
 import org.warheim.net.ResponseHandlerException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.LoggerFactory;
 import static org.warheim.eledger.web.HttpReqRespHandler.addCommonHeaders;
 import static org.warheim.eledger.web.HttpReqRespHandler.addExtHeaders;
+import org.warheim.net.WebRequest;
+import org.warheim.net.WebRequestType;
+import org.warheim.net.WebResponse;
 
 /**
  * Authorization web handler
@@ -41,7 +35,7 @@ public final class Authorize extends WebCall {
     
     public Authorize(String url, String destPage, String origin, String username, String pass,
         String cookie, String etag) {
-        super(302, url, WebCall.REQUEST_TYPE_POST);
+        super(302, url, WebRequestType.POST);
         this.username = username;
         this.pass = pass;
         this.destPage = destPage;
@@ -51,25 +45,16 @@ public final class Authorize extends WebCall {
     }
 
     @Override
-    public void prepareRequest(HttpRequest request) throws RequestPreparationException {
-            addCommonHeaders(request);
-            addExtHeaders(request, cookie, origin, destPage, etag);
-            
-            List<NameValuePair> nameValuePairs = new ArrayList<>(3);
-            nameValuePairs.add(new BasicNameValuePair("referer", "1"));
-            nameValuePairs.add(new BasicNameValuePair("login", username));
-            nameValuePairs.add(new BasicNameValuePair("password", pass));
-            HttpPost post = (HttpPost)request;
-        try {
-            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-        } catch (UnsupportedEncodingException ex) {
-            logger.error("Error while preparing request call headers", ex);
-            throw new RequestPreparationException(ex);
-        }
+    public void prepareRequest(WebRequest request) throws RequestPreparationException {
+        addCommonHeaders(request);
+        addExtHeaders(request, cookie, origin, destPage, etag);
+        request.addDataEntry("referer", "1");
+        request.addDataEntry("login", username);
+        request.addDataEntry("password", pass);
     }
 
     @Override
-    public String handleResponse(HttpResponse resp) throws ResponseHandlerException {
+    public String handleResponse(WebResponse response) throws ResponseHandlerException {
         return null;
     }
     

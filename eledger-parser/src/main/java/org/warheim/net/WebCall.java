@@ -1,15 +1,9 @@
 package org.warheim.net;
 
 import java.io.IOException;
-import org.apache.http.Header;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.slf4j.LoggerFactory;
+import org.warheim.di.ObjectCreationException;
+import org.warheim.di.ObjectFactory;
 
 /**
  * Base class for making web calls
@@ -20,55 +14,32 @@ import org.slf4j.LoggerFactory;
 public abstract class WebCall {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WebCall.class);
     
-    public static final String REQUEST_TYPE_GET = "GET";
-    public static final String REQUEST_TYPE_POST = "POST";
-    
     protected int expectedOutcomeStatus;
     protected String url;
-    protected String requestType;
+    protected WebRequest request;
     
-    public HttpUriRequest createRequest(String url) {
-        if (null != requestType) switch (requestType) {
-            case REQUEST_TYPE_GET:
-                return new HttpGet(url);
-            case REQUEST_TYPE_POST:
-                return new HttpPost(url);
-        }
-        return null;
-    }
-    
-    public WebCall(int expectedOutcomeStatus, String url, String requestType) {
+    public WebCall(int expectedOutcomeStatus, String url, WebRequestType requestType) {
         this.expectedOutcomeStatus = expectedOutcomeStatus;
         this.url = url;
-        this.requestType = requestType;
+        this.request = new WebRequestImpl(url, requestType);
     }
 
-    protected void showRequest(HttpRequest req) {
-        logger.debug("Executing request " + req.getRequestLine());
-        for (Header h: req.getAllHeaders()) {
-            logger.debug(h.toString());
-        }
-    }
-
-    public abstract void prepareRequest(HttpRequest request) throws RequestPreparationException;
+    public abstract void prepareRequest(WebRequest request) throws RequestPreparationException;
     
-    public abstract String handleResponse(HttpResponse resp) throws ResponseHandlerException;
+    public abstract String handleResponse(WebResponse response) throws ResponseHandlerException;
     
-    public String doCall() throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        String result = null;
-        try {
-            HttpUriRequest httpget = createRequest(url);
-            prepareRequest(httpget);
-            showRequest(httpget);
-            HttpResponse resp = httpclient.execute(httpget);
-            if (resp.getStatusLine().getStatusCode()==expectedOutcomeStatus) {
-                result = handleResponse(resp);
-            } else {
-                throw new WrongStatusException(expectedOutcomeStatus, resp.getStatusLine().getStatusCode());
-            }
-        } finally {
-            httpclient.close();
+    public String doCall() throws IOException, WrongStatusException, ResponseHandlerException, 
+            RequestPreparationException, ObjectCreationException, WebExecutionException {
+        WebProcessor wp = (WebProcessor) ObjectFactory.createObject("org.warheim.net.WebProcessorApache()");
+        prepareRequest(request);
+        WebResponse response = wp.execute(request);
+        String result;
+        logger.debug(response.getBody());
+        if (response.getStatus()==expectedOutcomeStatus) {
+            result = handleResponse(response);
+        } else {
+            logger.warn("Expected status " + expectedOutcomeStatus + " got " + response.getStatus());
+            throw new WrongStatusException(expectedOutcomeStatus, response.getStatus());
         }
         return result;
     }
