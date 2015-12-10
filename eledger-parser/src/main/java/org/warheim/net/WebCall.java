@@ -4,6 +4,7 @@ import java.io.IOException;
 import org.slf4j.LoggerFactory;
 import org.warheim.di.ObjectCreationException;
 import org.warheim.di.ObjectFactory;
+import org.warheim.eledger.parser.Config;
 
 /**
  * Base class for making web calls
@@ -30,7 +31,7 @@ public abstract class WebCall {
     
     public String doCall() throws IOException, WrongStatusException, ResponseHandlerException, 
             RequestPreparationException, ObjectCreationException, WebExecutionException {
-        WebProcessor wp = (WebProcessor) ObjectFactory.createObject("org.warheim.net.WebProcessorApache()");
+        WebProcessor wp = (WebProcessor) ObjectFactory.createObject("org.warheim.net.WebProcessorJsoup()");
         prepareRequest(request);
         WebResponse response = wp.execute(request);
         String result;
