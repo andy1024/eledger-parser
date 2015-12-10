@@ -1,8 +1,8 @@
 package org.warheim.eledger.web;
 
 import org.warheim.net.ReturnWebPageCall;
-import org.warheim.net.WebCall;
-import org.apache.http.HttpRequest;
+import org.warheim.net.WebRequest;
+import org.warheim.net.WebRequestType;
 
 /**
  * Gets tasks
@@ -25,13 +25,13 @@ public final class GetTasksList extends ReturnWebPageCall {
     private final String etag;
 
     public GetTasksList(String url, String cookie, String etag) {
-        super(200, url, WebCall.REQUEST_TYPE_GET);
+        super(200, url, WebRequestType.GET);
         this.cookie = cookie;
         this.etag = etag;
     }
 
     @Override
-    public void prepareRequest(HttpRequest request) {
+    public void prepareRequest(WebRequest request) {
         HttpReqRespHandler.addCommonHeaders(request);
         HttpReqRespHandler.addExtHeaders(request, cookie, url, null, etag);
     }

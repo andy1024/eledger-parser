@@ -10,10 +10,13 @@ import java.util.Random;
 import java.util.Set;
 import org.apache.http.HttpMessage;
 import org.slf4j.LoggerFactory;
+import org.warheim.di.ObjectCreationException;
 import org.warheim.eledger.parser.Config;
 import org.warheim.eledger.parser.model.Source;
 import org.warheim.eledger.parser.model.SourceType;
 import org.warheim.eledger.parser.model.User;
+import org.warheim.net.WebExecutionException;
+import org.warheim.net.WebRequest;
 
 /**
  * Main class for web interaction
@@ -45,7 +48,7 @@ public class HttpReqRespHandler {
         }
     }
 
-    public List<Source> getAllData() throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException {
+    public List<Source> getAllData() throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException, ObjectCreationException, WebExecutionException {
         List<Source> retval = new ArrayList<>();
         
         String authPage = base + "/" + Config.get(Config.KEY_AUTH_PAGE);
@@ -82,7 +85,7 @@ public class HttpReqRespHandler {
         return retval;
     }
     
-    public List<Source> getMessagesContents(Set<String> msgIds) throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException {
+    public List<Source> getMessagesContents(Set<String> msgIds) throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException, ObjectCreationException, WebExecutionException {
         List<Source> retval = new ArrayList<>();
         String messagePageUrl = base + "/" + Config.get(Config.KEY_MESSAGE_PAGE);
         String messageInboxPageUrl = base + "/" + Config.get(Config.KEY_MESSAGES_LIST_PAGE);
@@ -97,7 +100,7 @@ public class HttpReqRespHandler {
         return retval;
     }
     
-    public static void addCommonHeaders(HttpMessage httpMessage) {
+    public static void addCommonHeaders(WebRequest request) {
         /*
         -H "Accept: $ACCEPT" 
         -H 'Connection: keep-alive' 
@@ -106,15 +109,15 @@ public class HttpReqRespHandler {
         -H 'Upgrade-Insecure-Requests: 1' 
         -H "User-Agent: $USER_AGENT"
         */
-        httpMessage.addHeader(Config.get(Config.KEY_HEADER_ACCEPT_KEY), Config.get(Config.KEY_HEADER_ACCEPT_VALUE));
-        httpMessage.addHeader(Config.get(Config.KEY_HEADER_CONNECTION_KEY), Config.get(Config.KEY_HEADER_CONNECTION_VALUE));
-        httpMessage.addHeader(Config.get(Config.KEY_HEADER_ACCEPT_ENCODING_KEY), Config.get(Config.KEY_HEADER_ACCEPT_ENCODING_VALUE));
-        httpMessage.addHeader(Config.get(Config.KEY_HEADER_ACCEPT_LANGUAGE_KEY), Config.get(Config.KEY_HEADER_ACCEPT_LANGUAGE_VALUE));
-        httpMessage.addHeader(Config.get(Config.KEY_HEADER_UPGRADE_INSECURE_REQUESTS_KEY), Config.get(Config.KEY_HEADER_UPGRADE_INSECURE_REQUESTS_VALUE));
-        httpMessage.addHeader(Config.get(Config.KEY_HEADER_USER_AGENT_KEY), Config.get(Config.KEY_HEADER_USER_AGENT_VALUE));
+        request.addHeader(Config.get(Config.KEY_HEADER_ACCEPT_KEY), Config.get(Config.KEY_HEADER_ACCEPT_VALUE));
+        request.addHeader(Config.get(Config.KEY_HEADER_CONNECTION_KEY), Config.get(Config.KEY_HEADER_CONNECTION_VALUE));
+        request.addHeader(Config.get(Config.KEY_HEADER_ACCEPT_ENCODING_KEY), Config.get(Config.KEY_HEADER_ACCEPT_ENCODING_VALUE));
+        request.addHeader(Config.get(Config.KEY_HEADER_ACCEPT_LANGUAGE_KEY), Config.get(Config.KEY_HEADER_ACCEPT_LANGUAGE_VALUE));
+        request.addHeader(Config.get(Config.KEY_HEADER_UPGRADE_INSECURE_REQUESTS_KEY), Config.get(Config.KEY_HEADER_UPGRADE_INSECURE_REQUESTS_VALUE));
+        request.addHeader(Config.get(Config.KEY_HEADER_USER_AGENT_KEY), Config.get(Config.KEY_HEADER_USER_AGENT_VALUE));
     }
     
-    public static void addExtHeaders(HttpMessage httpMessage, String cookie,
+    public static void addExtHeaders(WebRequest request, String cookie,
             String origin, String referer, String etag
         ) {
         /*
@@ -126,17 +129,17 @@ public class HttpReqRespHandler {
         -H 'Connection: keep-alive' 
         If-None-Match: \"$ETAG\"`
         */
-        httpMessage.addHeader("Cookie", Config.get(Config.KEY_AUTH_COOKIE_NAME) + "=" + cookie);
+        request.addHeader("Cookie", Config.get(Config.KEY_AUTH_COOKIE_NAME) + "=" + cookie);
         if (origin!=null) {
-            httpMessage.addHeader("Origin", origin);
+            request.addHeader("Origin", origin);
         }
-        httpMessage.addHeader(Config.get(Config.KEY_HEADER_CONTENT_TYPE_KEY), Config.get(Config.KEY_HEADER_CONTENT_TYPE_VALUE));
-        httpMessage.addHeader(Config.get(Config.KEY_HEADER_CACHE_CONTROL_KEY), Config.get(Config.KEY_HEADER_CACHE_CONTROL_VALUE));
+        request.addHeader(Config.get(Config.KEY_HEADER_CONTENT_TYPE_KEY), Config.get(Config.KEY_HEADER_CONTENT_TYPE_VALUE));
+        request.addHeader(Config.get(Config.KEY_HEADER_CACHE_CONTROL_KEY), Config.get(Config.KEY_HEADER_CACHE_CONTROL_VALUE));
         if (referer!=null) {
-            httpMessage.addHeader(Config.get(Config.KEY_HEADER_REFERER_KEY), referer);
+            request.addHeader(Config.get(Config.KEY_HEADER_REFERER_KEY), referer);
         }
         if (etag!=null) {
-            httpMessage.addHeader(Config.get(Config.KEY_HEADER_IF_NONE_MATCH_KEY), etag);
+            request.addHeader(Config.get(Config.KEY_HEADER_IF_NONE_MATCH_KEY), etag);
         }
     }
     
@@ -144,7 +147,7 @@ public class HttpReqRespHandler {
         return input.replaceFirst(".*" + Config.get(Config.KEY_AUTH_COOKIE_NAME) + "=(.*);.*","$1");
     }
     
-    public void logout() throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException {
+    public void logout() throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException, ObjectCreationException, WebExecutionException {
         String logoutUrl = base + "/" + Config.get(Config.KEY_LOGOUT_PAGE);
         String referer = base + "/" + Config.get(Config.KEY_MAIN_PAGE);
 

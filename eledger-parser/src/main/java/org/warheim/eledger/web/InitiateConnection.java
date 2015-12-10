@@ -2,10 +2,11 @@ package org.warheim.eledger.web;
 
 import org.warheim.net.WebCall;
 import org.warheim.net.ResponseHandlerException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
 import static org.warheim.eledger.web.HttpReqRespHandler.addCommonHeaders;
 import static org.warheim.eledger.web.HttpReqRespHandler.extractCookieValue;
+import org.warheim.net.WebRequest;
+import org.warheim.net.WebRequestType;
+import org.warheim.net.WebResponse;
 
 /**
  * Initializes web session
@@ -17,18 +18,18 @@ public final class InitiateConnection extends WebCall {
     private String cookie = null;
 
     public InitiateConnection(String url) {
-        super(200, url, WebCall.REQUEST_TYPE_GET);
+        super(200, url, WebRequestType.GET);
     }
 
     @Override
-    public void prepareRequest(HttpRequest request) {
+    public void prepareRequest(WebRequest request) {
         addCommonHeaders(request);
     }
 
     @Override
-    public String handleResponse(HttpResponse resp) throws ResponseHandlerException {
-        etag = resp.getFirstHeader("Etag").getValue();
-        cookie = extractCookieValue(resp.getFirstHeader("Set-Cookie").getValue());
+    public String handleResponse(WebResponse resp) throws ResponseHandlerException {
+        etag = resp.getHeader("Etag");
+        cookie = extractCookieValue(resp.getHeader("Set-Cookie"));
         return null;
     }
 

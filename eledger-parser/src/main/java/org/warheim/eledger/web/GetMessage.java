@@ -1,10 +1,10 @@
 package org.warheim.eledger.web;
 
-import org.apache.http.HttpRequest;
 import org.warheim.eledger.parser.Config;
 import org.warheim.net.RequestPreparationException;
 import org.warheim.net.ReturnWebPageCall;
-import org.warheim.net.WebCall;
+import org.warheim.net.WebRequest;
+import org.warheim.net.WebRequestType;
 
 /**
  * Gets single message
@@ -19,7 +19,7 @@ public class GetMessage extends ReturnWebPageCall {
     private final String referer;
 
     public GetMessage(String url, String msgId, String cookie, String etag, String referer) {
-        super(200, url+"?id="+msgId, WebCall.REQUEST_TYPE_GET);
+        super(200, url+"?id="+msgId, WebRequestType.GET);
         this.cookie = cookie;
         this.etag = etag;
         this.msgId = msgId;
@@ -27,7 +27,7 @@ public class GetMessage extends ReturnWebPageCall {
     }
 
     @Override
-    public void prepareRequest(HttpRequest request) throws RequestPreparationException {
+    public void prepareRequest(WebRequest request) throws RequestPreparationException {
         HttpReqRespHandler.addCommonHeaders(request);
         HttpReqRespHandler.addExtHeaders(request, cookie, null, referer, null);
         request.addHeader(Config.get(Config.KEY_HEADER_AJAX_REQUESTED_WITH_KEY), Config.get(Config.KEY_HEADER_AJAX_REQUESTED_WITH_VALUE));

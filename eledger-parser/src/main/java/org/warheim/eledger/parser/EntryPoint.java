@@ -25,6 +25,7 @@ import org.warheim.net.RequestPreparationException;
 import org.warheim.net.ResponseHandlerException;
 import org.warheim.net.WrongStatusException;
 import org.warheim.formatter.Formatter;
+import org.warheim.net.WebExecutionException;
 import org.warheim.outputsink.Output;
 import org.warheim.outputsink.OutputException;
 
@@ -85,7 +86,7 @@ public class EntryPoint extends Application {
                             HttpReqRespHandler h = new HttpReqRespHandler(user);
                             serverResponse.addAll(h.getAllData());
                             sessions.put(user, h);
-                        } catch (java.io.IOException e) {
+                        } catch (java.io.IOException | WebExecutionException e) {
                             logger.error("Server request/respons error", e);
                             System.exit(2);
                         }
@@ -110,7 +111,7 @@ public class EntryPoint extends Application {
                             this.fire(Event.APP_EVENT_BEFORE_SINGLE_USER_LOGOUT);
                             h.logout();
                             this.fire(Event.APP_EVENT_AFTER_SINGLE_USER_LOGOUT);
-                        } catch (java.io.IOException e) {
+                        } catch (java.io.IOException|WebExecutionException e) {
                             logger.error("Server request/response error", e);
                             System.exit(2);
                         }

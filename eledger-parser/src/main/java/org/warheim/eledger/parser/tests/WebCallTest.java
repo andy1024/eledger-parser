@@ -6,12 +6,14 @@
 package org.warheim.eledger.parser.tests;
 
 import java.io.IOException;
-import org.apache.http.HttpRequest;
 import org.slf4j.LoggerFactory;
+import org.warheim.di.ObjectCreationException;
 import org.warheim.net.RequestPreparationException;
 import org.warheim.net.ResponseHandlerException;
 import org.warheim.net.ReturnWebPageCall;
-import org.warheim.net.WebCall;
+import org.warheim.net.WebExecutionException;
+import org.warheim.net.WebRequest;
+import org.warheim.net.WebRequestType;
 import org.warheim.net.WrongStatusException;
 
 /**
@@ -22,15 +24,15 @@ public class WebCallTest extends ReturnWebPageCall {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WebCallTest.class);
 
     public WebCallTest(int expectedOutcomeStatus, String url) {
-        super(expectedOutcomeStatus, url, WebCall.REQUEST_TYPE_GET);
+        super(expectedOutcomeStatus, url, WebRequestType.GET);
     }
 
     @Override
-    public void prepareRequest(HttpRequest request) {
+    public void prepareRequest(WebRequest request) {
         
     }
 
-    public static void main(String... args) throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException {
+    public static void main(String... args) throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException, ObjectCreationException, WebExecutionException {
         WebCallTest wct = new WebCallTest(200, "http://192.168.1.29/printer/main.html");
         logger.info(wct.doCall());
     }
