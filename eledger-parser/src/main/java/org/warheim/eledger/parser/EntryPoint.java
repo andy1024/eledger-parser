@@ -21,6 +21,7 @@ import org.warheim.di.ObjectFactory;
 import org.warheim.eledger.parser.model.NotificationsData;
 import org.warheim.eledger.parser.model.MockData;
 import org.warheim.eledger.parser.model.User;
+import org.warheim.eledger.parser.model.UserNotifications;
 import org.warheim.net.RequestPreparationException;
 import org.warheim.net.ResponseHandlerException;
 import org.warheim.net.WrongStatusException;
@@ -107,7 +108,13 @@ public class EntryPoint extends Application {
                     for (User user : Config.getUsers()) {
                         try {
                             HttpReqRespHandler h = sessions.get(user);
-                            messageDataServerResponse.addAll(h.getMessagesContents(newData.getNotificationsForUser(user).getMessageIDs()));
+                            UserNotifications un = newData.getNotificationsForUser(user);
+                            //fix for issue #6
+                            if (un!=null) {
+                                messageDataServerResponse.addAll(h.getMessagesContents(un.getMessageIDs()));
+                            } else {
+                                logger.info("No new notifications for user " + user.getFullname());
+                            }
                             this.fire(Event.APP_EVENT_BEFORE_SINGLE_USER_LOGOUT);
                             h.logout();
                             this.fire(Event.APP_EVENT_AFTER_SINGLE_USER_LOGOUT);
