@@ -1,10 +1,12 @@
 package org.warheim.net;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import org.slf4j.LoggerFactory;
 import org.warheim.di.ObjectCreationException;
 import org.warheim.di.ObjectFactory;
-import org.warheim.eledger.parser.Config;
 
 /**
  * Base class for making web calls
@@ -15,12 +17,21 @@ import org.warheim.eledger.parser.Config;
 public abstract class WebCall {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WebCall.class);
     
-    protected int expectedOutcomeStatus;
+    protected Collection<Integer> expectedOutcomeStatus = new HashSet<>();
     protected String url;
     protected WebRequest request;
     
-    public WebCall(int expectedOutcomeStatus, String url, WebRequestType requestType) {
-        this.expectedOutcomeStatus = expectedOutcomeStatus;
+    public WebCall(String expectedOutcomeStatiList, String url, WebRequestType requestType) {
+        String[] expArr = expectedOutcomeStatiList.split(",");
+        for (String exp: expArr) {
+            this.expectedOutcomeStatus.add(Integer.parseInt(exp));
+        }
+        this.url = url;
+        this.request = new WebRequestImpl(url, requestType);
+    }
+
+    public WebCall(Integer expectedOutcomeStatus, String url, WebRequestType requestType) {
+        this.expectedOutcomeStatus.add(expectedOutcomeStatus);
         this.url = url;
         this.request = new WebRequestImpl(url, requestType);
     }
@@ -31,15 +42,15 @@ public abstract class WebCall {
     
     public String doCall() throws IOException, WrongStatusException, ResponseHandlerException, 
             RequestPreparationException, ObjectCreationException, WebExecutionException {
-        WebProcessor wp = (WebProcessor) ObjectFactory.createObject("org.warheim.net.WebProcessorApache()");
+        WebProcessor wp = (WebProcessor) ObjectFactory.createObject("org.warheim.net.WebProcessorJsoup()");
         prepareRequest(request);
         WebResponse response = wp.execute(request);
         String result;
         logger.debug(response.getBody());
-        if (response.getStatus()==expectedOutcomeStatus) {
+        if (expectedOutcomeStatus.contains(response.getStatus())) {
             result = handleResponse(response);
         } else {
-            logger.warn("Expected status " + expectedOutcomeStatus + " got " + response.getStatus());
+            logger.warn("Expected status " + expectedOutcomeStatus.toString() + " got " + response.getStatus());
             throw new WrongStatusException(expectedOutcomeStatus, response.getStatus());
         }
         return result;

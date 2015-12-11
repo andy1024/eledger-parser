@@ -7,7 +7,6 @@ import java.util.Map;
  * @author andy
  */
 public interface WebRequest {
-    //FIXME: introduce cookies and adjust WebProcessorApache to handle them
     public String getUrl();
     public void setUrl(String url);
     public WebRequestType getType();

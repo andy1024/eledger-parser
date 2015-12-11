@@ -1,5 +1,6 @@
 package org.warheim.eledger.web;
 
+import java.util.HashSet;
 import org.warheim.net.RequestPreparationException;
 import org.warheim.net.WebCall;
 import org.warheim.net.ResponseHandlerException;
@@ -35,7 +36,7 @@ public final class Authorize extends WebCall {
     
     public Authorize(String url, String destPage, String origin, String username, String pass,
         String cookie, String etag) {
-        super(302, url, WebRequestType.POST);
+        super("200,302", url, WebRequestType.POST);
         this.username = username;
         this.pass = pass;
         this.destPage = destPage;
