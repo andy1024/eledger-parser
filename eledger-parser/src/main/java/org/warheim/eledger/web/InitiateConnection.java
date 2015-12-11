@@ -1,9 +1,9 @@
 package org.warheim.eledger.web;
 
+import org.warheim.eledger.parser.Config;
 import org.warheim.net.WebCall;
 import org.warheim.net.ResponseHandlerException;
 import static org.warheim.eledger.web.HttpReqRespHandler.addCommonHeaders;
-import static org.warheim.eledger.web.HttpReqRespHandler.extractCookieValue;
 import org.warheim.net.WebRequest;
 import org.warheim.net.WebRequestType;
 import org.warheim.net.WebResponse;
@@ -29,7 +29,7 @@ public final class InitiateConnection extends WebCall {
     @Override
     public String handleResponse(WebResponse resp) throws ResponseHandlerException {
         etag = resp.getHeader("Etag");
-        cookie = extractCookieValue(resp.getHeader("Set-Cookie"));
+        cookie = resp.getCookie(Config.get(Config.KEY_AUTH_COOKIE_NAME));
         return null;
     }
 

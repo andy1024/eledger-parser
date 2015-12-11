@@ -31,7 +31,7 @@ public abstract class WebCall {
     
     public String doCall() throws IOException, WrongStatusException, ResponseHandlerException, 
             RequestPreparationException, ObjectCreationException, WebExecutionException {
-        WebProcessor wp = (WebProcessor) ObjectFactory.createObject("org.warheim.net.WebProcessorJsoup()");
+        WebProcessor wp = (WebProcessor) ObjectFactory.createObject("org.warheim.net.WebProcessorApache()");
         prepareRequest(request);
         WebResponse response = wp.execute(request);
         String result;

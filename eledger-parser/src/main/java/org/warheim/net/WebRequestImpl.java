@@ -10,6 +10,7 @@ import java.util.Map;
 public class WebRequestImpl implements WebRequest {
     private final Map<String, String> headers = new HashMap<>();
     private final Map<String, String> dataEntries = new HashMap<>();
+    private final Map<String, String> cookies = new HashMap<>();
     private WebRequestType type;
     private String url;
 
@@ -36,10 +37,14 @@ public class WebRequestImpl implements WebRequest {
     @Override
     public String show() {
         StringBuilder str = new StringBuilder();
-        str.append(url).append(" ").append(type.getName());
-        str.append("\n");
+        str.append("Request ").append(url).append(" ").append(type.getName()).append("\n");
+        str.append("Headers:\n");
         for (String key: headers.keySet()) {
-            str.append(" ").append(key).append("=").append(headers.get(key));
+            str.append(" ").append(key).append("=").append(headers.get(key)).append("\n");
+        }
+        str.append("Cookies:\n");
+        for (String key: cookies.keySet()) {
+            str.append(" ").append(key).append("=").append(cookies.get(key)).append("\n");
         }
         str.append("\n");
         return str.toString();
@@ -73,6 +78,21 @@ public class WebRequestImpl implements WebRequest {
     @Override
     public Map<String, String> getDataEntries() {
         return dataEntries;
+    }
+
+    @Override
+    public String getCookie(String key) {
+        return cookies.get(key);
+    }
+
+    @Override
+    public void addCookie(String key, String value) {
+        cookies.put(key, value);
+    }
+
+    @Override
+    public Map<String, String> getCookies() {
+        return cookies;
     }
 
 }

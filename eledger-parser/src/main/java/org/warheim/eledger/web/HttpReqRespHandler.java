@@ -129,7 +129,7 @@ public class HttpReqRespHandler {
         -H 'Connection: keep-alive' 
         If-None-Match: \"$ETAG\"`
         */
-        request.addHeader("Cookie", Config.get(Config.KEY_AUTH_COOKIE_NAME) + "=" + cookie);
+        request.addCookie(Config.get(Config.KEY_AUTH_COOKIE_NAME), cookie);
         if (origin!=null) {
             request.addHeader("Origin", origin);
         }
@@ -141,10 +141,6 @@ public class HttpReqRespHandler {
         if (etag!=null) {
             request.addHeader(Config.get(Config.KEY_HEADER_IF_NONE_MATCH_KEY), etag);
         }
-    }
-    
-    protected static String extractCookieValue(String input) {
-        return input.replaceFirst(".*" + Config.get(Config.KEY_AUTH_COOKIE_NAME) + "=(.*);.*","$1");
     }
     
     public void logout() throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException, ObjectCreationException, WebExecutionException {

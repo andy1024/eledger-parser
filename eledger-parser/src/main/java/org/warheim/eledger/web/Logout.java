@@ -28,7 +28,7 @@ public final class Logout extends WebCall {
     @Override
     public void prepareRequest(WebRequest request) throws RequestPreparationException {
         addCommonHeaders(request);
-        request.addHeader("Cookie", Config.get(Config.KEY_AUTH_COOKIE_NAME) + "=" + cookie);
+        request.addCookie(Config.get(Config.KEY_AUTH_COOKIE_NAME), cookie);
         if (referer!=null) {
             request.addHeader(Config.get(Config.KEY_HEADER_REFERER_KEY), referer);
         }

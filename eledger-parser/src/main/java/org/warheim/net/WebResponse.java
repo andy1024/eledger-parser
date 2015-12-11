@@ -15,4 +15,7 @@ public interface WebResponse {
     public void setBody(String body);
     public int getStatus();
     public void setStatus(int status);
+    public String getCookie(String key);
+    public void addCookie(String key, String value);
+    public Map<String, String> getCookies();
 }

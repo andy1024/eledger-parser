@@ -36,6 +36,9 @@ public class WebProcessorJsoup implements WebProcessor {
             }
             conn = conn.method(Connection.Method.POST);
         }
+        for (String key: request.getCookies().keySet()) {
+            conn.cookie(key, request.getCookies().get(key));
+        }
 
         if (conn != null) {
             return conn;
@@ -52,7 +55,7 @@ public class WebProcessorJsoup implements WebProcessor {
             response.addHeader(key, resp.headers().get(key));
         }
         for (String key: resp.cookies().keySet()) {
-            response.addHeader("Set-Cookie",  key + "=" + resp.cookies().get(key) + ";");
+            response.addCookie(key, resp.cookies().get(key));
         }
         return response;
     }
@@ -61,9 +64,10 @@ public class WebProcessorJsoup implements WebProcessor {
     public WebResponse execute(WebRequest request) throws WebExecutionException {
         WebResponse response = null;
         try {
-            request.show();
+            logger.debug(request.show());
             Connection conn = getRequest(request);
             response = getResponse(conn.execute());
+            logger.debug(response.show());
         } catch (IOException ex) {
             logger.error("Error while reading response from server", ex);
             throw new WebExecutionException(ex);

@@ -18,6 +18,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.LoggerFactory;
+import org.warheim.eledger.parser.Config;
 
 /**
  *
@@ -52,6 +53,9 @@ public class WebProcessorApache implements WebProcessor {
             for (String key: request.getHeaders().keySet()) {
                 hreq.addHeader(key, request.getHeaders().get(key));
             }
+            for (String key: request.getCookies().keySet()) {
+                hreq.addHeader("Cookie", key + "=" + request.getCookies().get(key) + ";");
+            }
         } else {
             throw new WebExecutionException("Bad request method");
         }
@@ -71,7 +75,11 @@ public class WebProcessorApache implements WebProcessor {
         WebResponse response = new WebResponseImpl(hresp.getStatusLine().getStatusCode(), body);
 
         for (Header header: hresp.getAllHeaders()) {
-            response.addHeader(header.getName(), header.getValue());
+            if ("Set-Cookie".equals(header.getName())) {
+                processCookie(response, header.getValue());
+            } else {
+                response.addHeader(header.getName(), header.getValue());
+            }
         }
         return response;
     }
@@ -82,9 +90,10 @@ public class WebProcessorApache implements WebProcessor {
         WebResponse response;
         try {
             HttpUriRequest hreq = getRequest(request);
-            request.show();
+            logger.debug(request.show());
             HttpResponse resp = httpclient.execute(hreq);
             response = getResponse(resp);
+            logger.debug(response.show());
             httpclient.close();
         } catch (IOException ex) {
             logger.error("Error while reading response from server", ex);
@@ -94,4 +103,26 @@ public class WebProcessorApache implements WebProcessor {
 
     }
 
+    protected static void processCookie(WebResponse response, String input) {
+        String[] entryElements = input.split("=");
+        switch (entryElements.length) {
+            case 0:
+                logger.warn("Empty cookie: " + input);
+                break;
+            case 1: //no value cookie
+                response.addCookie(entryElements[0], null);
+                break;
+            default:
+                String[] valueElements = entryElements[1].split(";");
+                if (valueElements==null||valueElements.length<2) {
+                    logger.warn("Cookie format error: " + input);
+                }
+                if (entryElements.length>2) {
+                    logger.warn("Too many elements in cookie description: " + input);
+                }
+                response.addCookie(entryElements[0], valueElements[0]);
+                break;
+        }
+    }
+    
 }
