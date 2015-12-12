@@ -1,11 +1,7 @@
 package org.warheim.net;
 
 import java.io.IOException;
-import org.apache.http.HttpEntity;
-import org.apache.http.ParseException;
-import org.apache.http.util.EntityUtils;
 import org.jsoup.Connection;
-import org.jsoup.Connection.Request;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.slf4j.LoggerFactory;

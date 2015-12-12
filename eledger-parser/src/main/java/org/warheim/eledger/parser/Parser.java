@@ -14,6 +14,7 @@ import org.warheim.eledger.parser.model.UserNotifications;
  *
  * @author andy
  */
+//TODO: switch to real database, possibly object-oriented
 public class Parser {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Parser.class);
 

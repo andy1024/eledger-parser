@@ -1,12 +1,5 @@
 package org.warheim.eledger.custom;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.LoggerFactory;
 import org.warheim.net.RequestPreparationException;
 import org.warheim.net.ResponseHandlerException;
