@@ -3,7 +3,6 @@ package org.warheim.eledger.web;
 import org.warheim.eledger.parser.Config;
 import org.warheim.net.WebCall;
 import org.warheim.net.ResponseHandlerException;
-import static org.warheim.eledger.web.HttpReqRespHandler.addCommonHeaders;
 import org.warheim.net.WebRequest;
 import org.warheim.net.WebRequestType;
 import org.warheim.net.WebResponse;
@@ -23,7 +22,7 @@ public final class InitiateConnection extends WebCall {
 
     @Override
     public void prepareRequest(WebRequest request) {
-        addCommonHeaders(request);
+        RequestDecorator.addCommonHeaders(request);
     }
 
     @Override

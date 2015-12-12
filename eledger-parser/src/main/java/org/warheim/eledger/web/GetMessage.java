@@ -28,8 +28,8 @@ public class GetMessage extends ReturnWebPageCall {
 
     @Override
     public void prepareRequest(WebRequest request) throws RequestPreparationException {
-        HttpReqRespHandler.addCommonHeaders(request);
-        HttpReqRespHandler.addExtHeaders(request, cookie, null, referer, null);
+        RequestDecorator.addCommonHeaders(request);
+        RequestDecorator.addExtHeaders(request, cookie, null, referer, null);
         request.addHeader(Config.get(Config.KEY_HEADER_AJAX_REQUESTED_WITH_KEY), Config.get(Config.KEY_HEADER_AJAX_REQUESTED_WITH_VALUE));
     }
     

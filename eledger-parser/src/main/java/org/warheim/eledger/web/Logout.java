@@ -1,7 +1,6 @@
 package org.warheim.eledger.web;
 
 import org.warheim.eledger.parser.Config;
-import static org.warheim.eledger.web.HttpReqRespHandler.addCommonHeaders;
 import org.warheim.net.RequestPreparationException;
 import org.warheim.net.ResponseHandlerException;
 import org.warheim.net.WebCall;
@@ -27,7 +26,7 @@ public final class Logout extends WebCall {
 
     @Override
     public void prepareRequest(WebRequest request) throws RequestPreparationException {
-        addCommonHeaders(request);
+        RequestDecorator.addCommonHeaders(request);
         request.addCookie(Config.get(Config.KEY_AUTH_COOKIE_NAME), cookie);
         if (referer!=null) {
             request.addHeader(Config.get(Config.KEY_HEADER_REFERER_KEY), referer);

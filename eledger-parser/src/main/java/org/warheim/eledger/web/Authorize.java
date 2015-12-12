@@ -1,12 +1,9 @@
 package org.warheim.eledger.web;
 
-import java.util.HashSet;
 import org.warheim.net.RequestPreparationException;
 import org.warheim.net.WebCall;
 import org.warheim.net.ResponseHandlerException;
 import org.slf4j.LoggerFactory;
-import static org.warheim.eledger.web.HttpReqRespHandler.addCommonHeaders;
-import static org.warheim.eledger.web.HttpReqRespHandler.addExtHeaders;
 import org.warheim.net.WebRequest;
 import org.warheim.net.WebRequestType;
 import org.warheim.net.WebResponse;
@@ -47,8 +44,8 @@ public final class Authorize extends WebCall {
 
     @Override
     public void prepareRequest(WebRequest request) throws RequestPreparationException {
-        addCommonHeaders(request);
-        addExtHeaders(request, cookie, origin, destPage, etag);
+        RequestDecorator.addCommonHeaders(request);
+        RequestDecorator.addExtHeaders(request, cookie, origin, destPage, etag);
         request.addDataEntry("referer", "1");
         request.addDataEntry("login", username);
         request.addDataEntry("password", pass);

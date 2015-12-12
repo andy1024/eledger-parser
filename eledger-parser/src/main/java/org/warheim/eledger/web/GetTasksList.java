@@ -32,8 +32,8 @@ public final class GetTasksList extends ReturnWebPageCall {
 
     @Override
     public void prepareRequest(WebRequest request) {
-        HttpReqRespHandler.addCommonHeaders(request);
-        HttpReqRespHandler.addExtHeaders(request, cookie, url, null, etag);
+        RequestDecorator.addCommonHeaders(request);
+        RequestDecorator.addExtHeaders(request, cookie, url, null, etag);
     }
 
 }

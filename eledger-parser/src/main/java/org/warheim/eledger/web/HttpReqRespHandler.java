@@ -99,49 +99,6 @@ public class HttpReqRespHandler {
         return retval;
     }
     
-    public static void addCommonHeaders(WebRequest request) {
-        /*
-        -H "Accept: $ACCEPT" 
-        -H 'Connection: keep-alive' 
-        -H 'Accept-Encoding: gzip, deflate, sdch' 
-        -H "Accept-Language: $ACCEPT_LANG" 
-        -H 'Upgrade-Insecure-Requests: 1' 
-        -H "User-Agent: $USER_AGENT"
-        */
-        request.addHeader(Config.get(Config.KEY_HEADER_ACCEPT_KEY), Config.get(Config.KEY_HEADER_ACCEPT_VALUE));
-        request.addHeader(Config.get(Config.KEY_HEADER_CONNECTION_KEY), Config.get(Config.KEY_HEADER_CONNECTION_VALUE));
-        request.addHeader(Config.get(Config.KEY_HEADER_ACCEPT_ENCODING_KEY), Config.get(Config.KEY_HEADER_ACCEPT_ENCODING_VALUE));
-        request.addHeader(Config.get(Config.KEY_HEADER_ACCEPT_LANGUAGE_KEY), Config.get(Config.KEY_HEADER_ACCEPT_LANGUAGE_VALUE));
-        request.addHeader(Config.get(Config.KEY_HEADER_UPGRADE_INSECURE_REQUESTS_KEY), Config.get(Config.KEY_HEADER_UPGRADE_INSECURE_REQUESTS_VALUE));
-        request.addHeader(Config.get(Config.KEY_HEADER_USER_AGENT_KEY), Config.get(Config.KEY_HEADER_USER_AGENT_VALUE));
-    }
-    
-    public static void addExtHeaders(WebRequest request, String cookie,
-            String origin, String referer, String etag
-        ) {
-        /*
-        -H "Cookie: $AUTH_COOKIE_NAME=$COOKIE" 
-        -H "Origin: $BASE_HTTP" 
-        -H 'Content-Type: application/x-www-form-urlencoded' 
-        -H 'Cache-Control: max-age=0' 
-        -H "Referer: $BASE_HTTP/$DEST_PAGE" 
-        -H 'Connection: keep-alive' 
-        If-None-Match: \"$ETAG\"`
-        */
-        request.addCookie(Config.get(Config.KEY_AUTH_COOKIE_NAME), cookie);
-        if (origin!=null) {
-            request.addHeader("Origin", origin);
-        }
-        request.addHeader(Config.get(Config.KEY_HEADER_CONTENT_TYPE_KEY), Config.get(Config.KEY_HEADER_CONTENT_TYPE_VALUE));
-        request.addHeader(Config.get(Config.KEY_HEADER_CACHE_CONTROL_KEY), Config.get(Config.KEY_HEADER_CACHE_CONTROL_VALUE));
-        if (referer!=null) {
-            request.addHeader(Config.get(Config.KEY_HEADER_REFERER_KEY), referer);
-        }
-        if (etag!=null) {
-            request.addHeader(Config.get(Config.KEY_HEADER_IF_NONE_MATCH_KEY), etag);
-        }
-    }
-    
     public void logout() throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException, ObjectCreationException, WebExecutionException {
         String logoutUrl = base + "/" + Config.get(Config.KEY_LOGOUT_PAGE);
         String referer = base + "/" + Config.get(Config.KEY_MAIN_PAGE);
