@@ -18,13 +18,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.LoggerFactory;
-import org.warheim.eledger.parser.Config;
+import org.warheim.di.Cacheable;
 
 /**
  *
  * @author andy
  */
-public class WebProcessorApache implements WebProcessor {
+public class WebProcessorApache implements WebProcessor, Cacheable {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WebProcessorApache.class);
 
     protected HttpUriRequest getRequest(WebRequest request) throws WebExecutionException {

@@ -5,12 +5,13 @@ import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.slf4j.LoggerFactory;
+import org.warheim.di.Cacheable;
 
 /**
  *
  * @author andy
  */
-public class WebProcessorJsoup implements WebProcessor {
+public class WebProcessorJsoup implements WebProcessor, Cacheable {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WebProcessorJsoup.class);
 

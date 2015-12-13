@@ -20,13 +20,14 @@ import org.slf4j.LoggerFactory;
  * @author andy
  */
 public class ObjectFactory {
-    //TODO: implement object cache pool. consider TTL, synchronization and object resetting
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ObjectFactory.class);
     
     public static final String MI_TAG_CHARACTER = "%";
     
     protected static final Map<String, MetaInstruction> metaInstructionHandlers = new HashMap<>();
-
+    
+    protected static final ObjectCache cache = new ObjectCache();
+    
     static {
         List<PojoClass> classes = PojoClassFactory.getPojoClassesRecursively("org.warheim",
             new FilterBasedOnInheritance(MetaInstruction.class));
@@ -65,7 +66,7 @@ public class ObjectFactory {
         }
         return x;
     }
-
+    
     /**
      * creates object based on String parameter
      * @param objDef object specification: package.class(parameter=value[,parameter=value])
@@ -81,22 +82,25 @@ public class ObjectFactory {
         Class clazz;
         try {
             clazz = Class.forName(clazzStr);
-            object = clazz.newInstance();
+            ReturnedObject ro = cache.get(clazz, clazzStr);
+            object = ro.getObject();
             logger.debug(clazz.toString());
-            if (str.length>1) { //check if there are any arguments
-                String argumentList = str[1];
-                String[] args = argumentList.split(",");
-                Map<String, String> attrMap = new HashMap<>();
-                for (String arg : args) {
-                    String[] elements = arg.split("=");
-                    String key = elements[0];
-                    String value = elements[1];
-                    String miValue = runMetaInstructionHandlers(value);
-                    String setterName = getSetterName(key);
-                    logger.debug(setterName + "(" + miValue + ")");
-                    attrMap.put(key, miValue);
-                    Method m = clazz.getMethod(setterName, String.class);
-                    m.invoke(object, miValue);
+            if (!ro.isFromCache()) {
+                if (str.length>1) { //check if there are any arguments
+                    String argumentList = str[1];
+                    String[] args = argumentList.split(",");
+                    Map<String, String> attrMap = new HashMap<>();
+                    for (String arg : args) {
+                        String[] elements = arg.split("=");
+                        String key = elements[0];
+                        String value = elements[1];
+                        String miValue = runMetaInstructionHandlers(value);
+                        String setterName = getSetterName(key);
+                        logger.debug(setterName + "(" + miValue + ")");
+                        attrMap.put(key, miValue);
+                        Method m = clazz.getMethod(setterName, String.class);
+                        m.invoke(object, miValue);
+                    }
                 }
             }
         } catch (NoSuchMethodException | SecurityException ex) {
