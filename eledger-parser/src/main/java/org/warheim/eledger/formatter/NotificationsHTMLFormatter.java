@@ -15,7 +15,7 @@ import org.warheim.formatter.FormattingException;
  * @author andy
  */
 public class NotificationsHTMLFormatter extends NotificationsTaggedFormatter {
-    
+    //TODO: put css contents into outputfile
     protected String css = null;
 
     public void setCss(String css) {
