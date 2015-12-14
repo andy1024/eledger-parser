@@ -3,6 +3,8 @@ package org.warheim.eledger.formatter;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.slf4j.LoggerFactory;
 import static org.warheim.eledger.parser.NotificationsDataCombiner.combine;
 import org.warheim.eledger.parser.model.InfoOnSubject;
@@ -14,6 +16,8 @@ import org.warheim.eledger.parser.model.UserNotifications;
 import org.warheim.formatter.FormattableModel;
 import org.warheim.formatter.Formatter;
 import org.warheim.formatter.FormattingException;
+import org.warheim.formatter.Preprocessor;
+import org.warheim.formatter.PreprocessorException;
 
 /**
  *
@@ -23,6 +27,8 @@ public abstract class NotificationsTaggedFormatter implements Formatter {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(NotificationsTaggedFormatter.class);
 
     protected NotificationsData notificationsData;
+    
+    protected Preprocessor preprocessor;
 
     public NotificationsData getMmap() {
         return notificationsData;
@@ -36,6 +42,11 @@ public abstract class NotificationsTaggedFormatter implements Formatter {
     }
 
     @Override
+    public void setPreprocessor(Preprocessor preprocessor) {
+        this.preprocessor = preprocessor;
+    }
+
+    @Override
     public File getFormattedDocumentFile() throws FormattingException {
         //combine common messages:
         setModel(combine(notificationsData));
@@ -45,10 +56,19 @@ public abstract class NotificationsTaggedFormatter implements Formatter {
             makeHeader(str);
             makeBody(str);
             makeFooter(str);
-            outFile = prepareSourceDocument(str);
+            if (preprocessor!=null) {
+                String v = preprocessor.process(str.toString());
+                StringBuilder strV = new StringBuilder(v);
+                outFile = prepareSourceDocument(strV);
+            } else {
+                outFile = prepareSourceDocument(str);
+            }
             logger.debug(outFile.getAbsolutePath());
         } catch (IOException | InterruptedException ex) {
             logger.error("Error while creating output file", ex);
+            throw new FormattingException(ex);
+        } catch (PreprocessorException ex) {
+            logger.error("Error while preprocessing output file", ex);
             throw new FormattingException(ex);
         }
         return outFile;

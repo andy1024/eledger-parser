@@ -1,12 +1,17 @@
 package org.warheim.eledger.formatter;
 
+import org.warheim.formatter.PreprocessorException;
 import org.warheim.formatter.FormattingException;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 import static org.warheim.eledger.formatter.LatexEscaper.escape;
 import org.warheim.eledger.parser.Config;
+import static org.warheim.eledger.parser.NotificationsDataCombiner.combine;
 import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;
 import org.warheim.eledger.parser.model.Subject;
@@ -19,7 +24,8 @@ import org.warheim.eledger.parser.model.User;
  * @author andy
  */
 public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatter {
-
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(NotificationsPdfLatexFormatter.class);
+    
     //values with defaults
     protected String fontSize="5pt";
     protected String width="54mm";
@@ -57,8 +63,7 @@ public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatt
         }
         str.append("\\newline\n");
     }
-    //TODO: implement some kind of translation dictionary to shorten common subject names and other repetitive elements
-    
+
     @Override
     protected void makeHeader(StringBuilder str) throws FormattingException {
         str.append("\\documentclass{article}\n");

@@ -27,6 +27,7 @@ public class Config {
     public static final String KEY_PRINTER = "sys.output.printer";
     public static final String KEY_OUTPUT_SINK = "sys.output.sink";
     public static final String KEY_OUTPUT_FORMATTER = "sys.output.formatter";
+    public static final String KEY_OUTPUT_PREPROCESSOR = "sys.output.preprocessor";
     public static final String KEY_DEBUG = "sys.debug";
     public static final String KEY_OUTPUT = "sys.output";
     public static final String KEY_WAIT_RANDOM_MIN = "web.wait.random.min";
@@ -75,53 +76,47 @@ public class Config {
     public static final String KEY_MULTIPLE_RECIPIENTS = "msg.multipleRecipients";
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     
-    private Properties props;
-    private static Config instance = new Config();
-
-    private Config() {
-        init();
-    }
-    
-    private void init() {
-        String resourceName = KEY_CONFIG_FILENAME;
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        props = new Properties();
-        try (InputStream resourceStream = loader.getResourceAsStream(resourceName)) {
-            props.load(resourceStream);
-        } catch (IOException ex) {
-            logger.error("Main config not found", ex);
-        }
-        String customConfigFileName = Config.getx(props, KEY_CUSTOM_CONFIG_FILENAME);
-        if (customConfigFileName!=null && !customConfigFileName.isEmpty()) {
-            FileInputStream fis;
-            try {
-                fis = new FileInputStream(customConfigFileName);
-                props.load(fis);
-                fis.close();
-            } catch (FileNotFoundException ex) {
-                logger.error("Custom config not found", ex);
+    private static class Inner {
+        private static final Properties props = new Properties();
+        
+        static {
+            String resourceName = KEY_CONFIG_FILENAME;
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            try (InputStream resourceStream = loader.getResourceAsStream(resourceName)) {
+                props.load(resourceStream);
             } catch (IOException ex) {
-                logger.error("Custom config inaccesible", ex);
+                logger.error("Main config not found", ex);
+            }
+            String customConfigFileName = Config.getx(props, KEY_CUSTOM_CONFIG_FILENAME);
+            if (customConfigFileName!=null && !customConfigFileName.isEmpty()) {
+                FileInputStream fis;
+                try {
+                    fis = new FileInputStream(customConfigFileName);
+                    props.load(fis);
+                    fis.close();
+                } catch (FileNotFoundException ex) {
+                    logger.error("Custom config not found", ex);
+                } catch (IOException ex) {
+                    logger.error("Custom config inaccesible", ex);
+                }
             }
         }
-        
+        private static Properties initialize() {
+            return props;
+        }
+    }
+
+    //this is not a singleton, new is never called
+    private Config() {
     }
     
-    public static Config inst() {
-        if (instance==null) {
-            instance = new Config();
-        }
-        return instance;
-    }
     
     public static final String get(String key) {
-        Config inst = inst();
-        return inst.props.getProperty(key);
+        return Inner.initialize().getProperty(key);
     }
     
     public static final void set(String key, String value) {
-        Config inst = inst();
-        inst.props.setProperty(key, value);
+        Inner.initialize().setProperty(key, value);
     }
 
     public static final Integer getInt(String key) {
@@ -169,7 +164,6 @@ public class Config {
     }
     
     public static final Properties getProperties() {
-        Config inst = inst();
-        return inst.props;
+        return Inner.initialize();
     }
 }

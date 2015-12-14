@@ -67,15 +67,23 @@ public class ObjectFactory {
         return x;
     }
     
+    public static Object createObject(String objDef) throws ObjectCreationException {
+        return createObject(objDef, true);
+    }
     /**
      * creates object based on String parameter
      * @param objDef object specification: package.class(parameter=value[,parameter=value])
+     * @param required if false, it can be null
      * @return
      * @throws ObjectCreationException 
      */
-    public static Object createObject(String objDef) throws ObjectCreationException {
+    public static Object createObject(String objDef, boolean required) throws ObjectCreationException {
         logger.debug("DI-Constructing object");
         Object object = null;
+        if (!required&&(objDef==null||objDef.isEmpty())) {
+            logger.warn("Empty definition, object not constructed");
+            return null;
+        }
         String classDescription = objDef;
         String[] str = classDescription.split("[\\(\\)]");
         String clazzStr = str[0];

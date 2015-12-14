@@ -1,5 +1,6 @@
 package org.warheim.eledger.parser;
 
+import org.warheim.formatter.Preprocessor;
 import java.io.File;
 import org.warheim.eledger.parser.model.SourceType;
 import org.warheim.eledger.parser.model.Source;
@@ -136,7 +137,9 @@ public class EntryPoint extends Application {
             if ("1".equals(Config.get(Config.KEY_OUTPUT))) {
                 this.fire(Event.APP_EVENT_BEFORE_FORMATTING);
                 Formatter formatter = (Formatter) ObjectFactory.createObject(Config.get(Config.KEY_OUTPUT_FORMATTER));
+                Preprocessor preprocessor = (Preprocessor) ObjectFactory.createObject(Config.get(Config.KEY_OUTPUT_PREPROCESSOR), false);
                 formatter.setModel(newData);
+                formatter.setPreprocessor(preprocessor);
                 File formattedDocumentFile = formatter.getFormattedDocumentFile();
                 this.fire(Event.APP_EVENT_AFTER_FORMATTING);
                 Output output = (Output) ObjectFactory.createObject(Config.get(Config.KEY_OUTPUT_SINK));

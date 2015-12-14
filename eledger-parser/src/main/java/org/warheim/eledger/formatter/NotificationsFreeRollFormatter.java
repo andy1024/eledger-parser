@@ -25,25 +25,6 @@ public abstract class NotificationsFreeRollFormatter extends NotificationsTagged
     }
 
     @Override
-    public File getFormattedDocumentFile() throws FormattingException {
-        //combine common messages:
-        setModel(combine(notificationsData));
-        File outFile;
-        try {
-            StringBuilder str = new StringBuilder();
-            makeHeader(str);
-            makeBody(str);
-            makeFooter(str);
-            outFile = prepareSourceDocument(str);
-            logger.debug(outFile.getAbsolutePath());
-        } catch (IOException | InterruptedException ex) {
-            logger.error("Error while creating output file", ex);
-            throw new FormattingException(ex);
-        }
-        return outFile;
-    }
-    
-    @Override
     protected void startUserTag(StringBuilder str, User user, int count) {
         if (count>0) {
             addSeparator(str, SepType.NORMAL);

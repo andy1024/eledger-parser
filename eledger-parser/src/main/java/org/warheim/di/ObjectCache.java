@@ -23,6 +23,7 @@ public class ObjectCache {
         return false;
     }
 
+    //TODO: handle garbage collection of not needed objects
     public ReturnedObject get(Class clazz, String definition) throws InstantiationException, IllegalAccessException {
         Object object = null;
         CachedObject cachedObject = null;
