@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import org.slf4j.LoggerFactory;
 import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;
 import org.warheim.eledger.parser.model.Subject;
 import org.warheim.eledger.parser.model.User;
+import org.warheim.file.FileTool;
 import org.warheim.formatter.FormattingException;
 
 /**
@@ -15,7 +17,8 @@ import org.warheim.formatter.FormattingException;
  * @author andy
  */
 public class NotificationsHTMLFormatter extends NotificationsTaggedFormatter {
-    //TODO: put css contents into outputfile
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(NotificationsTaggedFormatter.class);
+
     protected String css = null;
 
     public void setCss(String css) {
@@ -27,7 +30,13 @@ public class NotificationsHTMLFormatter extends NotificationsTaggedFormatter {
         str.append("<html>");
         str.append("<head>");
         if (css!=null) {
-            str.append("<link rel=\"stylesheet\" href=\"").append(css).append("\">");
+            str.append("<style>");
+            try {
+                str.append(FileTool.readFile(css));
+            } catch (IOException ex) {
+                logger.warn("CSS inaccessible", ex);
+            }
+            str.append("</style>");
         }
         str.append("</head>");
         str.append("<body>");

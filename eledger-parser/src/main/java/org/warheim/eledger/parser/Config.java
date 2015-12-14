@@ -147,6 +147,7 @@ public class Config {
         return users;
     }
     
+    //TODO: check why it stopped working suddenly
     //TODO: letting use any environmental variable may be dangerous, rethink the strategy
     public static String getx(Properties props, String keyName) {
         String text = props.getProperty(keyName);
