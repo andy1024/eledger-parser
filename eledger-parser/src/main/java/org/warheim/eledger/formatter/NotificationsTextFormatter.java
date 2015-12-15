@@ -19,6 +19,11 @@ import org.warheim.formatter.FormattingException;
 public class NotificationsTextFormatter extends NotificationsFreeRollFormatter {
 
     @Override
+    public String getContentType() {
+        return "text/plain";
+    }
+
+    @Override
     protected void addSeparator(StringBuilder str, SepType sepType) {
         switch (sepType) {
             case THIN :   str.append("--------------------\n");

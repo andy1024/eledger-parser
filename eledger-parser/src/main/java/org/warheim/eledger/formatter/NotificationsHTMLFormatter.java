@@ -19,12 +19,17 @@ import org.warheim.formatter.FormattingException;
 public class NotificationsHTMLFormatter extends NotificationsTaggedFormatter {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(NotificationsTaggedFormatter.class);
 
+    @Override
+    public String getContentType() {
+        return "text/html";
+    }
+
     protected String css = null;
 
     public void setCss(String css) {
         this.css = css;
     }
-
+    
     @Override
     protected void makeHeader(StringBuilder str) throws FormattingException {
         str.append("<html>");

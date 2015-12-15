@@ -15,6 +15,6 @@ public class NotificationsPdfLatexFormatterTest {
                 //NotificationsData.deserializeFromJson(FileTool.readFile("/tmp/org.warheim.eledger.parser.model.MessageCombinerTest7328809941113559852.txt"));
         NotificationsPdfLatexFormatter fmt = new NotificationsPdfLatexFormatter();
         fmt.setModel(nd);
-        fmt.getFormattedDocumentFile();
+        fmt.getFormattedDocument();
     }
 }

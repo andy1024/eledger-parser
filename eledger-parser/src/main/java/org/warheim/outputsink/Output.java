@@ -1,6 +1,6 @@
 package org.warheim.outputsink;
 
-import java.io.File;
+import org.warheim.formatter.FormattedDocument;
 
 /**
  * General output interface
@@ -11,7 +11,7 @@ public interface Output {
     
     public void setOutputDeviceID(String outputDeviceID);
 
-    public void setInputFile(File inputFile);
+    public void setFormattedDocument(FormattedDocument formattedDocument);
 
     public boolean process() throws OutputException;
     

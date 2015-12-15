@@ -1,7 +1,5 @@
 package org.warheim.formatter;
 
-import java.io.File;
-
 /**
  * Formatter interface
  *
@@ -9,9 +7,11 @@ import java.io.File;
  */
 public interface Formatter {
     
+    public String getContentType();
+    
     public void setModel(FormattableModel model);
     
     public void setPreprocessor(Preprocessor preprocessor);
     
-    public File getFormattedDocumentFile() throws FormattingException;
+    public FormattedDocument getFormattedDocument() throws FormattingException;
 }

@@ -167,4 +167,8 @@ public class Config {
     public static final Properties getProperties() {
         return Inner.initialize();
     }
+    
+    public static void main(String... args) throws Exception {
+        
+    }
 }

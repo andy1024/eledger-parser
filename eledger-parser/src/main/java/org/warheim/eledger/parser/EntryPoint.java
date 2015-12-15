@@ -1,7 +1,6 @@
 package org.warheim.eledger.parser;
 
 import org.warheim.formatter.Preprocessor;
-import java.io.File;
 import org.warheim.eledger.parser.model.SourceType;
 import org.warheim.eledger.parser.model.Source;
 import org.warheim.file.FileTool;
@@ -23,6 +22,7 @@ import org.warheim.eledger.parser.model.NotificationsData;
 import org.warheim.eledger.parser.model.MockData;
 import org.warheim.eledger.parser.model.User;
 import org.warheim.eledger.parser.model.UserNotifications;
+import org.warheim.formatter.FormattedDocument;
 import org.warheim.net.RequestPreparationException;
 import org.warheim.net.ResponseHandlerException;
 import org.warheim.net.WrongStatusException;
@@ -140,10 +140,10 @@ public class EntryPoint extends Application {
                 Preprocessor preprocessor = (Preprocessor) ObjectFactory.createObject(Config.get(Config.KEY_OUTPUT_PREPROCESSOR), false);
                 formatter.setModel(newData);
                 formatter.setPreprocessor(preprocessor);
-                File formattedDocumentFile = formatter.getFormattedDocumentFile();
+                FormattedDocument formattedDocument = formatter.getFormattedDocument();
                 this.fire(Event.APP_EVENT_AFTER_FORMATTING);
                 Output output = (Output) ObjectFactory.createObject(Config.get(Config.KEY_OUTPUT_SINK));
-                output.setInputFile(formattedDocumentFile);
+                output.setFormattedDocument(formattedDocument);
 
                 try {
                     this.fire(Event.APP_EVENT_BEFORE_OUTPUT);

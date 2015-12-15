@@ -15,6 +15,6 @@ public class NotificationsFormatterTest {
         NotificationsData nd = MockData.createTestData(4);
         Formatter fmt = (Formatter)ObjectFactory.createObject("org.warheim.eledger.formatter.NotificationsHTMLFormatter(css=/home/andy/.eledger/eledgerstyle.css)");
         fmt.setModel(nd);
-        fmt.getFormattedDocumentFile();
+        fmt.getFormattedDocument();
     }
 }

@@ -13,6 +13,7 @@ import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import org.slf4j.LoggerFactory;
+import org.warheim.formatter.FormattedDocument;
 import org.warheim.outputsink.Output;
 
 /**
@@ -24,7 +25,7 @@ public class Printer implements Output {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Printer.class);    
     
     protected String outputDeviceID;
-    protected File inputFile;
+    protected FormattedDocument formattedDocument;
     protected Doc doc;
 
     @Override
@@ -32,16 +33,6 @@ public class Printer implements Output {
         this.outputDeviceID = outputDeviceID;
     }
 
-    @Override
-    public void setInputFile(File inputFile) {
-        this.inputFile = inputFile;
-    }
-    
-    public Printer(String printerID, File inputFile) {
-        this.outputDeviceID = printerID;
-        this.inputFile = inputFile;
-    }
-    
     public Printer() {
         
     }
@@ -50,7 +41,7 @@ public class Printer implements Output {
         Doc myDoc;
         try {
             FileInputStream psStream;
-            psStream = new FileInputStream(inputFile);
+            psStream = new FileInputStream(formattedDocument.getFile());
             DocFlavor psInFormat = DocFlavor.INPUT_STREAM.AUTOSENSE;
             myDoc = new SimpleDoc(psStream, psInFormat, null);  
         } catch (IOException ex) {
@@ -62,7 +53,7 @@ public class Printer implements Output {
     
     @Override
     public boolean process() throws PrintingException {
-        if (outputDeviceID==null||outputDeviceID.isEmpty()||inputFile==null) {
+        if (outputDeviceID==null||outputDeviceID.isEmpty()||formattedDocument.getFile()==null) {
             throw new PrintingException("No printer or inputFile defined");
         }
         DocFlavor psInFormat = DocFlavor.INPUT_STREAM.AUTOSENSE;
@@ -94,6 +85,11 @@ public class Printer implements Output {
             throw new PrintingException(new Exception("no printer services found"));
         }
         return true;
+    }
+
+    @Override
+    public void setFormattedDocument(FormattedDocument formattedDocument) {
+        this.formattedDocument = formattedDocument;
     }
     
 }

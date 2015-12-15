@@ -13,6 +13,7 @@ import javax.mail.*;
 import javax.mail.internet.*;
 import org.slf4j.LoggerFactory;
 import org.warheim.file.FileTool;
+import org.warheim.formatter.FormattedDocument;
 import org.warheim.outputsink.Output;
 import org.warheim.outputsink.OutputException;
 
@@ -30,7 +31,7 @@ public class MailSender implements Output {
     private String asAttachment="true";
 
     protected String outputDeviceID;
-    protected File inputFile;
+    protected FormattedDocument formattedDocument;
 
     protected void send(String contents) throws AddressException, MessagingException {
         send(user, pass, recipient, title, contents, null, null);
@@ -92,12 +93,14 @@ public class MailSender implements Output {
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient, false));
 
         msg.setSubject(title);
-        msg.setText(contents);
         msg.setSentDate(new Date());
 
         if (file!=null) {
             addAttachment(msg, file, fileNameToBeShown);
-        }
+            msg.setText(contents);
+        } else {
+            msg.setContent(contents, formattedDocument.getContentType());
+       }
         
         SMTPTransport t = (SMTPTransport)session.getTransport("smtps");
 
@@ -139,11 +142,6 @@ public class MailSender implements Output {
         this.outputDeviceID = outputDeviceID;
     }
 
-    @Override
-    public void setInputFile(File inputFile) {
-        this.inputFile = inputFile;
-    }
-
     public String getAsAttachment() {
         return asAttachment;
     }
@@ -156,9 +154,9 @@ public class MailSender implements Output {
     public boolean process() throws OutputException {
         try {
             if ("true".equals(asAttachment)) {
-                send(title, inputFile.getAbsolutePath(), title+"."+FileTool.getExtension(inputFile));
+                send(title, formattedDocument.getFile().getAbsolutePath(), title+"."+FileTool.getExtension(formattedDocument.getFile()));
             } else {
-                String contents = FileTool.readFile(inputFile);
+                String contents = FileTool.readFile(formattedDocument.getFile());
                 send(contents);
             }
             logger.info("Email sent to " + recipient);
@@ -166,10 +164,15 @@ public class MailSender implements Output {
             logger.error("Error while sending mail", ex);
             throw new OutputException(ex);
         } catch (IOException ex) {
-            logger.error("Can't read file " + inputFile, ex);
+            logger.error("Can't read file " + formattedDocument.getFile(), ex);
             throw new OutputException(ex);
         }
         return true;
+    }
+
+    @Override
+    public void setFormattedDocument(FormattedDocument formattedDocument) {
+        this.formattedDocument = formattedDocument;
     }
 
 }

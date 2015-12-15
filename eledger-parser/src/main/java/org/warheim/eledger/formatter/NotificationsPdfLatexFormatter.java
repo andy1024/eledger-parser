@@ -25,6 +25,11 @@ import org.warheim.eledger.parser.model.User;
  */
 public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatter {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(NotificationsPdfLatexFormatter.class);
+
+    @Override
+    public String getContentType() {
+        return "application/pdf";
+    }
     
     //values with defaults
     protected String fontSize="5pt";

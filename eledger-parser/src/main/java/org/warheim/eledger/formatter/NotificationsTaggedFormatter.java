@@ -3,8 +3,6 @@ package org.warheim.eledger.formatter;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.slf4j.LoggerFactory;
 import static org.warheim.eledger.parser.NotificationsDataCombiner.combine;
 import org.warheim.eledger.parser.model.InfoOnSubject;
@@ -14,6 +12,7 @@ import org.warheim.eledger.parser.model.Subject;
 import org.warheim.eledger.parser.model.User;
 import org.warheim.eledger.parser.model.UserNotifications;
 import org.warheim.formatter.FormattableModel;
+import org.warheim.formatter.FormattedDocument;
 import org.warheim.formatter.Formatter;
 import org.warheim.formatter.FormattingException;
 import org.warheim.formatter.Preprocessor;
@@ -47,7 +46,7 @@ public abstract class NotificationsTaggedFormatter implements Formatter {
     }
 
     @Override
-    public File getFormattedDocumentFile() throws FormattingException {
+    public FormattedDocument getFormattedDocument() throws FormattingException {
         //combine common messages:
         setModel(combine(notificationsData));
         File outFile;
@@ -71,7 +70,7 @@ public abstract class NotificationsTaggedFormatter implements Formatter {
             logger.error("Error while preprocessing output file", ex);
             throw new FormattingException(ex);
         }
-        return outFile;
+        return new FormattedDocument(outFile, getContentType());
     }
 
     protected abstract File prepareSourceDocument(StringBuilder str) throws IOException, FormattingException, InterruptedException;
