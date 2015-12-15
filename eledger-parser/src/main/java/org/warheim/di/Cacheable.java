@@ -1,10 +1,16 @@
 package org.warheim.di;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  *
  * @author andy
  */
-//TODO: convert this to annotation
-public interface Cacheable {
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Cacheable {
 
 }

@@ -15,7 +15,8 @@ import org.warheim.di.Cacheable;
  *
  * @author andy
  */
-public class DictionaryPreprocessor implements Preprocessor, Cacheable {
+@Cacheable
+public class DictionaryPreprocessor implements Preprocessor {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DictionaryPreprocessor.class);
     private Map<String, String> dict;

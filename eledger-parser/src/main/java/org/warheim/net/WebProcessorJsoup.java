@@ -11,7 +11,8 @@ import org.warheim.di.Cacheable;
  *
  * @author andy
  */
-public class WebProcessorJsoup implements WebProcessor, Cacheable {
+@Cacheable
+public class WebProcessorJsoup implements WebProcessor {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WebProcessorJsoup.class);
 

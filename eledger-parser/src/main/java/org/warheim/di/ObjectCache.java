@@ -15,12 +15,7 @@ public class ObjectCache {
     protected final Map<String, CachedObject> cache = new HashMap<>();
 
     public static boolean isCacheable(Class clazz) {
-        for (Class i: clazz.getInterfaces()) {
-            if (i.isAssignableFrom(Cacheable.class)) {
-                return true;
-            }
-        }
-        return false;
+        return clazz.isAnnotationPresent(Cacheable.class);
     }
 
     //TODO: handle garbage collection of not needed objects
@@ -46,4 +41,5 @@ public class ObjectCache {
         
         return new ReturnedObject(object, foundInCache);
     }
+    
 }

@@ -24,7 +24,8 @@ import org.warheim.di.Cacheable;
  *
  * @author andy
  */
-public class WebProcessorApache implements WebProcessor, Cacheable {
+@Cacheable
+public class WebProcessorApache implements WebProcessor {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WebProcessorApache.class);
 
     protected HttpUriRequest getRequest(WebRequest request) throws WebExecutionException {
