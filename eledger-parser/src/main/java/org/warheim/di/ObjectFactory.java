@@ -28,6 +28,7 @@ public class ObjectFactory {
     
     protected static final ObjectCache cache = new ObjectCache();
     
+    //TODO: consider letting user use $ENV type of variables as substition values in config
     static {
         List<PojoClass> classes = PojoClassFactory.getPojoClassesRecursively("org.warheim",
             new FilterBasedOnInheritance(MetaInstruction.class));
