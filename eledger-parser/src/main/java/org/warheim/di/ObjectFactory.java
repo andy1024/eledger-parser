@@ -22,13 +22,12 @@ import org.slf4j.LoggerFactory;
 public class ObjectFactory {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ObjectFactory.class);
     
-    public static final String MI_TAG_CHARACTER = "%";
+    public static final String MI_TAG_CHARACTER = "$";
     
     protected static final Map<String, MetaInstruction> metaInstructionHandlers = new HashMap<>();
     
     protected static final ObjectCache cache = new ObjectCache();
     
-    //TODO: consider letting user use $ENV type of variables as substition values in config
     static {
         List<PojoClass> classes = PojoClassFactory.getPojoClassesRecursively("org.warheim",
             new FilterBasedOnInheritance(MetaInstruction.class));
@@ -62,7 +61,7 @@ public class ObjectFactory {
             for (String miKey: metaInstructionHandlers.keySet()) {
                 MetaInstruction mi = metaInstructionHandlers.get(miKey);
                 String miResult = mi.execute();
-                x = x.replaceAll(miKey, miResult);
+                x = x.replaceAll("\\"+miKey, miResult);
             }
         }
         return x;

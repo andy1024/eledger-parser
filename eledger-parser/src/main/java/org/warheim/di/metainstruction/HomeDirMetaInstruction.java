@@ -9,7 +9,7 @@ import org.warheim.di.ObjectFactory;
  */
 public class HomeDirMetaInstruction implements MetaInstruction {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeDirMetaInstruction.class);
-    public static final String KEY = "%HOME%";
+    public static final String KEY = "$HOME";
 
     @Override
     public void register() throws MetaInstructionException {

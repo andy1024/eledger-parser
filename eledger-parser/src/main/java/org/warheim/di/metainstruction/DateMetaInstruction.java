@@ -13,7 +13,7 @@ import org.warheim.eledger.parser.Config;
  */
 public class DateMetaInstruction implements MetaInstruction {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DateMetaInstruction.class);
-    public static final String KEY = "%CURRENT_DATE%";
+    public static final String KEY = "$CURRENT_DATE";
 
     @Override
     public void register() throws MetaInstructionException {
