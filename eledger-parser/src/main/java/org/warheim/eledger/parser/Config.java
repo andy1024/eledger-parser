@@ -5,11 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import org.slf4j.LoggerFactory;
+import org.warheim.di.metainstruction.MetaInstructionException;
+import org.warheim.di.metainstruction.MetaInstructionProcessor;
 import org.warheim.eledger.parser.model.User;
 
 /**
@@ -84,20 +85,38 @@ public class Config {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             try (InputStream resourceStream = loader.getResourceAsStream(resourceName)) {
                 props.load(resourceStream);
+                Enumeration e = props.propertyNames();
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    String value = props.getProperty(key);
+                    String miValue = MetaInstructionProcessor.runMetaInstructionHandlers(value);
+                    props.setProperty(key, miValue);
+                }
             } catch (IOException ex) {
                 logger.error("Main config not found", ex);
+            } catch (MetaInstructionException ex) {
+                logger.error("MI error", ex);
             }
-            String customConfigFileName = Config.getx(props, KEY_CUSTOM_CONFIG_FILENAME);
+            String customConfigFileName = props.getProperty(KEY_CUSTOM_CONFIG_FILENAME);
             if (customConfigFileName!=null && !customConfigFileName.isEmpty()) {
                 FileInputStream fis;
                 try {
                     fis = new FileInputStream(customConfigFileName);
                     props.load(fis);
+                    Enumeration e = props.propertyNames();
+                    while (e.hasMoreElements()) {
+                        String key = (String) e.nextElement();
+                        String value = props.getProperty(key);
+                        String miValue = MetaInstructionProcessor.runMetaInstructionHandlers(value);
+                        props.setProperty(key, miValue);
+                    }
                     fis.close();
                 } catch (FileNotFoundException ex) {
                     logger.error("Custom config not found", ex);
                 } catch (IOException ex) {
                     logger.error("Custom config inaccesible", ex);
+                } catch (MetaInstructionException ex) {
+                    logger.error("MI error", ex);
                 }
             }
         }
@@ -129,7 +148,7 @@ public class Config {
     }
 
     public static final String getStoreFileName() {
-        return getx(KEY_DATASTORE_DIR) +java.io.File.separator + get(KEY_DATASTORE_FILENAME);
+        return get(KEY_DATASTORE_DIR) +java.io.File.separator + get(KEY_DATASTORE_FILENAME);
     }
     
     public static final List<User> getUsers() {
@@ -147,27 +166,11 @@ public class Config {
         return users;
     }
     
-    //TODO: letting use any environmental variable may be dangerous, rethink the strategy
-    public static String getx(Properties props, String keyName) {
-        String text = props.getProperty(keyName);
-        Map<String, String> envMap = System.getenv();       
-        for (Entry<String, String> entry : envMap.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            text = text.replaceAll("\\$" + key + "", value);
-        }
-        return text;
-    }
-    
-    public static String getx(String keyName) {
-        return getx(getProperties(), keyName);
-    }
-    
     public static final Properties getProperties() {
         return Inner.initialize();
     }
     
     public static void main(String... args) throws Exception {
-        
+        System.out.println(Config.get(Config.KEY_DATASTORE_DIR));
     }
 }

@@ -18,7 +18,7 @@ public class DateMetaInstruction implements MetaInstruction {
     @Override
     public void register() throws MetaInstructionException {
         try {
-            ObjectFactory.registerMetaInstructionHandler(KEY, DateMetaInstruction.class);
+            MetaInstructionProcessor.registerMetaInstructionHandler(KEY, DateMetaInstruction.class);
         } catch (InstantiationException | IllegalAccessException ex) {
             logger.error("Meta instruction handler registration error", ex);
             throw new MetaInstructionException(ex);

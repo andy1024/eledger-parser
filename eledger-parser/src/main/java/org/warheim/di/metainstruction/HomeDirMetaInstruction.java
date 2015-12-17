@@ -14,7 +14,7 @@ public class HomeDirMetaInstruction implements MetaInstruction {
     @Override
     public void register() throws MetaInstructionException {
         try {
-            ObjectFactory.registerMetaInstructionHandler(KEY, HomeDirMetaInstruction.class);
+            MetaInstructionProcessor.registerMetaInstructionHandler(KEY, HomeDirMetaInstruction.class);
         } catch (InstantiationException | IllegalAccessException ex) {
             logger.error("Meta instruction handler registration error", ex);
             throw new MetaInstructionException(ex);

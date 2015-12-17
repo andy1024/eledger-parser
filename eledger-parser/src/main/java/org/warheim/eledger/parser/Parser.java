@@ -101,7 +101,7 @@ public class Parser {
     
     public void storeUpdatedDiskMap() throws IOException {
         try {
-            FileTool.writeFile(Config.getx(Config.KEY_DATASTORE_DIR), Config.get(Config.KEY_DATASTORE_FILENAME), dataFromDisk.serializeToJson());
+            FileTool.writeFile(Config.get(Config.KEY_DATASTORE_DIR), Config.get(Config.KEY_DATASTORE_FILENAME), dataFromDisk.serializeToJson());
         } catch (IOException ex) {
             logger.error("Error while serializing json", ex);
             throw ex;

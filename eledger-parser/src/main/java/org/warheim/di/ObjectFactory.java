@@ -1,16 +1,12 @@
 package org.warheim.di;
 
 import org.warheim.di.metainstruction.MetaInstructionException;
-import org.warheim.di.metainstruction.MetaInstruction;
-import com.openpojo.reflection.PojoClass;
-import com.openpojo.reflection.filters.FilterBasedOnInheritance;
-import com.openpojo.reflection.impl.PojoClassFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.slf4j.LoggerFactory;
+import org.warheim.di.metainstruction.MetaInstructionProcessor;
 
 /**
  *
@@ -22,29 +18,7 @@ import org.slf4j.LoggerFactory;
 public class ObjectFactory {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ObjectFactory.class);
     
-    public static final String MI_TAG_CHARACTER = "$";
-    
-    protected static final Map<String, MetaInstruction> metaInstructionHandlers = new HashMap<>();
-    
     protected static final ObjectCache cache = new ObjectCache();
-    
-    static {
-        List<PojoClass> classes = PojoClassFactory.getPojoClassesRecursively("org.warheim",
-            new FilterBasedOnInheritance(MetaInstruction.class));
-        for (PojoClass pc: classes) {
-            try {
-                MetaInstruction mi = (MetaInstruction)pc.getClazz().newInstance();
-                mi.register();
-            } catch (InstantiationException | IllegalAccessException | MetaInstructionException ex) {
-                logger.error("Meta instruction handler instantiation error", ex);
-            }
-        }
-    }
-    
-    public static void registerMetaInstructionHandler(String key, Class<? extends MetaInstruction> handler) 
-            throws InstantiationException, IllegalAccessException {
-        metaInstructionHandlers.put(key, handler.newInstance());
-    }
     
     /**
      * returns setter method name for the specified key
@@ -55,17 +29,6 @@ public class ObjectFactory {
         return "set" + key.substring(0, 1).toUpperCase() + key.substring(1);
     }
     
-    public static String runMetaInstructionHandlers(String value) throws MetaInstructionException {
-        String x = value;
-        if (x.contains(MI_TAG_CHARACTER)) {
-            for (String miKey: metaInstructionHandlers.keySet()) {
-                MetaInstruction mi = metaInstructionHandlers.get(miKey);
-                String miResult = mi.execute();
-                x = x.replaceAll("\\"+miKey, miResult);
-            }
-        }
-        return x;
-    }
     
     public static Object createObject(String objDef) throws ObjectCreationException {
         return createObject(objDef, true);
@@ -102,7 +65,7 @@ public class ObjectFactory {
                         String[] elements = arg.split("=");
                         String key = elements[0];
                         String value = elements[1];
-                        String miValue = runMetaInstructionHandlers(value);
+                        String miValue = MetaInstructionProcessor.runMetaInstructionHandlers(value);
                         String setterName = getSetterName(key);
                         logger.debug(setterName + "(" + miValue + ")");
                         attrMap.put(key, miValue);
