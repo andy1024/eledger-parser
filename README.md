@@ -43,39 +43,39 @@ School e-ledger extracting and parsing tool to be used by parents in order to mo
 
    In the stdout you'll see some informational messages about program workings. First it will read the config, then access the datastore, next download the necessary information from the server, check what's and finally output the extract on the device specified in the configuration file.
   1. Sample output  
-```
-Event fired: app.event.start
-Event handler class org.warheim.app.Application$1
-application start
-Event handler finished
-/home/andy/.eledger/datastore.json
-Nov 29, 2015 3:29:45 PM org.warheim.di.ObjectFactory createObject
-INFO: null
-Nov 29, 2015 3:29:45 PM org.warheim.di.ObjectFactory createObject
-INFO: null
-Nov 29, 2015 3:29:45 PM org.warheim.di.ObjectFactory createObject
-INFO: null
-Nov 29, 2015 3:29:45 PM org.warheim.di.ObjectFactory createObject
-INFO: null
-Event fired: app.event.afterConfigRead
-All notifications
-for user: Matthew C. Cornwallis
-Tasks
-Maths and algebra
- 2015-10-10 Memorize multiplication matrix
- 2015-10-12 Complex numbers calculus using algebraic theorems
-English language
- 2015-11-12 Learn to cite any Shakespeare play
-Tests
-Maths and algebra
- 2015-11-30 All algebra test
-Messages
- 111 2015-09-01 john@mit.edu all-students No more jumping on the bed!
-
-Event fired: app.event.beforeDataStoreWrite
-Event fired: app.event.afterDataStoreWrite
-Event fired: app.event.finish
-```
+   ```
+   Event fired: app.event.start
+   Event handler class org.warheim.app.Application$1
+   application start
+   Event handler finished
+   /home/andy/.eledger/datastore.json
+   Nov 29, 2015 3:29:45 PM org.warheim.di.ObjectFactory createObject
+   INFO: null
+   Nov 29, 2015 3:29:45 PM org.warheim.di.ObjectFactory createObject
+   INFO: null
+   Nov 29, 2015 3:29:45 PM org.warheim.di.ObjectFactory createObject
+   INFO: null
+   Nov 29, 2015 3:29:45 PM org.warheim.di.ObjectFactory createObject
+   INFO: null
+   Event fired: app.event.afterConfigRead
+   All notifications
+   for user: Matthew C. Cornwallis
+   Tasks
+   Maths and algebra
+    2015-10-10 Memorize multiplication matrix
+    2015-10-12 Complex numbers calculus using algebraic theorems
+   English language
+    2015-11-12 Learn to cite any Shakespeare play
+   Tests
+   Maths and algebra
+    2015-11-30 All algebra test
+   Messages
+    111 2015-09-01 john@mit.edu all-students No more jumping on the bed!
+   
+   Event fired: app.event.beforeDataStoreWrite
+   Event fired: app.event.afterDataStoreWrite
+   Event fired: app.event.finish
+   ```
 
 6. Problems and troubleshooting
 
