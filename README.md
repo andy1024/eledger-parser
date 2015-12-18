@@ -27,19 +27,19 @@ School e-ledger extracting and parsing tool to be used by parents in order to mo
 
    Config entries can use meta-instructions (MetaInstruction interface), e.g. DateMetaInstruction ($CURRENT_DATE), HomeDirMetaInstruction ($HOME)
    
-3. Building
+4. Building
 
    The tool main build management software is maven. 
    Build using 'mvn install' command
 
-4. Running the tool
+5. Running the tool
 
    The tool is configured with MANIFEST file, so you can run it by entering the simple command
    'java -jar <artifact-name>', where artifact name is by default eledger-parser-with-dependencies.jar
 
    In my intention it was supposed to be run from cron periodically, to make sure all important information awaits when we get home.
 
-5. Output
+6. Output
 
    In the stdout you'll see some informational messages about program workings. First it will read the config, then access the datastore, next download the necessary information from the server, check what's and finally output the extract on the device specified in the configuration file.
   1. Sample output  
@@ -77,11 +77,11 @@ School e-ledger extracting and parsing tool to be used by parents in order to mo
    Event fired: app.event.finish
    ```
 
-6. Problems and troubleshooting
+7. Problems and troubleshooting
 
    Nothing here for the moment
 
-7. What's next
+8. What's next
 
    - [ ] support more sources
    - [x] make more formatters
