@@ -736,6 +736,12 @@ ol {
   padding-left: 3px;
 }
 
+ol ol {
+  list-style-position: inside;
+  list-style: lower-latin;
+  padding-left: 3px;
+}
+
 dl dd {
   font-style: italic;
   font-weight: 100;
