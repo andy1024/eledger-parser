@@ -19,12 +19,14 @@ School e-ledger extracting and parsing tool to be used by parents in order to mo
   2. Preconfiguration  
    Edit the customconfig.properties file in your $HOME/.eledger directory and change the following keys to match your environment:
 
-   - sys.output.printer : enter your CUPS printer name here
    - sys.output.formatter : enter your formatter class of choice here (implements Formatter interface)
    - sys.output.sink : enter output sink of your choice (implements Output interface)
    - web.baseUrl : base URL of your e-ledger website
    - auth.data : semicolon separated list of authentication pairs "user,pass" or "user,pass,fullname", where fullname is user-friendly name
+   - optional sys.output.preprocessor : implements Preprocessor interface, e.g. Dictionary
 
+   Config entries can use meta-instructions (MetaInstruction interface), e.g. DateMetaInstruction ($CURRENT_DATE), HomeDirMetaInstruction ($HOME)
+   
 3. Building
 
    The tool main build management software is maven. 
