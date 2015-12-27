@@ -79,7 +79,7 @@ School e-ledger extracting and parsing tool to be used by parents in order to mo
 
 7. Problems and troubleshooting
 
-   Nothing here for the moment
+[Current bugs](https://github.com/andy1024/eledger-parser/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
 8. What's next
 
@@ -92,3 +92,8 @@ School e-ledger extracting and parsing tool to be used by parents in order to mo
    - [x] handle logouts
    - [x] add custom user name support
    - [x] add icons to PdfLatexFormatter
+
+[Enhancements planned](https://github.com/andy1024/eledger-parser/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement)
+
+
+
