@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.warheim.eledger.parser.Config;
 
 /**
- * TODO: this is too far fetched for the moment, do not implement yet
  * Grade model, describes student's grades
  *
  * @author andy
@@ -24,7 +23,6 @@ public class Grade implements Serializable, Comparable<Grade> {
     private String value;
 
     public Grade(String importance, String name, String date, String value) {
-        if (1==1) throw new RuntimeException("Not yet implemented");
         this.importance = importance;
         this.name = name;
         this.date = date;
