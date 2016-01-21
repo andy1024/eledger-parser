@@ -41,6 +41,7 @@ public class Config {
     public static final String KEY_AUTH_PAGE = "web.authPage";
     public static final String KEY_TASK_LIST_PAGE = "web.taskListPage";
     public static final String KEY_TEST_LIST_PAGE = "web.testListPage";
+    public static final String KEY_GRADE_LIST_PAGE = "web.gradeListPage";
     public static final String KEY_BASE_URL = "web.baseUrl";
     public static final String KEY_MESSAGES_LIST_PAGE = "web.messagesListPage";
     public static final String KEY_MESSAGE_PAGE = "web.messagePage";
