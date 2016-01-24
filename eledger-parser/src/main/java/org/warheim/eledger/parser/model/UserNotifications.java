@@ -19,6 +19,7 @@ import java.util.TreeSet;
 public class UserNotifications implements Serializable {
     private Map<Subject, Set<Task>> taskMap = new HashMap<>();
     private Map<Subject, Set<Test>> testMap = new HashMap<>();
+    private Map<Subject, Set<Grade>> gradeMap = new HashMap<>();
     private final Map<String, Message> msgMap = new HashMap<>();
     
     public UserNotifications() {
@@ -30,6 +31,8 @@ public class UserNotifications implements Serializable {
                 &&
                 testMap.isEmpty()
                 &&
+                gradeMap.isEmpty()
+                &&
                 msgMap.isEmpty();
     }
     
@@ -39,6 +42,10 @@ public class UserNotifications implements Serializable {
     
     public Map<Subject, Set<Test>> getTestMap() {
         return testMap;
+    }
+
+    public Map<Subject, Set<Grade>> getGradeMap() {
+        return gradeMap;
     }
 
     public void addTask(Subject subject, Task task) {
@@ -56,6 +63,21 @@ public class UserNotifications implements Serializable {
         taskMap = tmap;
     }
     
+    public void addGrade(Subject subject, Grade grade) {
+        Set<Grade> list = gradeMap.get(subject);
+        if (list==null) {
+            list = new TreeSet<>();
+            gradeMap.put(subject, list);
+        }
+        list.add(grade);
+    }
+    public void putGrades(Subject subject, Set<Grade> grades) {
+        gradeMap.put(subject, grades);
+    }
+    public void putGrades(Map<Subject, Set<Grade>> gmap) {
+        gradeMap = gmap;
+    }
+
     public void putMessage(Message msg) {
         msgMap.put(msg.getId(), msg);
     }
@@ -92,6 +114,10 @@ public class UserNotifications implements Serializable {
         Set<Test> list = testMap.get(subject);
         return list;
     }
+    public Set<Grade> getGradesForSubject(Subject subject) {
+        Set<Grade> list = gradeMap.get(subject);
+        return list;
+    }
     
     public Set<Subject> getInfoSubjects() {
         Set<Subject> list = new TreeSet<>(taskMap.keySet()); //do not write to internal keySet, that's why I'm copying it
@@ -116,6 +142,11 @@ public class UserNotifications implements Serializable {
     
     public Set<Subject> getTestSubjects() {
         Set<Subject> list = testMap.keySet();
+        return list;
+    }
+
+    public Set<Subject> getGradeSubjects() {
+        Set<Subject> list = gradeMap.keySet();
         return list;
     }
 
@@ -173,6 +204,22 @@ public class UserNotifications implements Serializable {
                     for (Test test: list) {
                         retval.append(" ").append(test.getDate())
                               .append(" ").append(test.getContent())
+                              .append("\n");
+                    }
+                }
+            }
+        }
+        if (!gradeMap.isEmpty()) {
+            retval.append("Grades\n");
+            for (Subject subject: gradeMap.keySet()) {
+                retval.append(subject.getName()).append("\n");
+                Set<Grade> list = getGradesForSubject(subject);
+                if (list!=null) {
+                    for (Grade grade: list) {
+                        retval.append(" ").append(grade.getDate())
+                              .append(" ").append(grade.getName())
+                              .append(" ").append(grade.getValue())
+                              .append(" ").append(grade.getImportance())
                               .append("\n");
                     }
                 }

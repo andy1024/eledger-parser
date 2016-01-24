@@ -47,6 +47,9 @@ public class Parser {
                 case TESTLIST:
                     spp = new TestListParser();
                     break;
+                case GRADELIST:
+                    spp = new GradeListParser();
+                    break;
                 case MESSAGES:
                     spp = new MessageListParser();
                     break;

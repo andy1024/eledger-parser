@@ -15,7 +15,6 @@ import org.warheim.eledger.parser.model.Source;
 import org.warheim.eledger.parser.model.SourceType;
 import org.warheim.eledger.parser.model.User;
 import org.warheim.net.WebExecutionException;
-import org.warheim.net.WebRequest;
 
 /**
  * Main class for web interaction
@@ -53,6 +52,7 @@ public class HttpReqRespHandler {
         String authPage = base + "/" + Config.get(Config.KEY_AUTH_PAGE);
         String taskListPage = base + "/" + Config.get(Config.KEY_TASK_LIST_PAGE);
         String testListPage = base + "/" + Config.get(Config.KEY_TEST_LIST_PAGE);
+        String gradeListPage = base + "/" + Config.get(Config.KEY_GRADE_LIST_PAGE);
         String messagesListPage = base + "/" + Config.get(Config.KEY_MESSAGES_LIST_PAGE);
     
         InitiateConnection init = new InitiateConnection(taskListPage);
@@ -74,6 +74,11 @@ public class HttpReqRespHandler {
         testSourcePage = testListGetter.doCall();
         retval.add(new Source(user, SourceType.TESTLIST, testSourcePage));
   
+        String gradeSourcePage;
+        GetGradesList gradeListGetter = new GetGradesList(gradeListPage, cookie, etag);
+        gradeSourcePage = gradeListGetter.doCall();
+        retval.add(new Source(user, SourceType.GRADELIST, gradeSourcePage));
+        
         sleep();
         String messagesSourcePage;
         GetMessagesList messageListGetter = new GetMessagesList(messagesListPage, cookie, etag);

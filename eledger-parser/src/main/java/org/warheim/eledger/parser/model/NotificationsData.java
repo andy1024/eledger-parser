@@ -120,7 +120,7 @@ public class NotificationsData implements Serializable, FormattableModel  {
                         userNotificationsDiffMap.putTests(serverSubject, serverTests); //save it for printout
                         //FIX for bug #3
                         diskUN.putTests(serverSubject, serverTests); //copy it to disk store
-                    } else { //subject is known, check each task
+                    } else { //subject is known, check each test
                         Set<Test> diffTests = new TreeSet<>();
                         int newTestInSubjectCount = 0;
                         for (Test test: serverTests) {
@@ -134,6 +134,33 @@ public class NotificationsData implements Serializable, FormattableModel  {
                         }
                         if (newTestInSubjectCount>0) {
                             userNotificationsDiffMap.putTests(serverSubject, diffTests);//insert new test to diff map
+                        }
+
+                    }
+                }
+                //compare grades/subjects
+                for (Subject serverSubject: serverUN.getGradeSubjects()) {
+                    Set<Grade> serverGrades = serverUN.getGradesForSubject(serverSubject);
+                    Set<Grade> diskGrades = diskUN.getGradesForSubject(serverSubject);
+                    if (diskGrades==null||diskGrades.isEmpty()) { //it is not known to the stored map
+                        //process the entire subject
+                        userNotificationsDiffMap.putGrades(serverSubject, serverGrades); //save it for printout
+                        //FIX for bug #3
+                        diskUN.putGrades(serverSubject, serverGrades); //copy it to disk store
+                    } else { //subject is known, check each grade
+                        Set<Grade> diffGrades = new TreeSet<>();
+                        int newGradeInSubjectCount = 0;
+                        for (Grade grade: serverGrades) {
+                            if (diskGrades.contains(grade)) { //grade known, skip
+
+                            } else {
+                                newGradeInSubjectCount++;
+                                diffGrades.add(grade); //put grade to diff set
+                                diskGrades.add(grade); //copy it to disk store
+                            }
+                        }
+                        if (newGradeInSubjectCount>0) {
+                            userNotificationsDiffMap.putGrades(serverSubject, diffGrades);//insert new grade to diff map
                         }
 
                     }
