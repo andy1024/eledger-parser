@@ -24,7 +24,7 @@ public class MockData {
         notifications.addTask(maths, new Task("2015-10-12", "Complex numbers calculus using algebraic theorems"));
         Subject english = new Subject(SUBJ_2_ID, SUBJ_2_NAME);
         notifications.addTask(english, new Task("2015-11-12", "Learn to cite any Shakespeare play"));
-        
+        notifications.addGrade(english, new Grade("1", "Scraping the whiteboard", "2015-02-03", "A"));
         notifications.addTest(maths, new Test("2015-11-30", "All algebra test"));
         
         notifications.putMessage(new Message("111", "advice", "john@mit.edu", "all-students", "2015-09-01", "No more jumping on the bed!"));

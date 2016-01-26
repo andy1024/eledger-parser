@@ -219,7 +219,7 @@ public class MessageCombinerTest {
     public static final String M_TITLE_4 = "Fireblast";
     public static final String M_CONTENTS_4 = "Triple red, people!";
     
-    public static final String TASK_1 = "Clean all the ordinance";
+    public static final String TASK_1 = "Clean all the ordnance";
     public static final String TASK_2 = "Night watch, 4 hours";
     public static final String TASK_3 = "Move forward";
     public static final String TEST_1 = "Shooting competition";

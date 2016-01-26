@@ -62,14 +62,15 @@ public class NotificationsDataCombiner {
         Map<String, User> virtualUsersMap = new HashMap<>();
         //handle not combined messages:
         for (User user: src.getUsers()) {
-            //rewrite tasks & tests for non-combined users
+            //rewrite tasks & tests & grades for non-combined users
             UserNotifications un = src.getNotificationsForUser(user);
-            //but only if specific user has any tasks or tests
-            if (!un.getTaskMap().isEmpty()||!un.getTestMap().isEmpty()) {
+            //but only if specific user has any tasks, tests or grades
+            if (!un.getTaskMap().isEmpty()||!un.getTestMap().isEmpty()||!un.getGradeMap().isEmpty()) {
                 virtualUsersMap.put(user.getFullname(), user);
                 UserNotifications ndUn = new UserNotifications();
                 ndUn.putTasks(un.getTaskMap());
                 ndUn.putTests(un.getTestMap());
+                ndUn.putGrades(un.getGradeMap());
                 nd.putUserNotifications(user, ndUn);
             }
         }
