@@ -14,7 +14,16 @@ School e-ledger extracting and parsing tool to be used by parents in order to mo
 
 3. Usage
   1. Prerequisities  
-   In its OOB form, the software needs Java 7, LaTeX software with texlive-lang-polish, texlive-fonts-recommended and some printer to handle the output. You can however skip the preformatting part and send a plain text page to a generic CUPS printer by simple tweaks in properties file.
+   In its OOB form, the software needs:
+
+   - Java 7
+   - LaTeX software with
+      - texlive-lang-polish
+      - texlive-fonts-recommended
+      - texlive-latex-recommended
+   - some printer to handle the output.
+You can however skip the preformatting part and send a plain text page to a generic CUPS printer by simple tweaks in properties file.
+
    Of course you would also need an account on a e-ledger website that is run on a specific engine. For various reasons I'm not stating the default website manufacturer name. Feel free to ask, if you are interested in extending the tool to suit your needs.
   2. Preconfiguration  
    Edit the customconfig.properties file in your $HOME/.eledger directory and change the following keys to match your environment:
