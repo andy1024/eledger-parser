@@ -10,5 +10,8 @@ public class FormattingException extends Exception {
         super(cause);
     }
 
+    public FormattingException(String msg) {
+        super(msg);
+    }
     
 }

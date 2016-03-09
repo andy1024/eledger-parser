@@ -2,8 +2,12 @@ package org.warheim.eledger.formatter;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 import org.slf4j.LoggerFactory;
+import org.warheim.eledger.parser.Config;
 import static org.warheim.eledger.parser.NotificationsDataCombiner.combine;
 import org.warheim.eledger.parser.model.InfoOnSubject;
 import org.warheim.eledger.parser.model.Message;
@@ -93,7 +97,13 @@ public abstract class NotificationsTaggedFormatter implements Formatter {
     
     protected void makeBody(StringBuilder str) throws FormattingException {
         if (notificationsData!=null) {
+            int totalLimit = Config.getInt(Config.KEY_OUTPUT_LIMIT_NOTIFICATIONS_TOTAL);
+            int totalCount = notificationsData.getTotalCount();
+            if (totalCount>totalLimit) {
+                throw new FormattingException("Notifications count (" + totalCount + ") exceeds specified limit (" + totalLimit + "). Check your config");
+            }
             int userCount = 0;
+            int msgLimit = Config.getInt(Config.KEY_OUTPUT_LIMIT_MESSAGES);
             for (User user: notificationsData.getUsers()) {
                 UserNotifications userNotifications = notificationsData.getNotificationsForUser(user);
                 if (userNotifications.isEmpty()) {
@@ -115,11 +125,20 @@ public abstract class NotificationsTaggedFormatter implements Formatter {
                     endSubjectTag(str, subject, subjectCount++);
                 }
                 //messages section
-                int msgCount = 0;
-                for (String msgId: userNotifications.getMessageIDs()) {
-                    Message msg = userNotifications.getMessage(msgId);
+                int msgCount = userNotifications.getMessages().size();
+                if (msgCount>msgLimit) {
+                    Date date = new Date();
+                    DateFormat df = new SimpleDateFormat("yyy-MM-dd");
+                    Message msg = new Message("000", "There are " + msgCount + " messages waiting for you online", "system", "you", df.format(date), null);
                     startMessageTag(str, msg, msgCount);
                     endMessageTag(str, msg, msgCount++);
+                } else {
+                    msgCount = 0;
+                    for (String msgId: userNotifications.getMessageIDs()) {
+                        Message msg = userNotifications.getMessage(msgId);
+                        startMessageTag(str, msg, msgCount);
+                        endMessageTag(str, msg, msgCount++);
+                    }
                 }
                 endUserTag(str, user, userCount++);
             }

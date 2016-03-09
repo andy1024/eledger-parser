@@ -39,6 +39,18 @@ public class NotificationsData implements Serializable, FormattableModel  {
         }
         return null;
     }
+    
+    public int getTotalCount() {
+        int totalCount = 0;
+        for (User user: dataMap.keySet()) {
+            UserNotifications un = dataMap.get(user);
+            totalCount += un.getTestMap().size();
+            totalCount += un.getTaskMap().size();
+            totalCount += un.getMessages().size();
+            totalCount += un.getGradeMap().size();
+        }
+        return totalCount;
+    }
 
     public Set<User> getUsers() {
         return dataMap.keySet();

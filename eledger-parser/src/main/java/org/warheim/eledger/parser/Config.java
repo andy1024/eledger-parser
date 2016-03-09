@@ -31,6 +31,10 @@ public class Config {
     public static final String KEY_OUTPUT_PREPROCESSOR = "sys.output.preprocessor";
     public static final String KEY_DEBUG = "sys.debug";
     public static final String KEY_OUTPUT = "sys.output";
+
+    public static final String KEY_OUTPUT_LIMIT_MESSAGES = "sys.output.limit.messages";
+    public static final String KEY_OUTPUT_LIMIT_NOTIFICATIONS_TOTAL = "sys.output.limit.notifications.total";
+    
     public static final String KEY_WAIT_RANDOM_MIN = "web.wait.random.min";
     public static final String KEY_WAIT_RANDOM_MAX = "web.wait.random.max";
     public static final String KEY_WRITE = "sys.write";
