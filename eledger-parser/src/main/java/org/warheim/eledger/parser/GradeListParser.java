@@ -27,10 +27,11 @@ public class GradeListParser implements SourcePageParser {
             logger.debug(e.className());
             logger.debug(e.id());
             Elements subjectNameElements = e.select(".subject_1line");
-
-            String id = stripSubjectId(e.id());
-            Subject subject = new Subject(id, stripSubjectName(subjectNameElements.get(0).html()));
-            subjects.put(id, subject);
+            if (subjectNameElements.size()>0) {
+                String id = stripSubjectId(e.id());
+                Subject subject = new Subject(id, stripSubjectName(subjectNameElements.get(0).html()));
+                subjects.put(id, subject);
+            }
         }
         return subjects;
     }
