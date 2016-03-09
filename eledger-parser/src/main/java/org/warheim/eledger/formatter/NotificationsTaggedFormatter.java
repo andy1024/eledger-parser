@@ -129,7 +129,7 @@ public abstract class NotificationsTaggedFormatter implements Formatter {
                 if (msgCount>msgLimit) {
                     Date date = new Date();
                     DateFormat df = new SimpleDateFormat("yyy-MM-dd");
-                    Message msg = new Message("000", "There are " + msgCount + " messages waiting for you online", "system", "you", df.format(date), null);
+                    Message msg = new Message("000", "There are " + msgCount + " messages waiting for you online", "system", "you", df.format(date), "");
                     startMessageTag(str, msg, msgCount);
                     endMessageTag(str, msg, msgCount++);
                 } else {
