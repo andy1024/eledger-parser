@@ -10,3 +10,7 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/eledger-parser/target/
+/eledger-parser/nbactions.xml
+/eledger-parser/jar-with-deps-with-exclude.xml
+/eledger-parser/pom0.xml
