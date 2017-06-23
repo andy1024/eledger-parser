@@ -48,4 +48,17 @@ public class ModelComparatorTest {
         
     }
     
+    @Test
+    public void testCompareDifferentInfoOnSubjectTypes() {
+        NotificationsData notif1 = MockData.createTestData(0);
+        NotificationsData notif2 = MockData.createTestData(0);
+        notif1.getNotificationsForUser(MockData.USER_1_NAME)
+                .addTopic(
+                        new Subject("XYZ-101", "New Subject"), 
+                        new Topic("2017-03-03", "New topic")
+                );
+        NotificationsData diff = NotificationsData.getDataDiff(notif1, notif2);
+        Assert.assertEquals(1, diff.getTotalCount());
+        Assert.assertEquals(1, diff.getNotificationsForUser(MockData.USER_1_NAME).getTopicMap().size());
+    }
 }
