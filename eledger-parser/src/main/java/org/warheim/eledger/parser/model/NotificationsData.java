@@ -45,6 +45,7 @@ public class NotificationsData implements Serializable, FormattableModel  {
         for (User user: dataMap.keySet()) {
             UserNotifications un = dataMap.get(user);
             totalCount += un.getTestMap().size();
+            totalCount += un.getTopicMap().size();
             totalCount += un.getTaskMap().size();
             totalCount += un.getMessages().size();
             totalCount += un.getGradeMap().size();
@@ -82,7 +83,15 @@ public class NotificationsData implements Serializable, FormattableModel  {
         return retval.toString();
     }
      
-    public static NotificationsData getDataDiff(NotificationsData dataFromServer, NotificationsData dataFromDisk) {
+    /**
+     * Calculates the difference between what is currently stored on disk and what comes from the server
+     * As a side effect it supplements the disk storage to much the data from server
+     * 
+     * @param dataFromServer
+     * @param dataFromDisk
+     * @return diff tree
+     */
+     public static NotificationsData getDataDiff(NotificationsData dataFromServer, NotificationsData dataFromDisk) {
         //buildDataFromDisk();
         //buildDataFromServer();
 
@@ -146,6 +155,33 @@ public class NotificationsData implements Serializable, FormattableModel  {
                         }
                         if (newTestInSubjectCount>0) {
                             userNotificationsDiffMap.putTests(serverSubject, diffTests);//insert new test to diff map
+                        }
+
+                    }
+                }
+                //compare topics/subjects
+                for (Subject serverSubject: serverUN.getTopicSubjects()) {
+                    Set<Topic> serverTopics = serverUN.getTopicsForSubject(serverSubject);
+                    Set<Topic> diskTopics = diskUN.getTopicsForSubject(serverSubject);
+                    if (diskTopics==null||diskTopics.isEmpty()) { //it is not known to the stored map
+                        //process the entire subject
+                        userNotificationsDiffMap.putTopics(serverSubject, serverTopics); //save it for printout
+                        //FIX for bug #3
+                        diskUN.putTopics(serverSubject, serverTopics); //copy it to disk store
+                    } else { //subject is known, check each topic
+                        Set<Topic> diffTopics = new TreeSet<>();
+                        int newTopicInSubjectCount = 0;
+                        for (Topic topic: serverTopics) {
+                            if (diskTopics.contains(topic)) { //topic known, skip
+
+                            } else {
+                                newTopicInSubjectCount++;
+                                diffTopics.add(topic); //put topic to diff set
+                                diskTopics.add(topic); //copy it to disk store
+                            }
+                        }
+                        if (newTopicInSubjectCount>0) {
+                            userNotificationsDiffMap.putTopics(serverSubject, diffTopics);//insert new topic to diff map
                         }
 
                     }

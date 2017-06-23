@@ -19,6 +19,7 @@ import java.util.TreeSet;
 public class UserNotifications implements Serializable {
     private Map<Subject, Set<Task>> taskMap = new HashMap<>();
     private Map<Subject, Set<Test>> testMap = new HashMap<>();
+    private Map<Subject, Set<Topic>> topicMap = new HashMap<>();
     private Map<Subject, Set<Grade>> gradeMap = new HashMap<>();
     private final Map<String, Message> msgMap = new HashMap<>();
     
@@ -31,6 +32,8 @@ public class UserNotifications implements Serializable {
                 &&
                 testMap.isEmpty()
                 &&
+                topicMap.isEmpty()
+                &&
                 gradeMap.isEmpty()
                 &&
                 msgMap.isEmpty();
@@ -42,6 +45,10 @@ public class UserNotifications implements Serializable {
     
     public Map<Subject, Set<Test>> getTestMap() {
         return testMap;
+    }
+
+    public Map<Subject, Set<Topic>> getTopicMap() {
+        return topicMap;
     }
 
     public Map<Subject, Set<Grade>> getGradeMap() {
@@ -101,6 +108,21 @@ public class UserNotifications implements Serializable {
         testMap = tsmap;
     }
     
+    public void addTopic(Subject subject, Topic topic) {
+        Set<Topic> list = topicMap.get(subject);
+        if (list==null) {
+            list = new TreeSet<>();
+            topicMap.put(subject, list);
+        }
+        list.add(topic);
+    }
+    public void putTopics(Subject subject, Set<Topic> topics) {
+        topicMap.put(subject, topics);
+    }
+    public void putTopics(Map<Subject, Set<Topic>> tcmap) {
+        topicMap = tcmap;
+    }
+
     public Set<Task> getTasksForSubject(Subject subject) {
         Set<Task> list = taskMap.get(subject);
         return list;
@@ -112,6 +134,10 @@ public class UserNotifications implements Serializable {
     }
     public Set<Test> getTestsForSubject(Subject subject) {
         Set<Test> list = testMap.get(subject);
+        return list;
+    }
+    public Set<Topic> getTopicsForSubject(Subject subject) {
+        Set<Topic> list = topicMap.get(subject);
         return list;
     }
     public Set<Grade> getGradesForSubject(Subject subject) {
@@ -137,11 +163,21 @@ public class UserNotifications implements Serializable {
                 list.add(test);
             }
         }
+        if (topicMap.containsKey(subject)) {
+            for (Topic topic: topicMap.get(subject)) {
+                list.add(topic);
+            }
+        }
         return list;
     }
     
     public Set<Subject> getTestSubjects() {
         Set<Subject> list = testMap.keySet();
+        return list;
+    }
+
+    public Set<Subject> getTopicSubjects() {
+        Set<Subject> list = topicMap.keySet();
         return list;
     }
 
@@ -204,6 +240,20 @@ public class UserNotifications implements Serializable {
                     for (Test test: list) {
                         retval.append(" ").append(test.getDate())
                               .append(" ").append(test.getContent())
+                              .append("\n");
+                    }
+                }
+            }
+        }
+        if (!topicMap.isEmpty()) {
+            retval.append("Topics\n");
+            for (Subject subject: topicMap.keySet()) {
+                retval.append(subject.getName()).append("\n");
+                Set<Topic> list = getTopicsForSubject(subject);
+                if (list!=null) {
+                    for (Topic topic: list) {
+                        retval.append(" ").append(topic.getDate())
+                              .append(" ").append(topic.getContent())
                               .append("\n");
                     }
                 }
