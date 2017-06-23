@@ -52,6 +52,7 @@ public class HttpReqRespHandler {
         String authPage = base + "/" + Config.get(Config.KEY_AUTH_PAGE);
         String taskListPage = base + "/" + Config.get(Config.KEY_TASK_LIST_PAGE);
         String testListPage = base + "/" + Config.get(Config.KEY_TEST_LIST_PAGE);
+        String topicListPage = base + "/" + Config.get(Config.KEY_TOPIC_LIST_PAGE);
         String gradeListPage = base + "/" + Config.get(Config.KEY_GRADE_LIST_PAGE);
         String messagesListPage = base + "/" + Config.get(Config.KEY_MESSAGES_LIST_PAGE);
     
@@ -74,6 +75,11 @@ public class HttpReqRespHandler {
         testSourcePage = testListGetter.doCall();
         retval.add(new Source(user, SourceType.TESTLIST, testSourcePage));
   
+        String topicSourcePage;
+        GetTopicsList topicListGetter = new GetTopicsList(topicListPage, cookie, etag);
+        topicSourcePage = topicListGetter.doCall();
+        retval.add(new Source(user, SourceType.TOPICLIST, topicSourcePage));
+ 
         String gradeSourcePage;
         GetGradesList gradeListGetter = new GetGradesList(gradeListPage, cookie, etag);
         gradeSourcePage = gradeListGetter.doCall();
