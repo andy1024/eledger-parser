@@ -63,6 +63,8 @@ public class NotificationsTextFormatter extends NotificationsFreeRollFormatter {
                 break;
             case TEST: str.append("Test "); //clock icon
                 break;
+            case TOPIC: str.append("Topic "); //topic icon
+                break;
         }
 
         str.append("").append(info.getDate()).append(" ").append(escape(info.getContent()))
