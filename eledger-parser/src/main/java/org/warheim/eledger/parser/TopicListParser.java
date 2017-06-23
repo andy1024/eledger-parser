@@ -82,7 +82,7 @@ public class TopicListParser implements SourcePageParser {
                     logger.warn("Bad topic attributes");
                 } else {
                     Topic topic = new Topic(topicDate, topicValue);
-                    //un.addTopic(subject, topic);
+                    un.addTopic(subject, topic);
                 }
 
             }
