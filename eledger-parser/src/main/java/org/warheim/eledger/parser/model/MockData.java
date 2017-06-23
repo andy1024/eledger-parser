@@ -30,7 +30,6 @@ public class MockData {
         notifications.addTopic(maths, new Topic("2015-12-01", "Matrix calculus"));
         
         notifications.putMessage(new Message("111", "advice", "john@mit.edu", "all-students", "2015-09-01", "No more jumping on the bed!"));
-        notifications.putMessageSent(new Message("934", "No way we'll do that!", "us", "you", "2016-04-04", "Sorry to inform you that we're not gonna do it."));
         User user = new User(USER_1_NAME);
         if (stage>0) {
             notifications.putMessage(new Message("112", "warning", "admin@mit.edu", "matt@cs.mit.edu", "2915-11-30", "You've been warned"));
