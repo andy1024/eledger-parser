@@ -50,6 +50,7 @@ public class Config {
     public static final String KEY_BASE_URL = "web.baseUrl";
     public static final String KEY_MESSAGES_LIST_PAGE = "web.messagesListPage";
     public static final String KEY_MESSAGE_PAGE = "web.messagePage";
+    public static final String KEY_MESSAGES_SENT_LIST_PAGE = "web.messagesSentListPage";
     public static final String KEY_LOGOUT_PAGE = "web.logoutPage";
     public static final String KEY_MAIN_PAGE = "web.mainPage";
     
