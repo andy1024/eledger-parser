@@ -211,6 +211,8 @@ public class NotificationsPdfLatexFormatter extends NotificationsFreeRollFormatt
                 break;
             case TEST: str.append("\\Clocklogo"); //clock icon
                 break;
+            case TOPIC: //don't output this
+                return;
         }
 
         str.append("\\textsl{\\textsf{\\small{").append(info.getDate()).append("}}} ").append(escape(info.getContent()))
