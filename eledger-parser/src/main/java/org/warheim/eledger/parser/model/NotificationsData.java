@@ -82,7 +82,7 @@ public class NotificationsData implements Serializable, FormattableModel  {
         }
         return retval.toString();
     }
-     
+    
     /**
      * Calculates the difference between what is currently stored on disk and what comes from the server
      * As a side effect it supplements the disk storage to much the data from server
@@ -91,7 +91,7 @@ public class NotificationsData implements Serializable, FormattableModel  {
      * @param dataFromDisk
      * @return diff tree
      */
-     public static NotificationsData getDataDiff(NotificationsData dataFromServer, NotificationsData dataFromDisk) {
+    public static NotificationsData getDataDiff(NotificationsData dataFromServer, NotificationsData dataFromDisk) {
         //buildDataFromDisk();
         //buildDataFromServer();
 
@@ -218,6 +218,14 @@ public class NotificationsData implements Serializable, FormattableModel  {
                     if (diskUN.getMessage(msg.getId())==null) {
                         userNotificationsDiffMap.putMessage(msg);
                         diskUN.putMessage(msg);
+                    }
+                }
+
+                //compare outbound messages
+                for (Message msg: serverUN.getMessagesSent()) {
+                    if (diskUN.getMessageSent(msg.getId())==null) {
+                        userNotificationsDiffMap.putMessageSent(msg);
+                        diskUN.putMessageSent(msg);
                     }
                 }
                 if (!userNotificationsDiffMap.isEmpty()) {

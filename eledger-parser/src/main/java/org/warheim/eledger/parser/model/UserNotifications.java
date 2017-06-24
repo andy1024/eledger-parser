@@ -22,6 +22,7 @@ public class UserNotifications implements Serializable {
     private Map<Subject, Set<Topic>> topicMap = new HashMap<>();
     private Map<Subject, Set<Grade>> gradeMap = new HashMap<>();
     private final Map<String, Message> msgMap = new HashMap<>();
+    private final Map<String, Message> msgSentMap = new HashMap<>();
     
     public UserNotifications() {
         
@@ -36,7 +37,9 @@ public class UserNotifications implements Serializable {
                 &&
                 gradeMap.isEmpty()
                 &&
-                msgMap.isEmpty();
+                msgMap.isEmpty()
+                &&
+                msgSentMap.isEmpty();
     }
     
     public Map<Subject, Set<Task>> getTaskMap() {
@@ -91,6 +94,14 @@ public class UserNotifications implements Serializable {
     
     public void putMessageWithoutContents(String msgId, String title, String sender, String date) {
         msgMap.put(msgId, new Message(msgId, title, sender, null, date, null)); //to be filled later
+    }
+
+    public void putMessageSent(Message msg) {
+        msgSentMap.put(msg.getId(), msg);
+    }
+    
+    public void putMessageSentWithoutContents(String msgId, String title, String recipients, String date) {
+        msgSentMap.put(msgId, new Message(msgId, title, null, recipients, date, null)); //to be filled later
     }
 
     public void addTest(Subject subject, Test task) {
@@ -199,6 +210,19 @@ public class UserNotifications implements Serializable {
         return msgMap.values();
     }
 
+    public Set<String> getMessageSentIDs() {
+        Set<String> list = msgSentMap.keySet();
+        return list;
+    }
+    
+    public Message getMessageSent(String id) {
+        return msgSentMap.get(id);
+    }
+    
+    public Collection<Message> getMessagesSent() {
+        return msgSentMap.values();
+    }
+
     @Deprecated
     public String serializeToJson() {
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization()
@@ -276,8 +300,23 @@ public class UserNotifications implements Serializable {
             }
         }
         if (!msgMap.isEmpty()) {
-            retval.append("Messages\n");
+            retval.append("Incoming messages\n");
             Collection<Message> list = getMessages();
+            if (list!=null) {
+                for (Message msg: list) {
+                retval.append(" ").append(msg.getId())
+                      .append(" ").append(msg.getTitle())
+                      .append(" ").append(msg.getDate())
+                      .append(" ").append(msg.getSender())
+                      .append(" ").append(msg.getRecipients())
+                      .append(" ").append(msg.getContent())
+                      .append("\n");
+                }
+            }
+        }
+        if (!msgMap.isEmpty()) {
+            retval.append("Outgoing messages\n");
+            Collection<Message> list = getMessagesSent();
             if (list!=null) {
                 for (Message msg: list) {
                 retval.append(" ").append(msg.getId())
