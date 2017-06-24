@@ -113,6 +113,7 @@ public class EntryPoint extends Application {
                             //fix for issue #6
                             if (un!=null) {
                                 messageDataServerResponse.addAll(h.getMessagesContents(un.getMessageIDs()));
+                                messageDataServerResponse.addAll(h.getMessagesSentContents(un.getMessageSentIDs()));
                             } else {
                                 logger.info("No new notifications for user " + user.getFullname());
                             }
