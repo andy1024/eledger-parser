@@ -55,6 +55,7 @@ public class HttpReqRespHandler {
         String topicListPage = base + "/" + Config.get(Config.KEY_TOPIC_LIST_PAGE);
         String gradeListPage = base + "/" + Config.get(Config.KEY_GRADE_LIST_PAGE);
         String messagesListPage = base + "/" + Config.get(Config.KEY_MESSAGES_LIST_PAGE);
+        String messagesSentListPage = base + "/" + Config.get(Config.KEY_MESSAGES_SENT_LIST_PAGE);
     
         InitiateConnection init = new InitiateConnection(taskListPage);
         init.doCall();
@@ -79,7 +80,7 @@ public class HttpReqRespHandler {
         GetTopicsList topicListGetter = new GetTopicsList(topicListPage, cookie, etag);
         topicSourcePage = topicListGetter.doCall();
         retval.add(new Source(user, SourceType.TOPICLIST, topicSourcePage));
- 
+  
         String gradeSourcePage;
         GetGradesList gradeListGetter = new GetGradesList(gradeListPage, cookie, etag);
         gradeSourcePage = gradeListGetter.doCall();
@@ -92,6 +93,10 @@ public class HttpReqRespHandler {
         retval.add(new Source(user, SourceType.MESSAGES, messagesSourcePage));
         
         sleep();
+        String messagesSentSourcePage;
+        GetMessagesList messageSentListGetter = new GetMessagesList(messagesSentListPage, cookie, etag);
+        messagesSentSourcePage = messageSentListGetter.doCall();
+        retval.add(new Source(user, SourceType.MESSAGES_SENT, messagesSentSourcePage));
         return retval;
     }
     
@@ -110,6 +115,21 @@ public class HttpReqRespHandler {
         return retval;
     }
     
+    public List<Source> getMessagesSentContents(Set<String> msgIds) throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException, ObjectCreationException, WebExecutionException {
+        List<Source> retval = new ArrayList<>();
+        String messagePageUrl = base + "/" + Config.get(Config.KEY_MESSAGE_PAGE);
+        String messageOutboxPageUrl = base + "/" + Config.get(Config.KEY_MESSAGES_SENT_LIST_PAGE);
+        
+        for (String msgId: msgIds) {
+            String messagePageResponse;
+            GetMessage messageGetter = new GetMessage(messagePageUrl, msgId, cookie, etag, messageOutboxPageUrl);
+            messagePageResponse = messageGetter.doCall();
+            retval.add(new Source(user, SourceType.MESSAGE_SENT_CONTENT, messagePageResponse, msgId));
+            sleep();
+        }
+        return retval;
+    }
+
     public void logout() throws IOException, WrongStatusException, ResponseHandlerException, RequestPreparationException, ObjectCreationException, WebExecutionException {
         String logoutUrl = base + "/" + Config.get(Config.KEY_LOGOUT_PAGE);
         String referer = base + "/" + Config.get(Config.KEY_MAIN_PAGE);

@@ -56,6 +56,9 @@ public class Parser {
                 case MESSAGES:
                     spp = new MessageListParser();
                     break;
+                case MESSAGES_SENT:
+                    spp = new MessageSentListParser();
+                    break;
                 default:
                     spp = null;
                     
@@ -73,6 +76,11 @@ public class Parser {
                 if (SourceType.MESSAGE_CONTENT.equals(src.getType())) {
                     UserNotifications un = dataFromServer.getNotificationsForUser(src.getUser());
                     SourcePageParser spp = new MessageParser();
+                    spp.parse(src, un);
+                }
+                if (SourceType.MESSAGE_SENT_CONTENT.equals(src.getType())) {
+                    UserNotifications un = dataFromServer.getNotificationsForUser(src.getUser());
+                    SourcePageParser spp = new MessageSentParser();
                     spp.parse(src, un);
                 }
             } catch (Exception e) {
